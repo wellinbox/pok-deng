@@ -34,6 +34,11 @@ const dict: Record<Lang, Record<string, string>> = {
     chips: "ชิป",
     dealer: "เดลเลอร์",
     langSwitch: "EN",
+    wallet: "กระเป๋า",
+    winner: "ผู้ชนะ",
+    youWin: "คุณชนะ!",
+    youLose: "คุณแพ้",
+    draw: "เสมอ",
   },
   en: {
     title: "Pok Deng",
@@ -68,6 +73,11 @@ const dict: Record<Lang, Record<string, string>> = {
     chips: "Chips",
     dealer: "Dealer",
     langSwitch: "TH",
+    wallet: "Wallet",
+    winner: "WINNER",
+    youWin: "YOU WIN!",
+    youLose: "YOU LOSE",
+    draw: "DRAW",
   },
 };
 
