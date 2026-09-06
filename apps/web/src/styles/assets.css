@@ -36,10 +36,10 @@
 .s6.seat-stack, .s7.seat-stack { flex-direction: row-reverse; }
 .s2.seat-stack { flex-direction: row; }
 
-.gem, .chip, .icon-btn, .row-btns button, .full-btn {
+.gem, .chip, .icon-btn, .row-btns button, .full-btn, .draw-btn {
   transition: transform .06s steps(2, end), filter .06s linear;
 }
-.gem:active, .chip:active, .icon-btn:active, .row-btns button:active, .full-btn:active {
+.gem:active, .chip:active, .icon-btn:active, .row-btns button:active, .full-btn:active, .draw-btn:active {
   transform: scale(.78) rotate(-3deg);
   filter: brightness(1.25);
 }
@@ -52,6 +52,31 @@
   70% { transform: scale(1.12) rotate(3deg); }
   100% { transform: scale(1); }
 }
+
+.draw-choice {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  z-index: 25;
+  text-align: center;
+  animation: punch .35s cubic-bezier(.15,1.6,.3,1);
+}
+.draw-hint { font-size: 11px; color: #f0d78a; margin-bottom: 8px; font-weight: 700; }
+.draw-row { display: flex; gap: 12px; }
+.draw-btn {
+  min-width: 108px;
+  min-height: 48px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff8e8;
+  border: 2px solid #e0c36a;
+  box-shadow: 0 8px 16px #0008, inset 0 1px 0 #fff6;
+}
+.draw-btn.hit { background: radial-gradient(circle at 30% 25%, #7ad4ff, #1560d0 58%, #08245c); }
+.draw-btn.stand { background: radial-gradient(circle at 30% 25%, #9dffb4, #0f8a3e 58%, #053c1c); }
 
 .winner-banner {
   position: absolute; left: 50%; top: 18%; transform: translateX(-50%);

@@ -83,6 +83,13 @@ export default function App() {
   const mePlayer = state?.players.find((p) => p.id === me);
   const isDealer = state?.dealerId === me;
   const betting = state?.phase === "waiting" || state?.phase === "betting";
+  const myTurn =
+    !!state &&
+    state.phase === "playerAction" &&
+    state.currentActorId === me &&
+    !isDealer &&
+    !mePlayer?.folded &&
+    hole.length === 2;
   const remain = useMemo(() => {
     if (!state?.timerEndsAt) return 0;
     return Math.max(0, Math.ceil((state.timerEndsAt - Date.now()) / 1000));
@@ -171,6 +178,16 @@ export default function App() {
             </div>
           )}
         </div>
+
+        {myTurn && (
+          <div className="draw-choice">
+            <div className="draw-hint">{t(lang, lang === "th" ? "hit" : "hit")} / {t(lang, "stand")}</div>
+            <div className="draw-row">
+              <button className="draw-btn hit" onClick={tap("hit")}>{t(lang, "hit")}</button>
+              <button className="draw-btn stand" onClick={tap("stand")}>{t(lang, "stand")}</button>
+            </div>
+          </div>
+        )}
 
         {showWinner && (
           <div className="winner-banner" key={state.timerEndsAt || "payout"}>
