@@ -1,4 +1,4 @@
-/* UI Asset Sheets only — files are .jpeg */
+/* All visible chrome comes from the 3 UI asset sheets */
 :root {
   --sheet-table: url("/assets/sheet-table-cards.jpeg");
   --sheet-ui: url("/assets/sheet-ui-chips.jpeg");
@@ -6,61 +6,75 @@
 }
 
 .table {
-  background-image:
-    radial-gradient(circle at 50% 46%, rgba(255,255,255,0.05), transparent 18%),
-    var(--sheet-table);
-  background-size: auto, 220% auto;
-  background-position: center, 6% 4%;
-  background-repeat: no-repeat;
+  background: var(--sheet-table) 7% 3% / 240% auto no-repeat;
 }
 
 .logo-hex {
+  width: 168px;
+  height: 54px;
+  background: var(--sheet-logo) 7% 6% / 260% auto no-repeat;
+}
+
+.spr {
+  width: 40px; height: 40px; border-radius: 50%;
   background-image: var(--sheet-logo);
-  background-size: 280% auto;
-  background-position: 6% 5%;
   background-repeat: no-repeat;
-}
-
-.card.back {
-  background-image: var(--sheet-table);
   background-size: 900% auto;
-  background-position: 4% 28%;
+}
+.spr-gear { background-position: 3% 41%; }
+.spr-sound { background-position: 13% 41%; }
+.spr-mute { background-position: 23% 41%; }
+.spr-bell { background-position: 73% 41%; }
+.spr-menu { background-position: 63% 41%; }
+
+.card {
+  background: #f6efdc var(--sheet-table) 38% 36% / 1200% auto no-repeat;
+}
+.card.back {
+  background: var(--sheet-table) 4% 29% / 980% auto no-repeat;
+}
+
+.avatar {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--sheet-ui) 8% 8% / 420% auto no-repeat;
+}
+.nameplate {
+  min-width: 72px; min-height: 18px;
+  background: var(--sheet-ui) 8% 22% / 280% auto no-repeat;
+  font-size: 10px; text-align: center; color: #f4e7c3;
+}
+.rim-badge {
+  min-width: 36px; min-height: 28px;
+  background: var(--sheet-ui) 38% 38% / 900% auto no-repeat;
+  font-size: 7px; font-weight: 800; color: #f0d78a;
+  text-align: center; white-space: pre-line; line-height: 1.1;
+}
+.pot-box {
+  min-width: 110px; min-height: 44px;
+  background: var(--sheet-ui) 8% 86% / 240% auto no-repeat;
+  text-align: center; padding: 6px 10px;
+}
+
+.gem {
+  background-image: var(--sheet-ui);
   background-repeat: no-repeat;
+  background-size: 620% auto;
 }
+.gem.fold { background-position: 6% 62%; }
+.gem.check { background-position: 24% 62%; }
+.gem.call { background-position: 42% 62%; }
+.gem.bet { background-position: 60% 62%; }
+.gem.raise { background-position: 78% 62%; }
+.gem.allin { background-position: 96% 62%; }
 
-.gem.fold {
+.chip {
   background-image: var(--sheet-ui);
-  background-size: 620% auto;
-  background-position: 6% 62%;
+  background-repeat: no-repeat;
+  background-size: 920% auto;
+  color: transparent;
 }
-.gem.check {
-  background-image: var(--sheet-ui);
-  background-size: 620% auto;
-  background-position: 24% 62%;
-}
-.gem.call {
-  background-image: var(--sheet-ui);
-  background-size: 620% auto;
-  background-position: 42% 62%;
-}
-.gem.bet {
-  background-image: var(--sheet-ui);
-  background-size: 620% auto;
-  background-position: 60% 62%;
-}
-.gem.raise {
-  background-image: var(--sheet-ui);
-  background-size: 620% auto;
-  background-position: 78% 62%;
-}
-.gem.allin {
-  background-image: var(--sheet-ui);
-  background-size: 620% auto;
-  background-position: 96% 62%;
-}
-
-.chip.c5 { background-image: var(--sheet-ui); background-size: 900% auto; background-position: 52% 8%; }
-.chip.c10 { background-image: var(--sheet-ui); background-size: 900% auto; background-position: 62% 8%; }
-.chip.c25 { background-image: var(--sheet-ui); background-size: 900% auto; background-position: 72% 8%; }
-.chip.c50 { background-image: var(--sheet-ui); background-size: 900% auto; background-position: 82% 8%; }
-.chip.c100 { background-image: var(--sheet-ui); background-size: 900% auto; background-position: 93% 8%; }
+.chip.c5 { background-position: 52% 8%; }
+.chip.c10 { background-position: 62% 8%; }
+.chip.c25 { background-position: 72% 8%; }
+.chip.c50 { background-position: 82% 8%; }
+.chip.c100 { background-position: 93% 8%; }

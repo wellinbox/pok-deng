@@ -106,16 +106,13 @@ export default function App() {
     <div id="game-screen">
       <header className="game-header">
         <div className="icon-row">
-          <button className="icon-btn" type="button">⚙</button>
-          <button className="icon-btn" type="button" onClick={() => setSound((s) => !s)}>{sound ? "\ud83d\udd0a" : "\ud83d\udd07"}</button>
+          <button className="spr spr-gear" type="button" aria-label="settings" />
+          <button className={`spr ${sound ? "spr-sound" : "spr-mute"}`} type="button" aria-label="sound" onClick={() => setSound((s) => !s)} />
         </div>
-        <div className="logo-hex">
-          <div className="th">ป๊อกเด้ง</div>
-          <div className="en">POK DENG</div>
-        </div>
+        <div className="logo-hex" aria-label="POK DENG" />
         <div className="icon-row">
-          <button className="icon-btn" type="button">\ud83d\udd14</button>
-          <button className="icon-btn" type="button" onClick={() => setLang(lang === "th" ? "en" : "th")}>☰</button>
+          <button className="spr spr-bell" type="button" aria-label="alerts" />
+          <button className="spr spr-menu" type="button" aria-label="menu" onClick={() => setLang(lang === "th" ? "en" : "th")} />
         </div>
       </header>
 
@@ -162,16 +159,16 @@ export default function App() {
 
       <footer className="action-bar">
         <div className="actions">
-          <button className="gem fold" data-label="FOLD" disabled={isDealer} onClick={() => emit("fold")} />
-          <button className="gem check" data-label="CHECK" onClick={() => emit("check")} />
-          <button className="gem call" data-label="CALL" disabled={!betting || isDealer} onClick={() => emit("bet", state.minBet)} />
-          <button className="gem bet" data-label="BET" disabled={!betting || isDealer} onClick={() => emit("bet", chip)} />
-          <button className="gem raise" data-label="RAISE" disabled={!betting || isDealer} onClick={() => emit("bet", chip * 2)} />
-          <button className="gem allin" data-label="ALL-IN" disabled={!betting || isDealer} onClick={() => emit("allin")} />
+          <button className="gem fold" disabled={isDealer} onClick={() => emit("fold")} />
+          <button className="gem check" onClick={() => emit("check")} />
+          <button className="gem call" disabled={!betting || isDealer} onClick={() => emit("bet", state.minBet)} />
+          <button className="gem bet" disabled={!betting || isDealer} onClick={() => emit("bet", chip)} />
+          <button className="gem raise" disabled={!betting || isDealer} onClick={() => emit("bet", chip * 2)} />
+          <button className="gem allin" disabled={!betting || isDealer} onClick={() => emit("allin")} />
         </div>
         <div className="tray">
           {CHIP_VALUES.map((v) => (
-            <button key={v} className={`chip c${v} ${chip === v ? "on" : ""}`} onClick={() => setChip(v)}>{v}</button>
+            <button key={v} className={`chip c${v} ${chip === v ? "on" : ""}`} onClick={() => setChip(v)} />
           ))}
         </div>
       </footer>
