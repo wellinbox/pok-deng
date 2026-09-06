@@ -1,2 +1,12 @@
-/* Asset sheets stay in /public/assets for later slicing.
-   Do not paint whole sheets onto UI elements — that caused the crop bugs. */
+.gem {
+  display: grid;
+  place-items: center;
+  color: #fff8e8;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  line-height: 1;
+  text-shadow: 0 1px 2px #0009;
+}
+.gem.allin { color: #2a1c06; text-shadow: 0 1px 0 #fff6; }
+.gem::after { content: none !important; }
