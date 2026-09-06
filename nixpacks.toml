@@ -5,7 +5,7 @@ nixPkgs = ["nodejs_20"]
 cmds = ["npm install"]
 
 [phases.build]
-cmds = ["npm run build -w @pokdeng/shared", "npm run build -w @pokdeng/server"]
+cmds = ["echo railway-no-tsc"]
 
 [start]
-cmd = "node apps/server/dist/index.js"
+cmd = "npx tsx apps/server/src/index.ts"
