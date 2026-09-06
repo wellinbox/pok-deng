@@ -2,7 +2,7 @@ import { v4 as uuid } from "uuid";
 import {
   Card, ChatMessage, MAX_PLAYERS, MIN_BET_DEFAULT, PHASE_MS, Phase,
   PlayerPrivate, RoomState, STARTING_CHIPS, SeatRole,
-  createDeck, dealerShouldHit, detectPok, evaluateHand, payout, shuffle,
+  avatarUrl, createDeck, dealerShouldHit, detectPok, evaluateHand, payout, shuffle,
 } from "@pokdeng/shared";
 
 interface InternalPlayer extends PlayerPrivate { socketId: string | null; }
@@ -24,9 +24,14 @@ export class GameRoom {
     this.roomId = roomId; this.hostId = hostId; this.dealerId = hostId; this.emit = emit; this.solo = solo;
     this.addPlayer(hostId, hostName, null, 0);
     if (solo) {
-      this.addPlayer("ai-dealer-bot", "เจ้ามือ AI", null, 1, true);
+      this.addPlayer("ai-dealer-bot", "เจ้ามือ AI", null, 4, true);
       this.dealerId = "ai-dealer-bot";
-      this.players[1].role = "DEALER";
+      this.addPlayer("ai-p2", "น้อง AI", null, 2, true);
+      this.addPlayer("ai-p3", "เสี่ย AI", null, 6, true);
+      this.addPlayer("ai-p4", "คุณนาย AI", null, 3, true);
+      this.addPlayer("ai-p5", "หมอ AI", null, 5, true);
+      const d = this.players.find((p) => p.id === this.dealerId);
+      if (d) d.role = "DEALER";
     }
   }
 
@@ -35,8 +40,13 @@ export class GameRoom {
     if (existing) { existing.socketId = socketId; existing.connected = true; existing.name = name || existing.name; return true; }
     if (this.players.length >= MAX_PLAYERS) return false;
     const used = new Set(this.players.map((p) => p.seat));
-    let s = seat ?? 0; if (seat === undefined) while (used.has(s)) s++;
-    this.players.push({ id, name, chips: STARTING_CHIPS, bet: 0, seat: s, ready: isAi, folded: false, connected: !isAi, role: id === this.dealerId ? "DEALER" : null, cardCount: 0, cards: [], socketId, lastResult: null });
+    let s = seat ?? 0; if (seat === undefined) while (used.has(s) && s < MAX_PLAYERS) s++;
+    if (used.has(s) || s >= MAX_PLAYERS) return false;
+    this.players.push({
+      id, name, avatar: avatarUrl(id), chips: STARTING_CHIPS, bet: 0, seat: s, ready: isAi,
+      folded: false, connected: !isAi, role: id === this.dealerId ? "DEALER" : null,
+      cardCount: 0, cards: [], socketId, lastResult: null,
+    });
     this.assignRoles(); return true;
   }
 
@@ -124,7 +134,17 @@ export class GameRoom {
 
   startBetting() {
     this.phase = "betting"; this.publicMessage = "วางเดิมพันก่อนแจกไพ่";
+    this.autoBetAi();
     this.setTimer(PHASE_MS.betting, () => this.startDeal()); this.emit();
+  }
+
+  private autoBetAi() {
+    for (const p of this.players) {
+      if (!p.id.startsWith("ai-") || p.id === this.dealerId || p.bet > 0) continue;
+      const add = Math.min(this.minBet, p.chips);
+      if (add <= 0) continue;
+      p.chips -= add; p.bet += add; this.pot += add; p.ready = true;
+    }
   }
 
   private startDeal() {
@@ -141,8 +161,7 @@ export class GameRoom {
 
   private afterDeal() {
     const dealer = this.players.find((p) => p.id === this.dealerId)!;
-    const dealerPok = detectPok(dealer.cards);
-    if (dealerPok || this.players.filter((p) => p.id !== this.dealerId && p.bet > 0).every((p) => detectPok(p.cards) || p.folded)) {
+    if (detectPok(dealer.cards) || this.players.filter((p) => p.id !== this.dealerId && p.bet > 0).every((p) => detectPok(p.cards) || p.folded)) {
       this.beginReveal(); return;
     }
     this.phase = "playerAction"; this.publicMessage = "เลือก ขอไพ่ หรือ อยู่"; this.queueActors(); this.emit();
@@ -212,7 +231,7 @@ export class GameRoom {
 
   private resetRound() {
     this.pot = 0;
-    for (const p of this.players) { p.bet = 0; p.cards = []; p.cardCount = 0; p.ready = p.id.startsWith("ai-"); p.folded = false; p.revealedCards = undefined; }
+    for (const p of this.players) { p.bet = 0; p.cards = []; p.cardCount = 0; p.ready = p.id.startsWith("ai-"); p.folded = false; p.revealedCards = undefined; p.lastResult = null; }
     this.phase = "waiting"; this.publicMessage = "วางเดิมพันรอบใหม่"; this.emit();
   }
 
@@ -231,7 +250,7 @@ export class GameRoom {
       currentActorId: this.currentActorId, publicMessage: this.publicMessage, chat: this.chat,
       lastHistory: this.lastHistory, solo: this.solo,
       players: this.players.map((p) => ({
-        id: p.id, name: p.name, chips: p.chips, bet: p.bet, seat: p.seat, ready: p.ready,
+        id: p.id, name: p.name, avatar: p.avatar || avatarUrl(p.id), chips: p.chips, bet: p.bet, seat: p.seat, ready: p.ready,
         folded: p.folded, connected: p.connected, role: p.role as SeatRole, cardCount: p.cardCount,
         revealedCards: open ? p.cards : undefined, taem: open ? p.taem : undefined, pok: p.pok,
         deng: p.deng, dengLabel: open ? p.dengLabel : undefined, lastResult: p.lastResult,
