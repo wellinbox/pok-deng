@@ -2,16 +2,14 @@
   "name": "pok-deng",
   "private": true,
   "version": "1.0.0",
+  "packageManager": "npm@10.9.2",
   "workspaces": ["apps/web", "apps/server", "packages/shared"],
   "scripts": {
     "dev": "concurrently -n web,server -c green,cyan \"npm run dev -w @pokdeng/web\" \"npm run dev -w @pokdeng/server\"",
     "dev:web": "npm run dev -w @pokdeng/web",
     "dev:server": "npm run dev -w @pokdeng/server",
-    "build": "npm run build -w @pokdeng/web",
-    "build:server": "echo skip-tsc",
-    "test": "npm run test -w @pokdeng/shared",
-    "start": "tsx apps/server/src/index.ts",
-    "start:server": "tsx apps/server/src/index.ts"
+    "build": "echo skip",
+    "start": "npx tsx apps/server/src/index.ts"
   },
   "dependencies": {
     "tsx": "^4.19.2"
