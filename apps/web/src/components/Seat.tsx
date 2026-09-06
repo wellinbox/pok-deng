@@ -1,11 +1,22 @@
 import type { Card, PlayerPublic } from "@pokdeng/shared";
 import PlayingCard from "./PlayingCard";
 
-function Silhouette() {
+function Silhouette({ crown }: { crown?: boolean }) {
   return (
     <svg viewBox="0 0 64 64" fill="none">
-      <circle cx="32" cy="22" r="12" fill="#111" stroke="#c9a227" strokeWidth="1.5" />
-      <path d="M12 56c2-14 12-20 20-20s18 6 20 20" fill="#111" stroke="#c9a227" strokeWidth="1.5" />
+      {crown ? (
+        <>
+          <path d="M10 28 L18 18 L32 26 L46 18 L54 28 L50 38 H14 Z" fill="#e8c86a" stroke="#8a6414" />
+          <circle cx="18" cy="18" r="3" fill="#fff4c8" />
+          <circle cx="32" cy="16" r="3" fill="#fff4c8" />
+          <circle cx="46" cy="18" r="3" fill="#fff4c8" />
+        </>
+      ) : (
+        <>
+          <circle cx="32" cy="22" r="13" fill="#050505" />
+          <path d="M10 58c2-16 12-22 22-22s20 6 22 22" fill="#050505" />
+        </>
+      )}
     </svg>
   );
 }
@@ -15,39 +26,34 @@ export default function SeatView({
   cls,
   showCards,
   hole,
+  rim,
+  crown,
 }: {
   player?: PlayerPublic;
   cls: string;
   showCards?: boolean;
   hole?: Card[];
+  rim?: string;
+  crown?: boolean;
 }) {
-  if (!player) {
-    return (
-      <div className={`seat ${cls}`}>
-        <div className="avatar"><Silhouette /></div>
-        <div className="nameplate">ว่าง</div>
-      </div>
-    );
-  }
-  const cards = showCards ? player.revealedCards : undefined;
+  const cards = player && showCards ? player.revealedCards : undefined;
   const mine = hole && hole.length ? hole : cards;
   return (
     <div className={`seat ${cls}`}>
       <div className="hand-row">
-        {player.cardCount > 0 &&
+        {player && player.cardCount > 0 && cls !== "s0" &&
           (mine
-            ? mine.map((c, i) => <PlayingCard key={c.id} card={c} i={i} />)
-            : Array.from({ length: player.cardCount }).map((_, i) => <PlayingCard key={i} i={i} />))}
+            ? mine.slice(0, 2).map((c, i) => <PlayingCard key={c.id} card={showCards ? c : undefined} i={i} />)
+            : Array.from({ length: Math.min(player.cardCount, 2) }).map((_, i) => <PlayingCard key={i} i={i} />))}
       </div>
-      <div className="avatar">
-        <Silhouette />
-        {player.role && <span className="role-badge">{player.role}</span>}
+      <div className="avatar-wrap">
+        {rim && <div className="rim-badge">{rim}</div>}
+        <div className={`avatar ${crown ? "crown" : ""}`}>
+          <Silhouette crown={crown} />
+        </div>
       </div>
-      <div className="nameplate">{player.name}</div>
-      <div className="chips-mini">{player.chips} · ลง {player.bet}</div>
-      {player.pok && <div className="result-tag">ป๊อก {player.pok}</div>}
-      {!player.pok && player.dengLabel && <div className="result-tag">{player.dengLabel}</div>}
-      {player.lastResult === "win" && <div className="result-tag">WIN</div>}
+      <div className={`nameplate ${player ? "" : "empty"}`}>{player?.name || ""}</div>
+      {player && <div className="chips-mini">{player.chips}</div>}
     </div>
   );
 }
