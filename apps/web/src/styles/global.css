@@ -95,22 +95,33 @@ button { font-family: inherit; border: 0; cursor: pointer; }
 .seat-anchor { position: absolute; left: 50%; top: 50%; width: 0; height: 0; z-index: 3; }
 .seat-anchor > * {
   position: absolute; left: 0; top: 0;
-  transform: translate(-50%, -50%) rotate(var(--a)) translateY(calc(var(--th) * -0.36)) rotate(calc(var(--a) * -1));
+  transform: translate(-50%, -50%) rotate(var(--a)) translateY(calc(var(--th) * -0.44)) rotate(calc(var(--a) * -1));
 }
 .seat-0 { --a: 180deg; }
-.seat-1 { --a: 110deg; }
-.seat-2 { --a: 55deg; }
+.seat-1 { --a: 108deg; }
+.seat-2 { --a: 52deg; }
 .seat-3 { --a: 0deg; }
-.seat-4 { --a: -55deg; }
-.seat-5 { --a: -110deg; }
+.seat-4 { --a: -52deg; }
+.seat-5 { --a: -108deg; }
 
-.you-hand { position: absolute; left: 50%; bottom: 16%; transform: translateX(-50%); display: flex; z-index: 4; }
+.seat-stack { display: flex; align-items: center; gap: 4px; }
+.seat-hud { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.seat-cards { display: flex; pointer-events: none; }
+.seat-cards .card { width: 30px; height: 42px; margin-left: -10px; }
+.seat-cards .card:first-child { margin-left: 0; transform: rotate(-8deg); }
+.seat-cards .card:last-child { transform: rotate(8deg); }
+.s3.seat-stack { flex-direction: column-reverse; }
+.s0.seat-stack { flex-direction: column; }
+.s5.seat-stack, .s4.seat-stack { flex-direction: row-reverse; }
+.s1.seat-stack, .s2.seat-stack { flex-direction: row; }
+
+.you-hand { position: absolute; left: 50%; bottom: 22%; transform: translateX(-50%); display: flex; z-index: 4; }
 .you-hand .card { margin-left: -12px; }
 .you-hand .card:nth-child(1) { transform: rotate(-12deg); }
 .you-hand .card:nth-child(2) { transform: rotate(-2deg); z-index: 2; }
 .you-hand .card:nth-child(3) { transform: rotate(10deg); z-index: 3; }
 .card {
-  width: 42px; height: 60px; border-radius: 6px; position: relative;
+  width: 40px; height: 56px; border-radius: 6px; position: relative;
   background: linear-gradient(#fffdf6, #efe4c8);
   border: 1px solid #d7c9a0; box-shadow: 0 4px 8px #0006;
 }
@@ -120,26 +131,31 @@ button { font-family: inherit; border: 0; cursor: pointer; }
     repeating-linear-gradient(45deg, #0c3a28 0 5px, #08281c 5px 10px);
   border: 2px solid #c9a44a;
 }
-.card .rank { position: absolute; top: 2px; left: 4px; font-family: Cinzel, serif; font-weight: 800; font-size: 12px; }
-.card .suit { position: absolute; top: 14px; left: 4px; font-size: 10px; }
-.card .suit-lg { position: absolute; right: 4px; bottom: 2px; font-size: 16px; }
+.card .rank { position: absolute; top: 2px; left: 4px; font-family: Cinzel, serif; font-weight: 800; font-size: 11px; }
+.card .suit { position: absolute; top: 13px; left: 4px; font-size: 9px; }
+.card .suit-lg { position: absolute; right: 3px; bottom: 2px; font-size: 14px; }
 .red { color: #c4122f; } .black { color: #161616; }
 
 .avatar {
-  width: 46px; height: 46px; border-radius: 50%;
+  width: 32px; height: 32px; border-radius: 50%;
   background: radial-gradient(circle at 40% 30%, #222, #050505);
-  border: 2.5px solid var(--gold);
+  border: 2px solid var(--gold);
   display: grid; place-items: center; overflow: hidden;
 }
+.avatar svg { width: 20px; height: 20px; }
 .nameplate {
-  min-width: 72px; background: #070705; border: 1.5px solid #c9a44a; border-radius: 4px;
-  font-size: 10px; text-align: center; padding: 1px 6px;
+  min-width: 52px; max-width: 64px;
+  background: #070705; border: 1px solid #c9a44a; border-radius: 3px;
+  font-size: 8px; line-height: 1.2; text-align: center; padding: 0 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.nameplate.empty { min-height: 11px; color: transparent; }
+.seat-chips { font-size: 8px; color: #c9b56a; line-height: 1; }
 .rim-badge {
   background: linear-gradient(#1a160e, #0b0906);
-  border: 1.5px solid var(--gold); color: #f0d78a;
-  font-size: 8px; font-weight: 800; padding: 3px 5px; border-radius: 40%;
-  text-align: center; line-height: 1.15; white-space: pre-line;
+  border: 1px solid var(--gold); color: #f0d78a;
+  font-size: 6px; font-weight: 800; padding: 2px 4px; border-radius: 8px;
+  text-align: center; line-height: 1.1; white-space: pre-line;
 }
 
 .action-bar {
@@ -206,4 +222,5 @@ button { font-family: inherit; border: 0; cursor: pointer; }
   .action-bar { flex-direction: row; justify-content: center; gap: 16px; height: auto; }
   .gem { max-width: 72px; }
   .chip { width: 42px; height: 42px; }
+  .avatar { width: 38px; height: 38px; }
 }
