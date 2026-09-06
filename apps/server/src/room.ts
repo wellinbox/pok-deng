@@ -30,6 +30,8 @@ export class GameRoom {
       this.addPlayer("ai-p3", "เสี่ย AI", null, 6, true);
       this.addPlayer("ai-p4", "คุณนาย AI", null, 3, true);
       this.addPlayer("ai-p5", "หมอ AI", null, 5, true);
+      this.addPlayer("ai-p6", "หมาย AI", null, 1, true);
+      this.addPlayer("ai-p7", "หมอพล AI", null, 7, true);
       const d = this.players.find((p) => p.id === this.dealerId);
       if (d) d.role = "DEALER";
     }
@@ -43,7 +45,7 @@ export class GameRoom {
     let s = seat ?? 0; if (seat === undefined) while (used.has(s) && s < MAX_PLAYERS) s++;
     if (used.has(s) || s >= MAX_PLAYERS) return false;
     this.players.push({
-      id, name, avatar: avatarUrl(id), chips: STARTING_CHIPS, bet: 0, seat: s, ready: isAi,
+      id, name, avatar: avatarUrl(id + "-" + name), chips: STARTING_CHIPS, bet: 0, seat: s, ready: isAi,
       folded: false, connected: !isAi, role: id === this.dealerId ? "DEALER" : null,
       cardCount: 0, cards: [], socketId, lastResult: null,
     });

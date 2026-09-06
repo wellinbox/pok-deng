@@ -1,4 +1,5 @@
 import type { Card, PlayerPublic } from "@pokdeng/shared";
+import { avatarUrl } from "@pokdeng/shared";
 import PlayingCard from "./PlayingCard";
 
 function Silhouette({ crown }: { crown?: boolean }) {
@@ -26,15 +27,11 @@ export default function SeatView({
   cls,
   showCards,
   hole,
-  rim,
-  crown,
 }: {
   player?: PlayerPublic;
   cls: string;
   showCards?: boolean;
   hole?: Card[];
-  rim?: string;
-  crown?: boolean;
 }) {
   const cards = player && showCards ? player.revealedCards : undefined;
   const mine = hole && hole.length ? hole : cards;
@@ -44,9 +41,12 @@ export default function SeatView({
       ? mine.slice(0, 2)
       : Array.from({ length: Math.min(player!.cardCount, 2) })
     : [];
+  const src = player ? player.avatar || avatarUrl(player.id) : "";
+  const crown = player?.role === "DEALER";
+  const rim = player?.role && player.role !== "DEALER" ? player.role : crown ? "DEALER" : undefined;
 
   return (
-    <div className={`seat-stack ${cls}`}>
+    <div className={`seat-stack ${cls} ${player?.lastResult === "win" ? "is-winner" : ""}`}>
       {showSideCards && (
         <div className="seat-cards">
           {list.map((c, i) => (
@@ -60,8 +60,8 @@ export default function SeatView({
       )}
       <div className="seat-hud">
         {rim && <div className="rim-badge">{rim}</div>}
-        <div className="avatar">
-          <Silhouette crown={crown} />
+        <div className={`avatar ${crown ? "dealer" : ""}`}>
+          {src ? <img src={src} alt="" /> : <Silhouette crown={crown} />}
         </div>
         <div className={`nameplate ${player ? "" : "empty"}`}>{player?.name || ""}</div>
         {player && <div className="seat-chips">{player.chips}</div>}

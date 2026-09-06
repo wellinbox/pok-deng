@@ -11,19 +11,19 @@ const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
   "https://pok-deng-production.up.railway.app";
 
-const RIM: Record<number, string> = {
-  1: "BB",
-  2: "DEALER\nSB",
-  3: "DEALER\nSB",
-  5: "DEALER\nSB",
-};
-
 function uid() {
   const e = localStorage.getItem("pd_id");
   if (e) return e;
   const n = crypto.randomUUID();
   localStorage.setItem("pd_id", n);
   return n;
+}
+
+function punch(el: HTMLElement | null) {
+  if (!el) return;
+  el.classList.remove("punched");
+  void el.offsetWidth;
+  el.classList.add("punched");
 }
 
 export default function App() {
@@ -88,6 +88,8 @@ export default function App() {
     return Math.max(0, Math.ceil((state.timerEndsAt - Date.now()) / 1000));
   }, [state]);
   const bySeat = (n: number) => state?.players.find((p) => p.seat === n);
+  const winners = (state?.players || []).filter((p) => p.lastResult === "win");
+  const showWinner = state?.phase === "payout";
 
   if (!joined || !state) {
     return (
@@ -100,14 +102,17 @@ export default function App() {
     );
   }
 
-  const emit = (ev: string, payload?: unknown) => sock.current?.emit(ev, payload);
+  const tap = (ev: string, payload?: unknown) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    punch(e.currentTarget);
+    sock.current?.emit(ev, payload);
+  };
 
   return (
     <div id="game-screen">
       <header className="game-header">
         <div className="icon-row">
-          <button className="icon-btn" type="button" aria-label={t(lang, "settings")}>⚙</button>
-          <button className="icon-btn" type="button" aria-label={t(lang, "sound")} onClick={() => setSound((s) => !s)}>
+          <button className="icon-btn" type="button" aria-label={t(lang, "settings")} onClick={(e) => punch(e.currentTarget)}>⚙</button>
+          <button className="icon-btn" type="button" aria-label={t(lang, "sound")} onClick={(e) => { punch(e.currentTarget); setSound((s) => !s); }}>
             {sound ? "♪" : "×"}
           </button>
         </div>
@@ -115,11 +120,17 @@ export default function App() {
           <div className="th">{t(lang, "title")}</div>
           <div className="en">POK DENG</div>
         </div>
-        <div className="icon-row end">
-          <button className="icon-btn" type="button" aria-label={t(lang, "alerts")}>○</button>
-          <button className="icon-btn" type="button" aria-label={t(lang, "menu")} onClick={() => setLang(lang === "th" ? "en" : "th")}>
-            {t(lang, "langSwitch")}
-          </button>
+        <div className="header-right">
+          <div className="icon-row end">
+            <button className="icon-btn" type="button" aria-label={t(lang, "alerts")} onClick={(e) => punch(e.currentTarget)}>○</button>
+            <button className="icon-btn" type="button" aria-label={t(lang, "menu")} onClick={(e) => { punch(e.currentTarget); setLang(lang === "th" ? "en" : "th"); }}>
+              {t(lang, "langSwitch")}
+            </button>
+          </div>
+          <div className="wallet-hud" title={t(lang, "wallet")}>
+            <span className="wallet-label">{t(lang, "wallet")}</span>
+            <span className="wallet-val">{mePlayer?.chips ?? 0}</span>
+          </div>
         </div>
       </header>
 
@@ -141,15 +152,13 @@ export default function App() {
             </div>
           </div>
 
-          {[0, 1, 2, 3, 4, 5].map((s) => (
+          {[0, 1, 2, 3, 4, 5, 6, 7].map((s) => (
             <div key={s} className={`seat-anchor seat-${s}`}>
               <SeatView
                 cls={`s${s}`}
                 player={bySeat(s)}
                 showCards={["reveal", "payout", "nextRound"].includes(state.phase)}
                 hole={bySeat(s)?.id === me ? hole : undefined}
-                rim={RIM[s]}
-                crown={s === 3}
               />
             </div>
           ))}
@@ -162,20 +171,31 @@ export default function App() {
             </div>
           )}
         </div>
+
+        {showWinner && (
+          <div className="winner-banner" key={state.timerEndsAt || "payout"}>
+            <div className="winner-title">{t(lang, "winner")}</div>
+            <div className="winner-names">
+              {winners.length
+                ? winners.map((w) => w.name).join(" · ")
+                : t(lang, mePlayer?.lastResult === "draw" ? "draw" : "youLose")}
+            </div>
+          </div>
+        )}
       </section>
 
       <footer className="action-bar">
         <div className="actions">
-          <button className="gem fold" disabled={isDealer} onClick={() => emit("fold")}>{t(lang, "fold")}</button>
-          <button className="gem check" onClick={() => emit("check")}>{t(lang, "check")}</button>
-          <button className="gem call" disabled={!betting || isDealer} onClick={() => emit("bet", state.minBet)}>{t(lang, "call")}</button>
-          <button className="gem bet" disabled={!betting || isDealer} onClick={() => emit("bet", chip)}>{t(lang, "bet")}</button>
-          <button className="gem raise" disabled={!betting || isDealer} onClick={() => emit("bet", chip * 2)}>{t(lang, "raise")}</button>
-          <button className="gem allin" disabled={!betting || isDealer} onClick={() => emit("allin")}>{t(lang, "allin")}</button>
+          <button className="gem fold" disabled={isDealer} onClick={tap("fold")}>{t(lang, "fold")}</button>
+          <button className="gem check" onClick={tap("check")}>{t(lang, "check")}</button>
+          <button className="gem call" disabled={!betting || isDealer} onClick={tap("bet", state.minBet)}>{t(lang, "call")}</button>
+          <button className="gem bet" disabled={!betting || isDealer} onClick={tap("bet", chip)}>{t(lang, "bet")}</button>
+          <button className="gem raise" disabled={!betting || isDealer} onClick={tap("bet", chip * 2)}>{t(lang, "raise")}</button>
+          <button className="gem allin" disabled={!betting || isDealer} onClick={tap("allin")}>{t(lang, "allin")}</button>
         </div>
         <div className="tray">
           {CHIP_VALUES.map((v) => (
-            <button key={v} className={`chip c${v} ${chip === v ? "on" : ""}`} onClick={() => setChip(v)}>
+            <button key={v} className={`chip c${v} ${chip === v ? "on" : ""}`} onClick={(e) => { punch(e.currentTarget); setChip(v); }}>
               {v}
             </button>
           ))}
