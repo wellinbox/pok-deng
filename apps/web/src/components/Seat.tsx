@@ -35,11 +35,12 @@ export default function SeatView({
 }) {
   const cards = player && showCards ? player.revealedCards : undefined;
   const mine = hole && hole.length ? hole : cards;
-  const showSideCards = !!(player && player.cardCount > 0 && cls !== "s0");
+  const n = player ? Math.min(player.cardCount || mine?.length || 0, 3) : 0;
+  const showSideCards = !!(player && n > 0);
   const list = showSideCards
     ? mine
-      ? mine.slice(0, 2)
-      : Array.from({ length: Math.min(player!.cardCount, 2) })
+      ? mine.slice(0, n)
+      : Array.from({ length: n })
     : [];
   const src = player ? player.avatar || avatarUrl(player.id) : "";
   const crown = player?.role === "DEALER";

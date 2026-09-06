@@ -1,14 +1,26 @@
-.table-center { top: 58%; }
+.table-center { top: 50%; z-index: 2; }
 
-.seat-0 { left: 50%; top: 86%; }
-.seat-1 { left: 80%; top: 73%; }
-.seat-2 { left: 90%; top: 50%; }
-.seat-3 { left: 80%; top: 24%; }
-.seat-4 { left: 50%; top: 10%; }
-.seat-5 { left: 20%; top: 24%; }
-.seat-6 { left: 10%; top: 50%; }
-.seat-7 { left: 20%; top: 73%; }
+.seat-0 { left: 50%; top: 84%; }
+.seat-1 { left: 78%; top: 72%; }
+.seat-2 { left: 88%; top: 50%; }
+.seat-3 { left: 78%; top: 28%; }
+.seat-4 { left: 50%; top: 16%; }
+.seat-5 { left: 22%; top: 28%; }
+.seat-6 { left: 12%; top: 50%; }
+.seat-7 { left: 22%; top: 72%; }
 
-.seat-stack { gap: 5px; }
+.seat-stack { gap: 4px; }
 .s4 .seat-hud { flex-direction: column-reverse; }
-.you-hand { bottom: 28%; }
+.s4 .seat-cards { margin-top: 0; }
+
+.seat-cards .card { width: 24px; height: 34px; margin-left: -11px; }
+.s4 .seat-cards .card { width: 22px; height: 32px; }
+
+.you-hand {
+  left: 50%;
+  bottom: 4%;
+  top: auto;
+  transform: translateX(-50%);
+  z-index: 4;
+}
+.you-hand .card { width: 34px; height: 48px; }
