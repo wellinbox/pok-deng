@@ -1,0 +1,21 @@
+{
+  "name": "pok-deng",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/web",
+    "apps/server",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev": "concurrently -n web,server -c green,cyan \"npm run dev -w @pokdeng/web\" \"npm run dev -w @pokdeng/server\"",
+    "dev:web": "npm run dev -w @pokdeng/web",
+    "dev:server": "npm run dev -w @pokdeng/server",
+    "build": "npm run build -w @pokdeng/shared && npm run build -w @pokdeng/server && npm run build -w @pokdeng/web",
+    "test": "npm run test -w @pokdeng/shared",
+    "start:server": "npm run start -w @pokdeng/server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
