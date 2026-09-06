@@ -18,15 +18,6 @@ const RIM: Record<number, string> = {
   5: "DEALER\nSB",
 };
 
-const SEAT_GRID: Record<number, string> = {
-  0: "seat-0",
-  1: "seat-1",
-  2: "seat-2",
-  3: "seat-3",
-  4: "seat-4",
-  5: "seat-5",
-};
-
 function uid() {
   const e = localStorage.getItem("pd_id");
   if (e) return e;
@@ -101,7 +92,7 @@ export default function App() {
   if (!joined || !state) {
     return (
       <>
-        <div className={`fixed top-2 left-2 z-20 text-[length:var(--fs-xs)] ${net === "online" ? "text-emerald-300" : "text-amber-300"}`}>
+        <div className={`fixed top-2 left-2 z-20 text-xs ${net === "online" ? "text-emerald-300" : "text-amber-300"}`}>
           {net === "online" ? "ออนไลน์" : net === "offline" ? "ออฟไลน์" : "กำลังต่อ..."}
         </div>
         <Landing lang={lang} setLang={setLang} onEnter={enter} />
@@ -112,37 +103,33 @@ export default function App() {
   const emit = (ev: string, payload?: unknown) => sock.current?.emit(ev, payload);
 
   return (
-    <div className="shell">
-      <header className="topgrid">
-        <div className="flex gap-[clamp(6px,1.2vw,12px)]">
-          <button className="icon-btn">⚙</button>
-          <button className="icon-btn" onClick={() => setSound((s) => !s)}>{sound ? "\ud83d\udd0a" : "\ud83d\udd07"}</button>
+    <div id="game-screen">
+      <header className="game-header">
+        <div className="icon-row">
+          <button className="icon-btn" type="button">⚙</button>
+          <button className="icon-btn" type="button" onClick={() => setSound((s) => !s)}>{sound ? "\ud83d\udd0a" : "\ud83d\udd07"}</button>
         </div>
-        <div className="justify-self-center">
-          <div className="logo-hex">
-            <div className="th">ป๊อกเด้ง</div>
-            <div className="en">POK DENG</div>
-          </div>
+        <div className="logo-hex">
+          <div className="th">ป๊อกเด้ง</div>
+          <div className="en">POK DENG</div>
         </div>
-        <div className="flex gap-[clamp(6px,1.2vw,12px)] justify-self-end">
-          <button className="icon-btn">\ud83d\udd14</button>
-          <button className="icon-btn" onClick={() => setLang(lang === "th" ? "en" : "th")}>☰</button>
+        <div className="icon-row">
+          <button className="icon-btn" type="button">\ud83d\udd14</button>
+          <button className="icon-btn" type="button" onClick={() => setLang(lang === "th" ? "en" : "th")}>☰</button>
         </div>
       </header>
 
-      {state.timerEndsAt && (
-        <div className="timer-line">{remain}s · {state.publicMessage}</div>
-      )}
+      {state.timerEndsAt && <div className="timer-line">{remain}s · {state.publicMessage}</div>}
 
-      <section className="stage">
-        <div className="table-oval table-grid">
-          <div className="pot-cell">
-            <div className="flex items-end gap-1">
-              <div className="chip c5 potchip" />
-              <div className="chip c10 potchip" />
-              <div className="chip c25 potchip" />
-              <div className="chip c50 potchip" />
-              <div className="chip c100 potchip" />
+      <section className="table-stage">
+        <div className="table">
+          <div className="table-center">
+            <div className="pot-chips">
+              <i className="chip c5 potchip" />
+              <i className="chip c10 potchip" />
+              <i className="chip c25 potchip" />
+              <i className="chip c50 potchip" />
+              <i className="chip c100 potchip" />
             </div>
             <div className="pot-box">
               <div className="pot-label">{t(lang, "pot")}</div>
@@ -151,7 +138,7 @@ export default function App() {
           </div>
 
           {[0, 1, 2, 3, 4, 5].map((s) => (
-            <div key={s} className={`seat-cell ${SEAT_GRID[s]}`}>
+            <div key={s} className={`seat-anchor seat-${s}`}>
               <SeatView
                 cls={`s${s}`}
                 player={bySeat(s)}
@@ -173,7 +160,7 @@ export default function App() {
         </div>
       </section>
 
-      <footer className="footgrid">
+      <footer className="action-bar">
         <div className="actions">
           <button className="gem fold" data-label="FOLD" disabled={isDealer} onClick={() => emit("fold")} />
           <button className="gem check" data-label="CHECK" onClick={() => emit("check")} />
