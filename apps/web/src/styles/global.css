@@ -58,8 +58,8 @@ button { font-family: inherit; border: 0; cursor: pointer; }
 
 .table-stage { position: relative; flex: 1; min-height: 0; overflow: hidden; }
 .table {
-  --tw: min(90vw, calc((100dvh - var(--header-h) - var(--action-h) - var(--safe-top) - var(--safe-bot)) * 1.55));
-  --th: min(calc(100dvh - var(--header-h) - var(--action-h) - var(--safe-top) - var(--safe-bot) - 8px), calc(90vw * 0.62));
+  --tw: min(92vw, calc((100dvh - var(--header-h) - var(--action-h) - var(--safe-top) - var(--safe-bot)) * 1.6));
+  --th: min(calc(100dvh - var(--header-h) - var(--action-h) - var(--safe-top) - var(--safe-bot) - 8px), calc(92vw * 0.64));
   width: var(--tw);
   height: var(--th);
   border-radius: 50%;
@@ -92,30 +92,33 @@ button { font-family: inherit; border: 0; cursor: pointer; }
 .pot-label { font-size: 12px; color: #f0d78a; }
 .pot-value { font-family: Cinzel, serif; font-size: 18px; color: #fff4c8; }
 
-.seat-anchor { position: absolute; left: 50%; top: 50%; width: 0; height: 0; z-index: 3; }
-.seat-anchor > * {
-  position: absolute; left: 0; top: 0;
-  transform: translate(-50%, -50%) rotate(var(--a)) translateY(calc(var(--th) * -0.44)) rotate(calc(var(--a) * -1));
+.seat-anchor {
+  position: absolute;
+  width: 0; height: 0; z-index: 3;
+  transform: translate(-50%, -50%);
 }
-.seat-0 { --a: 180deg; }
-.seat-1 { --a: 108deg; }
-.seat-2 { --a: 52deg; }
-.seat-3 { --a: 0deg; }
-.seat-4 { --a: -52deg; }
-.seat-5 { --a: -108deg; }
+.seat-anchor > * { position: relative; }
+.seat-0 { left: 50%; top: 90%; }
+.seat-1 { left: 84%; top: 76%; }
+.seat-2 { left: 94%; top: 50%; }
+.seat-3 { left: 84%; top: 24%; }
+.seat-4 { left: 50%; top: 10%; }
+.seat-5 { left: 16%; top: 24%; }
+.seat-6 { left: 6%; top: 50%; }
+.seat-7 { left: 16%; top: 76%; }
 
-.seat-stack { display: flex; align-items: center; gap: 4px; }
-.seat-hud { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-.seat-cards { display: flex; pointer-events: none; }
-.seat-cards .card { width: 30px; height: 42px; margin-left: -10px; }
+.seat-stack { display: flex; align-items: center; gap: 8px; }
+.seat-hud { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: none; }
+.seat-cards { display: flex; pointer-events: none; flex: none; }
+.seat-cards .card { width: 28px; height: 40px; margin-left: -12px; }
 .seat-cards .card:first-child { margin-left: 0; transform: rotate(-8deg); }
 .seat-cards .card:last-child { transform: rotate(8deg); }
-.s3.seat-stack { flex-direction: column-reverse; }
+.s4.seat-stack { flex-direction: column-reverse; }
 .s0.seat-stack { flex-direction: column; }
-.s5.seat-stack, .s4.seat-stack { flex-direction: row-reverse; }
-.s1.seat-stack, .s2.seat-stack { flex-direction: row; }
+.s5.seat-stack, .s6.seat-stack, .s7.seat-stack { flex-direction: row-reverse; }
+.s1.seat-stack, .s2.seat-stack, .s3.seat-stack { flex-direction: row; }
 
-.you-hand { position: absolute; left: 50%; bottom: 22%; transform: translateX(-50%); display: flex; z-index: 4; }
+.you-hand { position: absolute; left: 50%; bottom: 26%; transform: translateX(-50%); display: flex; z-index: 4; }
 .you-hand .card { margin-left: -12px; }
 .you-hand .card:nth-child(1) { transform: rotate(-12deg); }
 .you-hand .card:nth-child(2) { transform: rotate(-2deg); z-index: 2; }
@@ -137,14 +140,14 @@ button { font-family: inherit; border: 0; cursor: pointer; }
 .red { color: #c4122f; } .black { color: #161616; }
 
 .avatar {
-  width: 32px; height: 32px; border-radius: 50%;
+  width: 30px; height: 30px; border-radius: 50%;
   background: radial-gradient(circle at 40% 30%, #222, #050505);
   border: 2px solid var(--gold);
   display: grid; place-items: center; overflow: hidden;
 }
-.avatar svg { width: 20px; height: 20px; }
+.avatar svg { width: 18px; height: 18px; }
 .nameplate {
-  min-width: 52px; max-width: 64px;
+  min-width: 48px; max-width: 58px;
   background: #070705; border: 1px solid #c9a44a; border-radius: 3px;
   font-size: 8px; line-height: 1.2; text-align: center; padding: 0 4px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -172,11 +175,6 @@ button { font-family: inherit; border: 0; cursor: pointer; }
   border-radius: 50%; position: relative;
   border: 3px solid #e8c86a; min-width: 44px; min-height: 44px;
   box-shadow: inset 0 3px 6px rgba(255,255,255,.35), 0 6px 10px #0007;
-}
-.gem::after {
-  content: attr(data-label);
-  position: absolute; left: 50%; top: calc(100% + 3px); transform: translateX(-50%);
-  color: #efe0b0; font-size: 9px; font-weight: 800; white-space: nowrap;
 }
 .gem:disabled { filter: grayscale(.55) brightness(.62); }
 .gem.fold { background: radial-gradient(circle at 35% 28%, #ff8a8a, #b11422 55%, #4a060a); }
@@ -222,5 +220,5 @@ button { font-family: inherit; border: 0; cursor: pointer; }
   .action-bar { flex-direction: row; justify-content: center; gap: 16px; height: auto; }
   .gem { max-width: 72px; }
   .chip { width: 42px; height: 42px; }
-  .avatar { width: 38px; height: 38px; }
+  .avatar { width: 36px; height: 36px; }
 }
