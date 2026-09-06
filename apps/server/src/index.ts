@@ -5,15 +5,16 @@ import { Server } from "socket.io";
 import { GameRoom } from "./room.js";
 
 const PORT = Number(process.env.PORT || 3001);
-const ORIGIN = process.env.CLIENT_ORIGIN || "*";
 
 const app = express();
-app.use(cors({ origin: ORIGIN === "*" ? true : ORIGIN.split(",") }));
+app.use(cors({ origin: true }));
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: ORIGIN === "*" ? true : ORIGIN.split(","), methods: ["GET", "POST"] },
+  cors: { origin: true, methods: ["GET", "POST"] },
+  transports: ["polling", "websocket"],
+  allowEIO3: true,
 });
 
 const rooms = new Map<string, GameRoom>();
@@ -100,6 +101,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`Pok Deng server on :${PORT}`);
 });

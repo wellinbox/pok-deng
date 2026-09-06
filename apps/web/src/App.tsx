@@ -7,7 +7,9 @@ import SeatView from "./components/Seat";
 import PlayingCard from "./components/PlayingCard";
 import { Lang, t } from "./i18n";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:3001";
+const SOCKET_URL =
+  import.meta.env.VITE_SOCKET_URL ||
+  "https://pok-deng-production.up.railway.app";
 
 function uid() {
   const e = localStorage.getItem("pd_id");
@@ -25,12 +27,27 @@ export default function App() {
   const [chip, setChip] = useState(10);
   const [sound, setSound] = useState(true);
   const [chat, setChat] = useState("");
+  const [net, setNet] = useState<"connecting" | "online" | "offline">("connecting");
   const sock = useRef<Socket | null>(null);
+  const pending = useRef<Record<string, unknown> | null>(null);
   const me = uid();
 
   useEffect(() => {
-    const s = io(SOCKET_URL, { transports: ["websocket", "polling"] });
+    const s = io(SOCKET_URL, {
+      transports: ["polling", "websocket"],
+      withCredentials: false,
+      reconnection: true,
+    });
     sock.current = s;
+    s.on("connect", () => {
+      setNet("online");
+      if (pending.current) {
+        s.emit("join", pending.current);
+        pending.current = null;
+      }
+    });
+    s.on("disconnect", () => setNet("offline"));
+    s.on("connect_error", () => setNet("offline"));
     s.on("state", (st: RoomState) => {
       setState(st);
       setJoined(true);
@@ -43,12 +60,24 @@ export default function App() {
   }, []);
 
   const enter = (opts: { name: string; roomId?: string; solo?: boolean; create?: boolean }) => {
-    sock.current?.emit("join", {
+    const payload = {
       playerId: me,
       name: opts.name,
       roomId: opts.create ? undefined : opts.roomId,
       solo: !!opts.solo,
-    });
+    };
+    const s = sock.current;
+    if (s?.connected) {
+      s.emit("join", payload);
+    } else {
+      pending.current = payload;
+      s?.connect();
+      window.setTimeout(() => {
+        if (!sock.current?.connected) {
+          alert("ต่อเซิร์ฟเวอร์ไม่สำเร็จ: " + SOCKET_URL);
+        }
+      }, 8000);
+    }
   };
 
   const mePlayer = state?.players.find((p) => p.id === me);
@@ -63,7 +92,14 @@ export default function App() {
   const bySeat = (n: number) => state?.players.find((p) => p.seat === n);
 
   if (!joined || !state) {
-    return <Landing lang={lang} setLang={setLang} onEnter={enter} />;
+    return (
+      <>
+        <div style={{ position: "fixed", top: 8, left: 8, zIndex: 20, fontSize: 12, color: net === "online" ? "#8dffb0" : "#ffd36b" }}>
+          {net === "online" ? "ออนไลน์" : net === "offline" ? "ออฟไลน์ · " + SOCKET_URL : "กำลังต่อเซิร์ฟเวอร์..."}
+        </div>
+        <Landing lang={lang} setLang={setLang} onEnter={enter} />
+      </>
+    );
   }
 
   const emit = (ev: string, payload?: unknown) => sock.current?.emit(ev, payload);
@@ -74,7 +110,7 @@ export default function App() {
         <div className="icon-row">
           <button className="icon-btn" title="settings">⚙</button>
           <button className="icon-btn" title="sound" onClick={() => setSound((s) => !s)}>
-            {sound ? "\ud83d\udd0a" : "\ud83d\udd07"}
+            {sound ? "🔊" : "🔇"}
           </button>
         </div>
         <div className="logo-wrap">
@@ -85,7 +121,7 @@ export default function App() {
           <div className="msg">{t(lang, "room")} {state.roomId}</div>
         </div>
         <div className="icon-row">
-          <button className="icon-btn">\ud83d\udd14</button>
+          <button className="icon-btn">🔔</button>
           <button className="icon-btn" onClick={() => setLang(lang === "th" ? "en" : "th")}>☰</button>
         </div>
       </div>
