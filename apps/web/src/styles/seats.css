@@ -14,8 +14,11 @@
 .s4 .seat-hud { flex-direction: column; }
 .s4 .seat-cards { order: -1; }
 
-.seat-cards .card { width: 24px; height: 34px; margin-left: -11px; }
-.s4 .seat-cards .card { width: 22px; height: 32px; }
+.seat-cards .card { width: 34px; height: 48px; margin-left: -12px; }
+.s4 .seat-cards .card { width: 32px; height: 46px; }
+.seat-cards .card .rank { font-size: 12px; }
+.seat-cards .card .suit { font-size: 10px; }
+.seat-cards .card .suit-lg { font-size: 16px; }
 
 .you-hand {
   left: 50%;
@@ -24,4 +27,6 @@
   transform: translateX(-50%);
   z-index: 4;
 }
-.you-hand .card { width: 32px; height: 46px; }
+.you-hand .card { width: 42px; height: 60px; }
+.you-hand .card .rank { font-size: 14px; }
+.you-hand .card .suit-lg { font-size: 18px; }
