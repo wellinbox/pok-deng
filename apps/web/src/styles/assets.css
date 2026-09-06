@@ -1,0 +1,66 @@
+/* UI Asset Sheets only — do not use gameplay screenshots */
+:root {
+  --sheet-table: url("/assets/sheet-table-cards.jpg");
+  --sheet-ui: url("/assets/sheet-ui-chips.jpg");
+  --sheet-logo: url("/assets/sheet-logo-icons.jpg");
+}
+
+.table {
+  background-image:
+    radial-gradient(circle at 50% 46%, rgba(255,255,255,0.05), transparent 18%),
+    var(--sheet-table);
+  background-size: auto, 220% auto;
+  background-position: center, 6% 4%;
+  background-repeat: no-repeat;
+}
+
+.logo-hex {
+  background-image: var(--sheet-logo);
+  background-size: 280% auto;
+  background-position: 6% 5%;
+  background-repeat: no-repeat;
+}
+
+.card.back {
+  background-image: var(--sheet-table);
+  background-size: 900% auto;
+  background-position: 4% 28%;
+  background-repeat: no-repeat;
+}
+
+.gem.fold {
+  background-image: var(--sheet-ui);
+  background-size: 620% auto;
+  background-position: 6% 62%;
+}
+.gem.check {
+  background-image: var(--sheet-ui);
+  background-size: 620% auto;
+  background-position: 24% 62%;
+}
+.gem.call {
+  background-image: var(--sheet-ui);
+  background-size: 620% auto;
+  background-position: 42% 62%;
+}
+.gem.bet {
+  background-image: var(--sheet-ui);
+  background-size: 620% auto;
+  background-position: 60% 62%;
+}
+.gem.raise {
+  background-image: var(--sheet-ui);
+  background-size: 620% auto;
+  background-position: 78% 62%;
+}
+.gem.allin {
+  background-image: var(--sheet-ui);
+  background-size: 620% auto;
+  background-position: 96% 62%;
+}
+
+.chip.c5 { background-image: var(--sheet-ui); background-size: 900% auto; background-position: 52% 8%; }
+.chip.c10 { background-image: var(--sheet-ui); background-size: 900% auto; background-position: 62% 8%; }
+.chip.c25 { background-image: var(--sheet-ui); background-size: 900% auto; background-position: 72% 8%; }
+.chip.c50 { background-image: var(--sheet-ui); background-size: 900% auto; background-position: 82% 8%; }
+.chip.c100 { background-image: var(--sheet-ui); background-size: 900% auto; background-position: 93% 8%; }
