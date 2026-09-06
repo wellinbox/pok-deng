@@ -1,0 +1,51 @@
+export type Lang = "th" | "en";
+
+export const t = (lang: Lang, key: string) => {
+  const dict: Record<Lang, Record<string, string>> = {
+    th: {
+      title: "ป๊อกเด้ง",
+      subtitle: "ห้องไพ่หรู · ชิปในเกมเท่านั้น",
+      name: "ชื่อผู้เล่น",
+      create: "สร้างห้อง",
+      join: "เข้าห้อง",
+      code: "รหัสห้อง 6 ตัว",
+      solo: "ฝึกเล่นคนเดียว (AI)",
+      pot: "เงินเดิมพัน",
+      fold: "FOLD",
+      check: "CHECK",
+      call: "CALL",
+      bet: "BET",
+      raise: "RAISE",
+      allin: "ALL-IN",
+      hit: "HIT",
+      stand: "STAND",
+      chat: "แชท",
+      history: "ประวัติรอบ",
+      send: "ส่ง",
+      room: "ห้อง",
+    },
+    en: {
+      title: "Pok Deng",
+      subtitle: "Luxury table · in-game chips only",
+      name: "Player name",
+      create: "Create room",
+      join: "Join",
+      code: "6-letter code",
+      solo: "Solo practice (AI)",
+      pot: "POT",
+      fold: "FOLD",
+      check: "CHECK",
+      call: "CALL",
+      bet: "BET",
+      raise: "RAISE",
+      allin: "ALL-IN",
+      hit: "HIT",
+      stand: "STAND",
+      chat: "Chat",
+      history: "Round log",
+      send: "Send",
+      room: "Room",
+    },
+  };
+  return dict[lang][key] ?? key;
+};
