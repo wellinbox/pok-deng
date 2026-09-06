@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs_20"]
+
+[phases.install]
+cmds = ["npm install"]
+
+[phases.build]
+cmds = ["npm run build -w @pokdeng/shared", "npm run build -w @pokdeng/server"]
+
+[start]
+cmd = "node apps/server/dist/index.js"
