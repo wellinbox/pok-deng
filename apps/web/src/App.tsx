@@ -83,6 +83,7 @@ export default function App() {
   const mePlayer = state?.players.find((p) => p.id === me);
   const isDealer = state?.dealerId === me;
   const betting = state?.phase === "waiting" || state?.phase === "betting";
+  const revealed = ["reveal", "payout", "nextRound"].includes(state?.phase || "");
   const myTurn =
     !!state &&
     state.phase === "playerAction" &&
@@ -164,13 +165,13 @@ export default function App() {
               <SeatView
                 cls={`s${s}`}
                 player={bySeat(s)}
-                showCards={["reveal", "payout", "nextRound"].includes(state.phase)}
+                showCards={revealed}
                 hole={bySeat(s)?.id === me ? hole : undefined}
               />
             </div>
           ))}
 
-          {mePlayer && hole.length > 0 && (
+          {mePlayer && hole.length > 0 && !revealed && (
             <div className="you-hand">
               {hole.map((c, i) => (
                 <PlayingCard key={c.id} card={c} i={i} />
@@ -181,7 +182,7 @@ export default function App() {
 
         {myTurn && (
           <div className="draw-choice">
-            <div className="draw-hint">{t(lang, lang === "th" ? "hit" : "hit")} / {t(lang, "stand")}</div>
+            <div className="draw-hint">{t(lang, "hit")} / {t(lang, "stand")}</div>
             <div className="draw-row">
               <button className="draw-btn hit" onClick={tap("hit")}>{t(lang, "hit")}</button>
               <button className="draw-btn stand" onClick={tap("stand")}>{t(lang, "stand")}</button>
