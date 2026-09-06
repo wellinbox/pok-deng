@@ -19,12 +19,12 @@ const RIM: Record<number, string> = {
 };
 
 const SEAT_GRID: Record<number, string> = {
-  0: "col-start-6 col-span-2 row-start-8 self-end justify-self-center",
-  1: "col-start-11 col-span-2 row-start-5 self-center justify-self-end",
-  2: "col-start-10 col-span-2 row-start-2 self-start justify-self-end",
-  3: "col-start-6 col-span-2 row-start-1 self-start justify-self-center",
-  4: "col-start-2 col-span-2 row-start-2 self-start justify-self-start",
-  5: "col-start-1 col-span-2 row-start-5 self-center justify-self-start",
+  0: "seat-0",
+  1: "seat-1",
+  2: "seat-2",
+  3: "seat-3",
+  4: "seat-4",
+  5: "seat-5",
 };
 
 function uid() {
@@ -101,7 +101,7 @@ export default function App() {
   if (!joined || !state) {
     return (
       <>
-        <div className={`fixed top-2 left-2 z-20 text-xs ${net === "online" ? "text-emerald-300" : "text-amber-300"}`}>
+        <div className={`fixed top-2 left-2 z-20 text-[length:var(--fs-xs)] ${net === "online" ? "text-emerald-300" : "text-amber-300"}`}>
           {net === "online" ? "ออนไลน์" : net === "offline" ? "ออฟไลน์" : "กำลังต่อ..."}
         </div>
         <Landing lang={lang} setLang={setLang} onEnter={enter} />
@@ -112,9 +112,9 @@ export default function App() {
   const emit = (ev: string, payload?: unknown) => sock.current?.emit(ev, payload);
 
   return (
-    <div className="h-full w-full grid grid-rows-[72px_minmax(0,1fr)_132px]">
-      <header className="grid grid-cols-3 items-center px-5 pt-2">
-        <div className="flex gap-3">
+    <div className="shell">
+      <header className="topgrid">
+        <div className="flex gap-[clamp(6px,1.2vw,12px)]">
           <button className="icon-btn">⚙</button>
           <button className="icon-btn" onClick={() => setSound((s) => !s)}>{sound ? "\ud83d\udd0a" : "\ud83d\udd07"}</button>
         </div>
@@ -124,36 +124,34 @@ export default function App() {
             <div className="en">POK DENG</div>
           </div>
         </div>
-        <div className="flex gap-3 justify-self-end">
+        <div className="flex gap-[clamp(6px,1.2vw,12px)] justify-self-end">
           <button className="icon-btn">\ud83d\udd14</button>
           <button className="icon-btn" onClick={() => setLang(lang === "th" ? "en" : "th")}>☰</button>
         </div>
       </header>
 
       {state.timerEndsAt && (
-        <div className="absolute top-16 left-1/2 -translate-x-1/2 text-xs text-amber-200 z-10">
-          {remain}s · {state.publicMessage}
-        </div>
+        <div className="timer-line">{remain}s · {state.publicMessage}</div>
       )}
 
-      <section className="grid place-items-center min-h-0 px-3">
-        <div className="table-oval relative w-[min(1080px,94vw)] h-[min(520px,58vh)] grid grid-cols-12 grid-rows-8 p-6">
-          <div className="col-start-5 col-span-4 row-start-4 row-span-2 grid place-items-center gap-2">
-            <div className="flex items-end gap-1 drop-shadow-lg">
-              <div className="chip c5 !w-7 !h-7" />
-              <div className="chip c10 !w-7 !h-7" />
-              <div className="chip c25 !w-7 !h-7" />
-              <div className="chip c50 !w-7 !h-7" />
-              <div className="chip c100 !w-7 !h-7" />
+      <section className="stage">
+        <div className="table-oval table-grid">
+          <div className="pot-cell">
+            <div className="flex items-end gap-1">
+              <div className="chip c5 potchip" />
+              <div className="chip c10 potchip" />
+              <div className="chip c25 potchip" />
+              <div className="chip c50 potchip" />
+              <div className="chip c100 potchip" />
             </div>
             <div className="pot-box">
-              <div className="text-[13px] text-amber-200">{t(lang, "pot")}</div>
-              <div className="font-[Cinzel] text-xl text-amber-100">{state.pot}</div>
+              <div className="pot-label">{t(lang, "pot")}</div>
+              <div className="pot-value">{state.pot}</div>
             </div>
           </div>
 
           {[0, 1, 2, 3, 4, 5].map((s) => (
-            <div key={s} className={`grid place-items-center ${SEAT_GRID[s]}`}>
+            <div key={s} className={`seat-cell ${SEAT_GRID[s]}`}>
               <SeatView
                 cls={`s${s}`}
                 player={bySeat(s)}
@@ -166,7 +164,7 @@ export default function App() {
           ))}
 
           {mePlayer && hole.length > 0 && (
-            <div className="you-hand col-start-5 col-span-4 row-start-7 flex justify-center self-end">
+            <div className="you-hand">
               {hole.map((c, i) => (
                 <PlayingCard key={c.id} card={c} i={i} />
               ))}
@@ -175,8 +173,8 @@ export default function App() {
         </div>
       </section>
 
-      <footer className="grid grid-cols-[1fr_auto] items-end gap-4 px-6 pb-4">
-        <div className="flex justify-center gap-3">
+      <footer className="footgrid">
+        <div className="actions">
           <button className="gem fold" data-label="FOLD" disabled={isDealer} onClick={() => emit("fold")} />
           <button className="gem check" data-label="CHECK" onClick={() => emit("check")} />
           <button className="gem call" data-label="CALL" disabled={!betting || isDealer} onClick={() => emit("bet", state.minBet)} />
