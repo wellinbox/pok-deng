@@ -26,16 +26,6 @@
 .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .avatar.dealer { box-shadow: 0 0 0 2px #e0c36a, 0 0 10px #d4af3788; }
 
-.seat-1 { --a: 135deg; }
-.seat-2 { --a: 90deg; }
-.seat-3 { --a: 45deg; }
-.seat-4 { --a: 0deg; }
-.seat-5 { --a: -45deg; }
-.seat-6 { --a: -90deg; }
-.seat-7 { --a: -135deg; }
-.s6.seat-stack, .s7.seat-stack { flex-direction: row-reverse; }
-.s2.seat-stack { flex-direction: row; }
-
 .gem, .chip, .icon-btn, .row-btns button, .full-btn, .draw-btn {
   transition: transform .06s steps(2, end), filter .06s linear;
 }
