@@ -11,6 +11,13 @@ const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
   "https://pok-deng-production.up.railway.app";
 
+const RIM: Record<number, string> = {
+  1: "BB",
+  2: "DEALER\nSB",
+  3: "DEALER\nSB",
+  5: "DEALER\nSB",
+};
+
 function uid() {
   const e = localStorage.getItem("pd_id");
   if (e) return e;
@@ -26,7 +33,6 @@ export default function App() {
   const [hole, setHole] = useState<Card[]>([]);
   const [chip, setChip] = useState(10);
   const [sound, setSound] = useState(true);
-  const [chat, setChat] = useState("");
   const [net, setNet] = useState<"connecting" | "online" | "offline">("connecting");
   const sock = useRef<Socket | null>(null);
   const pending = useRef<Record<string, unknown> | null>(null);
@@ -67,35 +73,27 @@ export default function App() {
       solo: !!opts.solo,
     };
     const s = sock.current;
-    if (s?.connected) {
-      s.emit("join", payload);
-    } else {
+    if (s?.connected) s.emit("join", payload);
+    else {
       pending.current = payload;
       s?.connect();
-      window.setTimeout(() => {
-        if (!sock.current?.connected) {
-          alert("ต่อเซิร์ฟเวอร์ไม่สำเร็จ: " + SOCKET_URL);
-        }
-      }, 8000);
     }
   };
 
   const mePlayer = state?.players.find((p) => p.id === me);
   const isDealer = state?.dealerId === me;
   const betting = state?.phase === "waiting" || state?.phase === "betting";
-  const myTurn = state?.phase === "playerAction" && state.currentActorId === me;
   const remain = useMemo(() => {
     if (!state?.timerEndsAt) return 0;
     return Math.max(0, Math.ceil((state.timerEndsAt - Date.now()) / 1000));
   }, [state]);
-
   const bySeat = (n: number) => state?.players.find((p) => p.seat === n);
 
   if (!joined || !state) {
     return (
       <>
         <div style={{ position: "fixed", top: 8, left: 8, zIndex: 20, fontSize: 12, color: net === "online" ? "#8dffb0" : "#ffd36b" }}>
-          {net === "online" ? "ออนไลน์" : net === "offline" ? "ออฟไลน์ · " + SOCKET_URL : "กำลังต่อเซิร์ฟเวอร์..."}
+          {net === "online" ? "ออนไลน์" : net === "offline" ? "ออฟไลน์" : "กำลังต่อ..."}
         </div>
         <Landing lang={lang} setLang={setLang} onEnter={enter} />
       </>
@@ -109,19 +107,16 @@ export default function App() {
       <div className="topbar">
         <div className="icon-row">
           <button className="icon-btn" title="settings">⚙</button>
-          <button className="icon-btn" title="sound" onClick={() => setSound((s) => !s)}>
-            {sound ? "🔊" : "🔇"}
-          </button>
+          <button className="icon-btn" title="sound" onClick={() => setSound((s) => !s)}>{sound ? "\ud83d\udd0a" : "\ud83d\udd07"}</button>
         </div>
         <div className="logo-wrap">
           <div className="logo-hex">
             <div className="th">ป๊อกเด้ง</div>
             <div className="en">POK DENG</div>
           </div>
-          <div className="msg">{t(lang, "room")} {state.roomId}</div>
         </div>
-        <div className="icon-row">
-          <button className="icon-btn">🔔</button>
+        <div className="icon-row right">
+          <button className="icon-btn">\ud83d\udd14</button>
           <button className="icon-btn" onClick={() => setLang(lang === "th" ? "en" : "th")}>☰</button>
         </div>
       </div>
@@ -130,70 +125,53 @@ export default function App() {
         <div className="table">
           <div className="table-center">
             <div className="chip-stack">
-              <div className="chip c5" style={{ width: 28, height: 28, fontSize: 9 }}>5</div>
-              <div className="chip c10" style={{ width: 28, height: 28, fontSize: 9 }}>10</div>
-              <div className="chip c25" style={{ width: 28, height: 28, fontSize: 9 }}>25</div>
-              <div className="chip c100" style={{ width: 28, height: 28, fontSize: 9 }}>100</div>
+              <div className="chip c5" />
+              <div className="chip c10" />
+              <div className="chip c25" />
+              <div className="chip c50" />
+              <div className="chip c100" />
             </div>
-            <div className="pot-label">{t(lang, "pot")}</div>
-            <div className="pot-value">{state.pot}</div>
-            <div className="msg">{state.publicMessage}</div>
+            <div className="pot-box">
+              <div className="pot-label">{t(lang, "pot")}</div>
+              <div className="pot-value">{state.pot}</div>
+            </div>
           </div>
           {[0, 1, 2, 3, 4, 5].map((s) => {
             const p = bySeat(s);
-            const isMe = p?.id === me;
             return (
               <SeatView
                 key={s}
                 cls={`s${s}`}
                 player={p}
                 showCards={["reveal", "payout", "nextRound"].includes(state.phase)}
-                hole={isMe ? hole : undefined}
+                hole={p?.id === me ? hole : undefined}
+                rim={RIM[s]}
+                crown={s === 3}
               />
             );
           })}
+          {mePlayer && hole.length > 0 && (
+            <div className="you-hand">
+              {hole.map((c, i) => (
+                <PlayingCard key={c.id} card={c} i={i} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
-      {mePlayer && hole.length > 0 && !["reveal", "payout", "nextRound"].includes(state.phase) && (
-        <div className="you-hand">
-          {hole.map((c, i) => (
-            <PlayingCard key={c.id} card={c} i={i} />
-          ))}
-        </div>
-      )}
       <div className="bottom-bar">
         <div className="actions">
-          <button className="gem fold" disabled={isDealer} onClick={() => emit("fold")}>{t(lang, "fold")}</button>
-          <button className="gem check" onClick={() => emit("check")}>{t(lang, "check")}</button>
-          <button className="gem call" disabled={!betting || isDealer} onClick={() => emit("bet", state.minBet)}>{t(lang, "call")}</button>
-          <button className="gem bet" disabled={!betting || isDealer} onClick={() => emit("bet", chip)}>{t(lang, "bet")}</button>
-          <button className="gem raise" disabled={!betting || isDealer} onClick={() => emit("bet", chip * 2)}>{t(lang, "raise")}</button>
-          <button className="gem allin" disabled={!betting || isDealer} onClick={() => emit("allin")}>{t(lang, "allin")}</button>
-          <button className="gem hit" disabled={!myTurn} onClick={() => emit("hit")}>{t(lang, "hit")}</button>
-          <button className="gem stand" disabled={!myTurn} onClick={() => emit("stand")}>{t(lang, "stand")}</button>
+          <button className="gem fold" data-label="FOLD" disabled={isDealer} onClick={() => emit("fold")} />
+          <button className="gem check" data-label="CHECK" onClick={() => emit("check")} />
+          <button className="gem call" data-label="CALL" disabled={!betting || isDealer} onClick={() => emit("bet", state.minBet)} />
+          <button className="gem bet" data-label="BET" disabled={!betting || isDealer} onClick={() => emit("bet", chip)} />
+          <button className="gem raise" data-label="RAISE" disabled={!betting || isDealer} onClick={() => emit("bet", chip * 2)} />
+          <button className="gem allin" data-label="ALL-IN" disabled={!betting || isDealer} onClick={() => emit("allin")} />
         </div>
         <div className="tray">
           {CHIP_VALUES.map((v) => (
             <button key={v} className={`chip c${v} ${chip === v ? "on" : ""}`} onClick={() => setChip(v)}>{v}</button>
           ))}
-        </div>
-      </div>
-      <div className="side-dock">
-        <div className="panel">
-          <h4>{t(lang, "history")}</h4>
-          <div className="hist">{(state.lastHistory || []).map((h, i) => <div key={i}>{h}</div>)}</div>
-        </div>
-        <div className="panel">
-          <h4>{t(lang, "chat")}</h4>
-          <div className="chat-log">
-            {state.chat.map((c) => (
-              <div key={c.id}><b>{c.name}:</b> {c.text}</div>
-            ))}
-          </div>
-          <div className="chat-row">
-            <input value={chat} onChange={(e) => setChat(e.target.value)} />
-            <button onClick={() => { emit("chat", chat); setChat(""); }}>{t(lang, "send")}</button>
-          </div>
         </div>
       </div>
     </div>
