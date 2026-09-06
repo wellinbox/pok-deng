@@ -1,11 +1,14 @@
-/* Compact ring just inside the gold rail */
+.table-center { top: 58%; }
+
 .seat-0 { left: 50%; top: 86%; }
 .seat-1 { left: 80%; top: 73%; }
 .seat-2 { left: 90%; top: 50%; }
-.seat-3 { left: 80%; top: 27%; }
-.seat-4 { left: 50%; top: 14%; }
-.seat-5 { left: 20%; top: 27%; }
+.seat-3 { left: 80%; top: 24%; }
+.seat-4 { left: 50%; top: 10%; }
+.seat-5 { left: 20%; top: 24%; }
 .seat-6 { left: 10%; top: 50%; }
 .seat-7 { left: 20%; top: 73%; }
+
 .seat-stack { gap: 5px; }
+.s4 .seat-hud { flex-direction: column-reverse; }
 .you-hand { bottom: 28%; }
