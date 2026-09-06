@@ -38,22 +38,24 @@ export default function SeatView({
 }) {
   const cards = player && showCards ? player.revealedCards : undefined;
   const mine = hole && hole.length ? hole : cards;
+  const showSideCards = player && player.cardCount > 0 && cls !== "s0";
   return (
-    <div className={`seat ${cls}`}>
-      <div className="hand-row">
-        {player && player.cardCount > 0 && cls !== "s0" &&
-          (mine
-            ? mine.slice(0, 2).map((c, i) => <PlayingCard key={c.id} card={showCards ? c : undefined} i={i} />)
-            : Array.from({ length: Math.min(player.cardCount, 2) }).map((_, i) => <PlayingCard key={i} i={i} />))}
-      </div>
-      <div className="avatar-wrap">
+    <div className="grid justify-items-center gap-1">
+      {showSideCards && (
+        <div className="flex -space-x-2">
+          {(mine ? mine.slice(0, 2) : Array.from({ length: Math.min(player.cardCount, 2) })).map((c, i) => (
+            <PlayingCard key={typeof c === "object" && c ? c.id : i} card={showCards && typeof c === "object" ? c : undefined} i={i} />
+          ))}
+        </div>
+      )}
+      <div className={`flex items-center gap-1 ${cls === "s1" || cls === "s2" ? "flex-row-reverse" : ""}`}>
         {rim && <div className="rim-badge">{rim}</div>}
-        <div className={`avatar ${crown ? "crown" : ""}`}>
+        <div className="avatar">
           <Silhouette crown={crown} />
         </div>
       </div>
-      <div className={`nameplate ${player ? "" : "empty"}`}>{player?.name || ""}</div>
-      {player && <div className="chips-mini">{player.chips}</div>}
+      <div className={`nameplate ${player ? "" : "text-transparent"}`}>{player?.name || "."}</div>
+      {player && <div className="text-[10px] text-amber-200/80">{player.chips}</div>}
     </div>
   );
 }
