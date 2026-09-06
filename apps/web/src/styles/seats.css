@@ -1,10 +1,11 @@
-/* Keep player info inside the felt, just inside the gold rail */
-.seat-0 { left: 50%; top: 82%; }
-.seat-1 { left: 76%; top: 70%; }
-.seat-2 { left: 86%; top: 50%; }
-.seat-3 { left: 76%; top: 30%; }
-.seat-4 { left: 50%; top: 18%; }
-.seat-5 { left: 24%; top: 30%; }
-.seat-6 { left: 14%; top: 50%; }
-.seat-7 { left: 24%; top: 70%; }
-.you-hand { bottom: 30%; }
+/* Compact ring just inside the gold rail */
+.seat-0 { left: 50%; top: 86%; }
+.seat-1 { left: 80%; top: 73%; }
+.seat-2 { left: 90%; top: 50%; }
+.seat-3 { left: 80%; top: 27%; }
+.seat-4 { left: 50%; top: 14%; }
+.seat-5 { left: 20%; top: 27%; }
+.seat-6 { left: 10%; top: 50%; }
+.seat-7 { left: 20%; top: 73%; }
+.seat-stack { gap: 5px; }
+.you-hand { bottom: 28%; }
