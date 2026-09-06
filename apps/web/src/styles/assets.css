@@ -56,14 +56,15 @@
 .draw-choice {
   position: absolute;
   left: 50%;
-  top: 52%;
+  top: 50%;
   transform: translate(-50%, -50%);
   z-index: 25;
   text-align: center;
-  animation: punch .35s cubic-bezier(.15,1.6,.3,1);
+  transform-origin: center center;
+  animation: popCenter .28s cubic-bezier(.2,1.5,.3,1);
 }
 .draw-hint { font-size: 11px; color: #f0d78a; margin-bottom: 8px; font-weight: 700; }
-.draw-row { display: flex; gap: 12px; }
+.draw-row { display: flex; gap: 12px; justify-content: center; }
 .draw-btn {
   min-width: 108px;
   min-height: 48px;
@@ -77,6 +78,11 @@
 }
 .draw-btn.hit { background: radial-gradient(circle at 30% 25%, #7ad4ff, #1560d0 58%, #08245c); }
 .draw-btn.stand { background: radial-gradient(circle at 30% 25%, #9dffb4, #0f8a3e 58%, #053c1c); }
+@keyframes popCenter {
+  0% { transform: translate(-50%, -50%) scale(.55); opacity: 0; }
+  70% { transform: translate(-50%, -50%) scale(1.06); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
 
 .winner-banner {
   position: absolute; left: 50%; top: 18%; transform: translateX(-50%);
@@ -98,11 +104,11 @@
   text-shadow: 0 0 12px #d4af37aa;
 }
 @keyframes winnerIn {
-  0% { transform: translateX(-50%) scale(.6) rotate(-8deg); opacity: 0; }
-  100% { transform: translateX(-50%) scale(1) rotate(0); opacity: 1; }
+  0% { transform: translateX(-50%) scale(.6); opacity: 0; }
+  100% { transform: translateX(-50%) scale(1); opacity: 1; }
 }
 @keyframes winnerOut {
-  to { transform: translateX(-50%) scale(.85) translateY(-12px); opacity: 0; }
+  to { transform: translateX(-50%) scale(.85); opacity: 0; }
 }
 .seat-stack.is-winner .avatar {
   animation: glowWin 1.2s ease-in-out infinite alternate;
