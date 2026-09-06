@@ -1,8 +1,8 @@
-/* UI Asset Sheets only — do not use gameplay screenshots */
+/* UI Asset Sheets only — files are .jpeg */
 :root {
-  --sheet-table: url("/assets/sheet-table-cards.jpg");
-  --sheet-ui: url("/assets/sheet-ui-chips.jpg");
-  --sheet-logo: url("/assets/sheet-logo-icons.jpg");
+  --sheet-table: url("/assets/sheet-table-cards.jpeg");
+  --sheet-ui: url("/assets/sheet-ui-chips.jpeg");
+  --sheet-logo: url("/assets/sheet-logo-icons.jpeg");
 }
 
 .table {

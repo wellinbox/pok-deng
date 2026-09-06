@@ -1,9 +1,9 @@
-# UI asset sheets only
+# UI asset sheets (.jpeg)
 
-Place these files here (do not add gameplay screenshots):
+Put these files in this folder:
 
-- sheet-table-cards.jpg  <- IMG_0240 table + cards
-- sheet-ui-chips.jpg     <- IMG_0241 chips + action buttons
-- sheet-logo-icons.jpg   <- IMG_0242 logo + icons
+- sheet-table-cards.jpeg
+- sheet-ui-chips.jpeg
+- sheet-logo-icons.jpeg
 
-The UI reads them from /assets/...
+The UI loads /assets/*.jpeg
