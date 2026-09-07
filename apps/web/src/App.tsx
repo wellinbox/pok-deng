@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import type { Card, RoomState } from "@pokdeng/shared";
-import { CHIP_VALUES } from "@pokdeng/shared";
+import { CHIP_VALUES, STARTING_CHIPS, clampBuyIn } from "@pokdeng/shared";
 import Landing from "./pages/Landing";
 import SeatView from "./components/Seat";
 import ResultsBoard from "./components/ResultsBoard";
@@ -14,7 +14,7 @@ const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
   "https://pok-deng-production.up.railway.app";
 
-type Session = { roomId: string; name: string; solo: boolean };
+type Session = { roomId: string; name: string; solo: boolean; buyIn: number };
 
 function uid() {
   const e = localStorage.getItem("pd_id");
@@ -52,6 +52,7 @@ export default function App() {
   const [chip, setChip] = useState(10);
   const [sound, setSound] = useState(true);
   const [menu, setMenu] = useState(false);
+  const [joinErr, setJoinErr] = useState("");
   const [net, setNet] = useState<"connecting" | "online" | "offline">("connecting");
   const sock = useRef<Socket | null>(null);
   const session = useRef<Session | null>(loadSession());
@@ -63,8 +64,9 @@ export default function App() {
     s.emit("join", {
       playerId: me,
       name: sess.name,
-      roomId: sess.roomId,
+      roomId: sess.roomId || undefined,
       solo: sess.solo,
+      buyIn: clampBuyIn(sess.buyIn),
     });
   };
 
@@ -86,6 +88,7 @@ export default function App() {
     setState(null);
     setJoined(false);
     setMenu(false);
+    setJoinErr("");
   };
 
   useEffect(() => {
@@ -108,6 +111,7 @@ export default function App() {
     s.on("connect_error", () => setNet("offline"));
     s.on("state", (st: RoomState) => {
       if (!stay.current) return;
+      setJoinErr("");
       setState(st);
       setJoined(true);
       const prev = session.current;
@@ -115,6 +119,7 @@ export default function App() {
         roomId: st.roomId,
         name: prev?.name || localStorage.getItem("pd_name") || "ผู้เล่น",
         solo: st.solo,
+        buyIn: clampBuyIn(prev?.buyIn || Number(localStorage.getItem("pd_buyin")) || STARTING_CHIPS),
       };
       session.current = next;
       saveSession(next);
@@ -124,7 +129,8 @@ export default function App() {
       setHole(cards);
     });
     s.on("errorMsg", (m: string) => {
-      if (m === "ไม่พบห้องนี้" && !session.current?.solo) {
+      setJoinErr(m);
+      if (m === "ห้องเต็ม") {
         stay.current = false;
         session.current = null;
         localStorage.removeItem("pd_session");
@@ -157,26 +163,22 @@ export default function App() {
     };
   }, []);
 
-  const enter = (opts: { name: string; roomId?: string; solo?: boolean; create?: boolean }) => {
+  const enter = (opts: { name: string; roomId?: string; solo?: boolean; create?: boolean; buyIn: number }) => {
     const payload: Session = {
       name: opts.name,
-      roomId: opts.create ? "" : opts.solo ? `SOLO-${me.slice(0, 8)}`.toUpperCase() : (opts.roomId || "").toUpperCase(),
+      roomId: opts.create ? "" : opts.solo ? `SOLO${me.slice(0, 4)}`.toUpperCase() : (opts.roomId || "").toUpperCase(),
       solo: !!opts.solo,
+      buyIn: clampBuyIn(opts.buyIn),
     };
     stay.current = true;
     session.current = payload;
     saveSession(payload);
+    setJoinErr("");
     setJoined(true);
     const s = sock.current;
     if (!s) return;
-    if (s.connected) {
-      s.emit("join", {
-        playerId: me,
-        name: payload.name,
-        roomId: payload.roomId || undefined,
-        solo: payload.solo,
-      });
-    } else s.connect();
+    if (s.connected) emitJoin(s, payload);
+    else s.connect();
   };
 
   const mePlayer = state?.players.find((p) => p.id === me);
@@ -204,7 +206,7 @@ export default function App() {
         <div className={`fixed top-2 left-2 z-20 text-xs ${net === "online" ? "text-emerald-300" : "text-amber-300"}`}>
           {t(lang, net === "connecting" ? "connecting" : net)}
         </div>
-        <Landing lang={lang} setLang={setLang} onEnter={enter} />
+        <Landing lang={lang} setLang={setLang} onEnter={enter} error={joinErr} busy={joined && !state} />
       </>
     );
   }
@@ -237,6 +239,9 @@ export default function App() {
           </button>
         </div>
         <div className="header-right">
+          <button className="room-code" type="button" title={t(lang, "copy")} onClick={() => navigator.clipboard?.writeText(state.roomId)}>
+            {t(lang, "room")} {state.roomId}
+          </button>
           <div className="wallet-hud" title={t(lang, "wallet")}>
             <span className="wallet-label">{t(lang, "wallet")}</span>
             <span className="wallet-val">{money(mePlayer?.chips)}</span>
