@@ -5,6 +5,7 @@ import { CHIP_VALUES } from "@pokdeng/shared";
 import Landing from "./pages/Landing";
 import SeatView from "./components/Seat";
 import ResultsBoard from "./components/ResultsBoard";
+import PotHeap from "./components/PotHeap";
 import { Lang, t } from "./i18n";
 import { money } from "./lib/money";
 
@@ -232,10 +233,7 @@ export default function App() {
             <div className="rule" />
           </div>
           <div className="table-center">
-            <div className="pot-box">
-              <div className="pot-label">{t(lang, "pot")}</div>
-              <div className="pot-value">{money(state.pot)}</div>
-            </div>
+            <PotHeap amount={state.pot} />
           </div>
 
           {[0, 1, 2, 3, 4, 5, 6, 7].map((s) => (
