@@ -27,7 +27,7 @@ function stackChips(amount: number) {
   const out: number[] = [];
   let left = Math.max(0, Math.floor(amount));
   for (const v of vals) {
-    while (left >= v && out.length < 5) {
+    while (left >= v && out.length < 6) {
       out.push(v);
       left -= v;
     }
@@ -73,28 +73,32 @@ export default function SeatView({
 
   return (
     <div className={`seat-stack ${cls} ${player?.lastResult === "win" ? "is-winner" : ""} ${dealing ? "is-dealing" : ""}`}>
-      {showSideCards && (
-        <div className={`seat-cards ${dealing ? "dealing" : ""}`}>
-          {list.map((c, i) => (
-            <PlayingCard
-              key={typeof c === "object" && c ? c.id : i}
-              card={typeof c === "object" && c ? c : undefined}
-              i={i}
-            />
-          ))}
-        </div>
-      )}
-      {taemText && showCards && <div className="seat-taem">{taemText}</div>}
-      {betChips.length > 0 && (
-        <div className="bet-stack" title={`${player!.bet}`}>
-          {betChips.map((v, i) => (
-            <i key={`${v}-${i}`} className={`chip c${v} betchip`} style={{ zIndex: i + 1 }}>
-              {v}
-            </i>
-          ))}
-          <span className="bet-amt">{player!.bet}</span>
-        </div>
-      )}
+      <div className="play-pile">
+        {showSideCards && (
+          <div className={`seat-cards ${dealing ? "dealing" : ""}`}>
+            {list.map((c, i) => (
+              <PlayingCard
+                key={typeof c === "object" && c ? c.id : i}
+                card={typeof c === "object" && c ? c : undefined}
+                i={i}
+              />
+            ))}
+          </div>
+        )}
+        {taemText && showCards && <div className="seat-taem">{taemText}</div>}
+        {betChips.length > 0 && (
+          <div className="bet-stack" title={`${player!.bet}`}>
+            <div className="bet-pile">
+              {betChips.map((v, i) => (
+                <i key={`${v}-${i}`} className={`chip c${v} betchip`} style={{ zIndex: i + 1, left: `${i * 7}px` }}>
+                  {v}
+                </i>
+              ))}
+            </div>
+            <span className="bet-amt">{player!.bet}</span>
+          </div>
+        )}
+      </div>
       <div className="seat-hud">
         {rim && <div className="rim-badge">{rim}</div>}
         <div className={`avatar ${crown ? "dealer" : ""}`}>
