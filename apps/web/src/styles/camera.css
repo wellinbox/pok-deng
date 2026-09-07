@@ -1,10 +1,11 @@
-/* Camera tilt disabled — keep table flat */
 .table-stage {
   perspective: none;
   perspective-origin: 50% 50%;
 }
 .table {
-  transform: none;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   transform-origin: 50% 50%;
 }
 .seat-cards,
