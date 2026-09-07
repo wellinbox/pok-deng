@@ -22,16 +22,31 @@ function Silhouette({ crown }: { crown?: boolean }) {
   );
 }
 
+function stackChips(amount: number) {
+  const vals = [100, 50, 25, 10, 5];
+  const out: number[] = [];
+  let left = Math.max(0, Math.floor(amount));
+  for (const v of vals) {
+    while (left >= v && out.length < 5) {
+      out.push(v);
+      left -= v;
+    }
+  }
+  return out;
+}
+
 export default function SeatView({
   player,
   cls,
   showCards,
   hole,
+  dealing,
 }: {
   player?: PlayerPublic;
   cls: string;
   showCards?: boolean;
   hole?: Card[];
+  dealing?: boolean;
 }) {
   const face =
     hole && hole.length
@@ -49,11 +64,12 @@ export default function SeatView({
   const src = player ? player.avatar || avatarUrl(player.id) : "";
   const crown = player?.role === "DEALER";
   const rim = player?.role && player.role !== "DEALER" ? player.role : crown ? "DEALER" : undefined;
+  const betChips = player && player.bet > 0 ? stackChips(player.bet) : [];
 
   return (
-    <div className={`seat-stack ${cls} ${player?.lastResult === "win" ? "is-winner" : ""}`}>
+    <div className={`seat-stack ${cls} ${player?.lastResult === "win" ? "is-winner" : ""} ${dealing ? "is-dealing" : ""}`}>
       {showSideCards && (
-        <div className="seat-cards">
+        <div className={`seat-cards ${dealing ? "dealing" : ""}`}>
           {list.map((c, i) => (
             <PlayingCard
               key={typeof c === "object" && c ? c.id : i}
@@ -61,6 +77,16 @@ export default function SeatView({
               i={i}
             />
           ))}
+        </div>
+      )}
+      {betChips.length > 0 && (
+        <div className="bet-stack" title={`${player!.bet}`}>
+          {betChips.map((v, i) => (
+            <i key={`${v}-${i}`} className={`chip c${v} betchip`} style={{ zIndex: i + 1 }}>
+              {v}
+            </i>
+          ))}
+          <span className="bet-amt">{player!.bet}</span>
         </div>
       )}
       <div className="seat-hud">

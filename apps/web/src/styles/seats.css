@@ -1,13 +1,14 @@
 .table-center { top: 52%; z-index: 2; }
+.pot-chips { display: none !important; }
 
-.seat-0 { left: 50%; top: 76%; }
-.seat-1 { left: 76%; top: 64%; }
-.seat-2 { left: 84%; top: 44%; }
-.seat-3 { left: 76%; top: 22%; }
-.seat-4 { left: 50%; top: 12%; }
-.seat-5 { left: 24%; top: 22%; }
-.seat-6 { left: 16%; top: 44%; }
-.seat-7 { left: 24%; top: 64%; }
+.seat-0 { left: 50%; top: 76%; --dx: 0px; --dy: -88px; }
+.seat-1 { left: 76%; top: 64%; --dx: -70px; --dy: -40px; }
+.seat-2 { left: 84%; top: 44%; --dx: -96px; --dy: 0px; }
+.seat-3 { left: 76%; top: 22%; --dx: -70px; --dy: 48px; }
+.seat-4 { left: 50%; top: 12%; --dx: 0px; --dy: 88px; }
+.seat-5 { left: 24%; top: 22%; --dx: 70px; --dy: 48px; }
+.seat-6 { left: 16%; top: 44%; --dx: 96px; --dy: 0px; }
+.seat-7 { left: 24%; top: 64%; --dx: 70px; --dy: -40px; }
 
 .seat-stack { gap: 3px; }
 .s4.seat-stack { flex-direction: row; align-items: center; }
@@ -20,5 +21,51 @@
 .seat-cards .card .suit { font-size: 10px; }
 .seat-cards .card .suit-lg { font-size: 16px; }
 
-/* Extra center hand removed — cards live on the seat only */
+@keyframes deal-fly {
+  from {
+    transform: translate(var(--dx), var(--dy)) scale(0.45) rotate(-28deg);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.seat-cards.dealing .card {
+  animation: deal-fly 0.48s cubic-bezier(0.2, 0.85, 0.2, 1) both;
+}
+.seat-0 .seat-cards.dealing .card { animation-delay: 0.05s; }
+.seat-1 .seat-cards.dealing .card { animation-delay: 0.12s; }
+.seat-2 .seat-cards.dealing .card { animation-delay: 0.19s; }
+.seat-3 .seat-cards.dealing .card { animation-delay: 0.26s; }
+.seat-4 .seat-cards.dealing .card { animation-delay: 0.33s; }
+.seat-5 .seat-cards.dealing .card { animation-delay: 0.4s; }
+.seat-6 .seat-cards.dealing .card { animation-delay: 0.47s; }
+.seat-7 .seat-cards.dealing .card { animation-delay: 0.54s; }
+.seat-cards.dealing .card:nth-child(2) { animation-delay: calc(var(--d2, 0.18s) + inherit); }
+.seat-cards.dealing .card:nth-child(2) { animation-delay: 0.28s; }
+.seat-cards.dealing .card:nth-child(3) { animation-delay: 0.42s; }
+
+.bet-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+.bet-stack .betchip {
+  width: 22px;
+  height: 22px;
+  font-size: 8px;
+  margin-top: -10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.45);
+}
+.bet-stack .betchip:first-child { margin-top: 0; }
+.bet-amt {
+  margin-top: 2px;
+  font-size: 9px;
+  font-weight: 800;
+  color: #f3d98a;
+  text-shadow: 0 1px 2px #000;
+}
+
 .you-hand { display: none !important; }
