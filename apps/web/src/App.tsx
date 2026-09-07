@@ -6,6 +6,7 @@ import Landing from "./pages/Landing";
 import SeatView from "./components/Seat";
 import ResultsBoard from "./components/ResultsBoard";
 import PotHeap from "./components/PotHeap";
+import SettingsMenu from "./components/SettingsMenu";
 import { Lang, t } from "./i18n";
 import { money } from "./lib/money";
 
@@ -54,9 +55,11 @@ export default function App() {
   const [net, setNet] = useState<"connecting" | "online" | "offline">("connecting");
   const sock = useRef<Socket | null>(null);
   const session = useRef<Session | null>(loadSession());
+  const stay = useRef(!!loadSession());
   const me = uid();
 
   const emitJoin = (s: Socket, sess: Session) => {
+    if (!stay.current) return;
     s.emit("join", {
       playerId: me,
       name: sess.name,
@@ -66,6 +69,7 @@ export default function App() {
   };
 
   const resumeNow = () => {
+    if (!stay.current) return;
     const s = sock.current;
     const sess = session.current;
     if (!s || !sess) return;
@@ -74,6 +78,7 @@ export default function App() {
   };
 
   const leaveRoom = () => {
+    stay.current = false;
     sock.current?.emit("leave");
     session.current = null;
     localStorage.removeItem("pd_session");
@@ -97,11 +102,12 @@ export default function App() {
     sock.current = s;
     s.on("connect", () => {
       setNet("online");
-      if (session.current) emitJoin(s, session.current);
+      if (stay.current && session.current) emitJoin(s, session.current);
     });
     s.on("disconnect", () => setNet("offline"));
     s.on("connect_error", () => setNet("offline"));
     s.on("state", (st: RoomState) => {
+      if (!stay.current) return;
       setState(st);
       setJoined(true);
       const prev = session.current;
@@ -113,9 +119,13 @@ export default function App() {
       session.current = next;
       saveSession(next);
     });
-    s.on("holeCards", (cards: Card[]) => setHole(cards));
+    s.on("holeCards", (cards: Card[]) => {
+      if (!stay.current) return;
+      setHole(cards);
+    });
     s.on("errorMsg", (m: string) => {
       if (m === "ไม่พบห้องนี้" && !session.current?.solo) {
+        stay.current = false;
         session.current = null;
         localStorage.removeItem("pd_session");
         setJoined(false);
@@ -123,6 +133,7 @@ export default function App() {
       }
     });
     s.on("sessionGone", () => {
+      stay.current = false;
       session.current = null;
       localStorage.removeItem("pd_session");
       setJoined(false);
@@ -136,7 +147,7 @@ export default function App() {
     window.addEventListener("pageshow", wake);
     window.addEventListener("focus", wake);
     window.addEventListener("online", wake);
-    if (session.current && s.connected) emitJoin(s, session.current);
+    if (stay.current && session.current && s.connected) emitJoin(s, session.current);
     return () => {
       document.removeEventListener("visibilitychange", wake);
       window.removeEventListener("pageshow", wake);
@@ -152,6 +163,7 @@ export default function App() {
       roomId: opts.create ? "" : opts.solo ? `SOLO-${me.slice(0, 8)}`.toUpperCase() : (opts.roomId || "").toUpperCase(),
       solo: !!opts.solo,
     };
+    stay.current = true;
     session.current = payload;
     saveSession(payload);
     setJoined(true);
@@ -215,16 +227,7 @@ export default function App() {
             <button className="icon-btn" type="button" aria-label={t(lang, "settings")} onClick={(e) => { punch(e.currentTarget); setMenu((v) => !v); }}>
               <i className="fa-solid fa-gear" />
             </button>
-            {menu && (
-              <div className="settings-menu">
-                <button className={lang === "th" ? "on" : ""} onClick={() => setLang("th")}>
-                  <i className="fa-solid fa-language" /> {t(lang, "thai")}
-                </button>
-                <button className={lang === "en" ? "on" : ""} onClick={() => setLang("en")}>
-                  <i className="fa-solid fa-language" /> {t(lang, "english")}
-                </button>
-              </div>
-            )}
+            {menu && <SettingsMenu lang={lang} setLang={setLang} />}
           </div>
           <button className="icon-btn" type="button" aria-label={t(lang, "sound")} onClick={(e) => { punch(e.currentTarget); setSound((v) => !v); }}>
             <i className={`fa-solid ${sound ? "fa-volume-high" : "fa-volume-xmark"}`} />
