@@ -1,0 +1,65 @@
+.table {
+  box-shadow:
+    0 28px 50px #000c,
+    0 8px 16px #0008,
+    inset 0 18px 40px #fff2,
+    inset 0 -28px 40px #0007,
+    inset 18px 0 28px #0004,
+    inset -18px 0 28px #0004;
+}
+.table::after {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 18%, #fff6 0%, transparent 42%),
+    radial-gradient(ellipse at 50% 88%, #0006 0%, transparent 46%);
+  z-index: 1;
+}
+.table-center,
+.seat-anchor {
+  z-index: 2;
+}
+.card,
+.flip-card .face {
+  box-shadow:
+    0 6px 10px #0008,
+    0 1px 0 #fff8 inset,
+    -1px -1px 0 #0003 inset;
+}
+.card.back {
+  box-shadow:
+    0 7px 12px #0009,
+    inset 0 1px 0 #9dffc255;
+}
+.avatar {
+  box-shadow:
+    0 8px 14px #0009,
+    0 0 0 2px #c9a44a,
+    inset 0 6px 8px #fff3,
+    inset 0 -8px 10px #0006;
+}
+.chip,
+.betchip {
+  box-shadow:
+    0 5px 8px #0008,
+    0 1px 0 #fff7 inset,
+    0 -2px 0 #0005 inset;
+}
+.pot-box {
+  box-shadow:
+    0 10px 18px #000a,
+    inset 0 1px 0 #e0c36a66,
+    inset 0 -10px 16px #0006;
+}
+.gem {
+  box-shadow:
+    0 8px 14px #0008,
+    inset 0 6px 8px #fff4,
+    inset 0 -8px 10px #0005;
+}
+.logo-hex {
+  filter: drop-shadow(0 8px 10px #0008);
+}
