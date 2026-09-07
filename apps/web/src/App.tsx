@@ -4,6 +4,7 @@ import type { Card, RoomState } from "@pokdeng/shared";
 import { CHIP_VALUES } from "@pokdeng/shared";
 import Landing from "./pages/Landing";
 import SeatView from "./components/Seat";
+import ResultsBoard from "./components/ResultsBoard";
 import { Lang, t } from "./i18n";
 
 const SOCKET_URL =
@@ -81,7 +82,6 @@ export default function App() {
       autoConnect: true,
     });
     sock.current = s;
-
     s.on("connect", () => {
       setNet("online");
       if (session.current) emitJoin(s, session.current);
@@ -115,7 +115,6 @@ export default function App() {
       setJoined(false);
       setState(null);
     });
-
     const wake = () => {
       if (document.visibilityState === "hidden") return;
       resumeNow();
@@ -124,9 +123,7 @@ export default function App() {
     window.addEventListener("pageshow", wake);
     window.addEventListener("focus", wake);
     window.addEventListener("online", wake);
-
     if (session.current && s.connected) emitJoin(s, session.current);
-
     return () => {
       document.removeEventListener("visibilitychange", wake);
       window.removeEventListener("pageshow", wake);
@@ -174,8 +171,7 @@ export default function App() {
     return Math.max(0, Math.ceil((state.timerEndsAt - Date.now()) / 1000));
   }, [state, net]);
   const bySeat = (n: number) => state?.players.find((p) => p.seat === n);
-  const winners = (state?.players || []).filter((p) => p.lastResult === "win");
-  const showWinner = state?.phase === "payout";
+  const showBoard = state?.phase === "payout" || state?.phase === "reveal";
 
   if (!joined || !state) {
     return (
@@ -259,16 +255,7 @@ export default function App() {
           </div>
         )}
 
-        {showWinner && (
-          <div className="winner-banner" key={state.timerEndsAt || "payout"}>
-            <div className="winner-title">{t(lang, "winner")}</div>
-            <div className="winner-names">
-              {winners.length
-                ? winners.map((w) => w.name).join(" · ")
-                : t(lang, mePlayer?.lastResult === "draw" ? "draw" : "youLose")}
-            </div>
-          </div>
-        )}
+        {showBoard && <ResultsBoard players={state.players} lang={lang} />}
       </section>
 
       <footer className="action-bar">
