@@ -3,8 +3,8 @@
   width: 34px;
   height: 48px;
   perspective: 520px;
-  perspective-origin: 50% 30%;
   vertical-align: top;
+  transform-origin: center bottom;
 }
 .flip-inner {
   position: relative;
@@ -14,20 +14,36 @@
   transition: transform .5s cubic-bezier(.18,.84,.22,1);
 }
 .flip-card.is-open .flip-inner {
-  transform: rotateY(180deg) rotateX(8deg);
+  transform: rotateY(180deg);
 }
 .flip-card .face {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  margin: 0;
+  margin: 0 !important;
+  border-radius: 6px;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 .flip-card .front-face {
   transform: rotateY(180deg);
+  background: linear-gradient(#fffdf6, #efe4c8);
+  border: 1.5px solid #c9a44a;
 }
+.flip-card .back-face {
+  border: 1.5px solid #c9a44a;
+}
+.seat-cards { align-items: flex-end; }
+.seat-cards .flip-card { margin-left: -12px; }
+.seat-cards .flip-card:first-child { margin-left: 0; transform: rotate(-12deg); }
+.seat-cards .flip-card:nth-child(2) { transform: rotate(-2deg); z-index: 2; }
+.seat-cards .flip-card:nth-child(3),
+.seat-cards .flip-card:last-child:not(:first-child):not(:nth-child(2)) {
+  transform: rotate(11deg);
+  z-index: 3;
+}
+.seat-cards .flip-card:only-child { transform: none; }
 .you-hand .flip-card,
 .seat-cards .flip-card {
   width: 34px;

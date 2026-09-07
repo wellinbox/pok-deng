@@ -65,6 +65,11 @@ export default function SeatView({
   const crown = player?.role === "DEALER";
   const rim = player?.role && player.role !== "DEALER" ? player.role : crown ? "DEALER" : undefined;
   const betChips = player && player.bet > 0 ? stackChips(player.bet) : [];
+  const taemText = player?.pok
+    ? `ป๊อก ${player.pok}`
+    : player?.taem != null
+      ? `${player.taem}`
+      : "";
 
   return (
     <div className={`seat-stack ${cls} ${player?.lastResult === "win" ? "is-winner" : ""} ${dealing ? "is-dealing" : ""}`}>
@@ -79,6 +84,7 @@ export default function SeatView({
           ))}
         </div>
       )}
+      {taemText && showCards && <div className="seat-taem">{taemText}</div>}
       {betChips.length > 0 && (
         <div className="bet-stack" title={`${player!.bet}`}>
           {betChips.map((v, i) => (
