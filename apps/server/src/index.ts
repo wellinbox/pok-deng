@@ -2,13 +2,14 @@ import express from "express";
 import http from "http";
 import cors from "cors";
 import { Server } from "socket.io";
+import { clampBuyIn } from "@pokdeng/shared";
 import { GameRoom } from "./room.js";
 
 const PORT = Number(process.env.PORT || 3001);
 
 const app = express();
 app.use(cors({ origin: true }));
-app.get("/health", (_req, res) => res.json({ ok: true }));
+app.get("/health", (_req, res) => res.json({ ok: true, rooms: [...rooms?.keys?.() || []] }));
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -22,11 +23,17 @@ const io = new Server(server, {
 const rooms = new Map<string, GameRoom>();
 const leaveTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
+app.get("/health", (_req, res) => res.json({ ok: true, rooms: [...rooms.keys()] }));
+
 function code() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let s = "";
   for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
   return s;
+}
+
+function cleanCode(raw?: string) {
+  return String(raw || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 8);
 }
 
 function emitRoom(room: GameRoom) {
@@ -52,37 +59,50 @@ function attach(socket: import("socket.io").Socket, room: GameRoom, playerId: st
 }
 
 io.on("connection", (socket) => {
-  const join = ({ roomId, name, playerId, solo }: { roomId?: string; name: string; playerId: string; solo?: boolean }) => {
+  const join = (payload: { roomId?: string; name: string; playerId: string; solo?: boolean; buyIn?: number; create?: boolean }) => {
+    const playerId = String(payload?.playerId || "");
+    const name = String(payload?.name || "ผู้เล่น").slice(0, 18);
+    const chips = clampBuyIn(payload?.buyIn);
     if (!playerId) {
       socket.emit("errorMsg", "ไม่พบรหัสผู้เล่น");
       return;
     }
-    socket.data.name = name || "ผู้เล่น";
+    socket.data.name = name;
     let room: GameRoom | undefined;
-    if (solo) {
-      const id = (roomId || `SOLO-${playerId.slice(0, 8)}`).toUpperCase();
+
+    if (payload?.solo) {
+      const id = cleanCode(payload.roomId) || `SOLO${playerId.slice(0, 4)}`.toUpperCase();
       room = rooms.get(id);
       if (!room) {
-        room = new GameRoom(id, playerId, socket.data.name, () => emitRoom(room!), true);
+        room = new GameRoom(id, playerId, name, () => emitRoom(room!), true, chips);
         rooms.set(id, room);
       } else {
-        room.addPlayer(playerId, socket.data.name, socket.id);
+        room.addPlayer(playerId, name, socket.id, undefined, false, chips);
       }
-    } else if (roomId) {
-      room = rooms.get(roomId.toUpperCase());
+    } else if (payload?.create && !payload.roomId) {
+      const id = code();
+      room = new GameRoom(id, playerId, name, () => emitRoom(room!), false, chips);
+      rooms.set(id, room);
+    } else if (payload?.roomId) {
+      const id = cleanCode(payload.roomId);
+      if (id.length < 3) {
+        socket.emit("errorMsg", "รหัสห้องสั้นเกิน 3 ตัว");
+        return;
+      }
+      room = rooms.get(id);
       if (!room) {
-        socket.emit("errorMsg", "ไม่พบห้องนี้");
-        socket.emit("sessionGone");
-        return;
-      }
-      const ok = room.addPlayer(playerId, socket.data.name, socket.id);
-      if (!ok) {
-        socket.emit("errorMsg", "ห้องเต็ม");
-        return;
+        room = new GameRoom(id, playerId, name, () => emitRoom(room!), false, chips);
+        rooms.set(id, room);
+      } else {
+        const ok = room.addPlayer(playerId, name, socket.id, undefined, false, chips);
+        if (!ok) {
+          socket.emit("errorMsg", "ห้องเต็ม");
+          return;
+        }
       }
     } else {
       const id = code();
-      room = new GameRoom(id, playerId, socket.data.name, () => emitRoom(room!), false);
+      room = new GameRoom(id, playerId, name, () => emitRoom(room!), false, chips);
       rooms.set(id, room);
     }
     attach(socket, room, playerId);
@@ -116,6 +136,7 @@ io.on("connection", (socket) => {
       room.disconnect(socket.data.playerId);
       emitRoom(room);
     }
+    socket.leave(socket.data.roomId || "");
     socket.data.roomId = undefined;
   });
 
