@@ -1,0 +1,36 @@
+.pot-box { display: none !important; }
+.pot-chips { display: none !important; }
+
+.pot-heap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+.pot-cols {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+}
+.pot-col {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+}
+.pot-col .chip {
+  width: 26px;
+  height: 26px;
+  font-size: 8px;
+  margin-top: -16px;
+}
+.pot-col .chip:last-child { margin-top: 0; }
+.pot-heap-amt {
+  margin-top: 6px;
+  font-family: Cinzel, serif;
+  font-size: clamp(18px, 4.2cqw, 28px);
+  font-weight: 800;
+  color: #fff6d0;
+  text-shadow: 0 2px 0 #3a2a08, 0 4px 10px #000a;
+  letter-spacing: .04em;
+}
