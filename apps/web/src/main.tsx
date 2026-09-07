@@ -9,6 +9,7 @@ import "./styles/scoreboard.css";
 import "./styles/flip.css";
 import "./styles/camera.css";
 import "./styles/lighting.css";
+import "./styles/wood.css";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
