@@ -1,6 +1,7 @@
 import type { Card, PlayerPublic } from "@pokdeng/shared";
 import { avatarUrl } from "@pokdeng/shared";
 import PlayingCard from "./PlayingCard";
+import { money } from "../lib/money";
 
 function Silhouette({ crown }: { crown?: boolean }) {
   return (
@@ -88,7 +89,7 @@ export default function SeatView({
         )}
         {taemText && showCards && <div className="seat-taem">{taemText}</div>}
         {betChips.length > 0 && (
-          <div className="bet-stack" title={`${player!.bet}`}>
+          <div className="bet-stack" title={money(player!.bet)}>
             <div className="bet-pile">
               {betChips.map((v, i) => (
                 <i key={`${v}-${i}`} className={`chip c${v} betchip`} style={{ zIndex: i + 1, left: `${i * 7}px` }}>
@@ -96,7 +97,7 @@ export default function SeatView({
                 </i>
               ))}
             </div>
-            <span className="bet-amt">{player!.bet}</span>
+            <span className="bet-amt">{money(player!.bet)}</span>
           </div>
         )}
       </div>
@@ -106,7 +107,7 @@ export default function SeatView({
           {src ? <img src={src} alt="" /> : <Silhouette crown={crown} />}
         </div>
         <div className={`nameplate ${player ? "" : "empty"}`}>{player?.name || ""}</div>
-        {player && <div className="seat-chips">{player.chips}</div>}
+        {player && <div className="seat-chips">{money(player.chips)}</div>}
       </div>
     </div>
   );
