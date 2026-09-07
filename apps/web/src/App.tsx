@@ -7,6 +7,7 @@ import SeatView from "./components/Seat";
 import ResultsBoard from "./components/ResultsBoard";
 import PotHeap from "./components/PotHeap";
 import SettingsMenu from "./components/SettingsMenu";
+import BrokeBar from "./components/BrokeBar";
 import { Lang, t } from "./i18n";
 import { money } from "./lib/money";
 
@@ -80,6 +81,8 @@ export default function App() {
   };
 
   const leaveRoom = () => {
+    const rid = state?.roomId || session.current?.roomId;
+    if (rid) localStorage.setItem("pd_last_room", rid);
     stay.current = false;
     sock.current?.emit("leave");
     session.current = null;
@@ -186,6 +189,7 @@ export default function App() {
   const betting = state?.phase === "waiting" || state?.phase === "betting";
   const revealed = ["reveal", "payout", "nextRound"].includes(state?.phase || "");
   const dealing = state?.phase === "dealing";
+  const broke = !!mePlayer && !isDealer && (mePlayer.chips || 0) <= 0 && (mePlayer.bet || 0) <= 0;
   const myTurn =
     !!state &&
     state.phase === "playerAction" &&
@@ -295,24 +299,26 @@ export default function App() {
         {showBoard && <ResultsBoard players={state.players} lang={lang} />}
       </section>
 
+      {broke && <BrokeBar lang={lang} onLeave={leaveRoom} />}
+
       <footer className="action-bar">
         <div className="actions">
-          <button className="gem fold" disabled={isDealer} onClick={tap("fold")}>
+          <button className="gem fold" disabled={isDealer || broke} onClick={tap("fold")}>
             <i className="fa-solid fa-hand" /><span>{t(lang, "fold")}</span>
           </button>
-          <button className="gem check" onClick={tap("check")}>
+          <button className="gem check" disabled={broke} onClick={tap("check")}>
             <i className="fa-solid fa-check" /><span>{t(lang, "check")}</span>
           </button>
-          <button className="gem call" disabled={!betting || isDealer} onClick={tap("bet", state.minBet)}>
+          <button className="gem call" disabled={!betting || isDealer || broke} onClick={tap("bet", state.minBet)}>
             <i className="fa-solid fa-reply" /><span>{t(lang, "call")}</span>
           </button>
-          <button className="gem bet" disabled={!betting || isDealer} onClick={tap("bet", chip)}>
+          <button className="gem bet" disabled={!betting || isDealer || broke} onClick={tap("bet", chip)}>
             <i className="fa-solid fa-coins" /><span>{t(lang, "bet")}</span>
           </button>
-          <button className="gem raise" disabled={!betting || isDealer} onClick={tap("bet", chip * 2)}>
+          <button className="gem raise" disabled={!betting || isDealer || broke} onClick={tap("bet", chip * 2)}>
             <i className="fa-solid fa-angles-up" /><span>{t(lang, "raise")}</span>
           </button>
-          <button className="gem allin" disabled={!betting || isDealer} onClick={tap("allin")}>
+          <button className="gem allin" disabled={!betting || isDealer || broke} onClick={tap("allin")}>
             <i className="fa-solid fa-bolt" /><span>{t(lang, "allin")}</span>
           </button>
         </div>
