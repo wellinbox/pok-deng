@@ -1,23 +1,18 @@
+/* Camera tilt disabled — keep table flat */
 .table-stage {
-  perspective: 980px;
-  perspective-origin: 50% 78%;
+  perspective: none;
+  perspective-origin: 50% 50%;
 }
 .table {
-  transform: rotateX(16deg) scale(1.04);
-  transform-origin: 50% 62%;
-  transform-style: preserve-3d;
+  transform: none;
+  transform-origin: 50% 50%;
 }
-.seat-cards {
-  transform: rotateX(-6deg);
-}
-.s0 .seat-cards { transform: rotateX(-10deg) scale(1.08); }
-.s4 .seat-cards { transform: rotateX(4deg) scale(0.92); }
-.s1 .seat-cards, .s7 .seat-cards { transform: rotateX(-4deg); }
-.s3 .seat-cards, .s5 .seat-cards { transform: rotateX(2deg) scale(0.96); }
-
-@media (min-width: 720px) {
-  .table { transform: rotateX(18deg) scale(1.05); }
-}
-@media (max-height: 680px) {
-  .table { transform: rotateX(10deg) scale(1.02); }
+.seat-cards,
+.s0 .seat-cards,
+.s1 .seat-cards,
+.s3 .seat-cards,
+.s4 .seat-cards,
+.s5 .seat-cards,
+.s7 .seat-cards {
+  transform: none;
 }
