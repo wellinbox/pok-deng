@@ -41,14 +41,6 @@
 }
 .draw-btn i { font-size: 15px; }
 
-.chip {
-  border: 2px solid rgba(255,255,255,.55) !important;
-  box-shadow:
-    0 0 0 1px rgba(0,0,0,.35),
-    0 3px 5px #0006,
-    inset 0 1px 0 rgba(255,255,255,.35) !important;
-}
-
 .card,
 .flip-card .card {
   border: 1px solid #b9a87a !important;
