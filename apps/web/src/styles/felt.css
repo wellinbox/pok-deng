@@ -1,0 +1,39 @@
+.logo-hex { display: none !important; }
+
+.table {
+  container-type: size;
+  container-name: felt;
+}
+
+.felt-mark {
+  position: absolute;
+  left: 50%;
+  top: 36%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.14);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.18);
+  user-select: none;
+}
+.felt-mark .th {
+  font-weight: 800;
+  font-size: clamp(22px, 12cqw, 84px);
+  letter-spacing: 0.12em;
+  line-height: 0.95;
+}
+.felt-mark .en {
+  font-family: Cinzel, serif;
+  font-size: clamp(9px, 3.2cqw, 22px);
+  letter-spacing: 0.42em;
+  margin-top: 0.35em;
+  font-weight: 700;
+}
+.felt-mark .rule {
+  width: min(46cqw, 220px);
+  height: 1px;
+  margin: 0.4em auto 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+}
+.table-center { z-index: 3; }
