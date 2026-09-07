@@ -8,6 +8,7 @@ import ResultsBoard from "./components/ResultsBoard";
 import PotHeap from "./components/PotHeap";
 import SettingsMenu from "./components/SettingsMenu";
 import BrokeBar from "./components/BrokeBar";
+import Toast from "./components/Toast";
 import { Lang, t } from "./i18n";
 import { money } from "./lib/money";
 
@@ -54,6 +55,8 @@ export default function App() {
   const [sound, setSound] = useState(true);
   const [menu, setMenu] = useState(false);
   const [joinErr, setJoinErr] = useState("");
+  const [toast, setToast] = useState<{ text: string; kind?: "info" | "error" | "ok" } | null>(null);
+  const [splash, setSplash] = useState(true);
   const [net, setNet] = useState<"connecting" | "online" | "offline">("connecting");
   const sock = useRef<Socket | null>(null);
   const session = useRef<Session | null>(loadSession());
@@ -93,6 +96,23 @@ export default function App() {
     setMenu(false);
     setJoinErr("");
   };
+
+  useEffect(() => {
+    const hide = window.setTimeout(() => setSplash(false), 1200);
+    return () => window.clearTimeout(hide);
+  }, []);
+
+  useEffect(() => {
+    if (!joinErr) return;
+    setToast({ text: joinErr, kind: "error" });
+    const id = window.setTimeout(() => setToast(null), 4200);
+    return () => window.clearTimeout(id);
+  }, [joinErr]);
+
+  useEffect(() => {
+    if (net !== "offline") return;
+    setToast({ text: t(lang, "reconnecting"), kind: "info" });
+  }, [net, lang]);
 
   useEffect(() => {
     const s = io(SOCKET_URL, {
@@ -147,6 +167,7 @@ export default function App() {
       localStorage.removeItem("pd_session");
       setJoined(false);
       setState(null);
+      setToast({ text: t(lang, "offline"), kind: "error" });
     });
     const wake = () => {
       if (document.visibilityState === "hidden") return;
@@ -203,14 +224,23 @@ export default function App() {
   }, [state, net]);
   const bySeat = (n: number) => state?.players.find((p) => p.seat === n);
   const showBoard = state?.phase === "payout" || state?.phase === "reveal";
+  const splashUi = splash ? (
+    <div className="splash">
+      <div className="splash-mark">
+        <div className="th">ป๊อกเด้ง</div>
+        <div className="en">POK DENG</div>
+        <div className="splash-spin" />
+      </div>
+    </div>
+  ) : null;
+  const toastUi = toast ? <Toast text={toast.text} kind={toast.kind} onClose={() => setToast(null)} /> : null;
 
   if (!joined || !state) {
     return (
       <>
-        <div className={`fixed top-2 left-2 z-20 text-xs ${net === "online" ? "text-emerald-300" : "text-amber-300"}`}>
-          {t(lang, net === "connecting" ? "connecting" : net)}
-        </div>
-        <Landing lang={lang} setLang={setLang} onEnter={enter} error={joinErr} busy={joined && !state} />
+        {splashUi}
+        {toastUi}
+        <Landing lang={lang} setLang={setLang} onEnter={enter} error={joinErr} busy={joined && !state} net={net} />
       </>
     );
   }
@@ -222,6 +252,8 @@ export default function App() {
 
   return (
     <div id="game-screen">
+      {splashUi}
+      {toastUi}
       {net !== "online" && (
         <div className="fixed inset-x-0 top-0 z-30 bg-amber-900/90 text-center text-xs py-1 text-amber-100">
           {t(lang, "reconnecting")}
@@ -268,7 +300,6 @@ export default function App() {
           <div className="table-center">
             <PotHeap amount={state.pot} />
           </div>
-
           {[0, 1, 2, 3, 4, 5, 6, 7].map((s) => (
             <div key={s} className={`seat-anchor seat-${s}`}>
               <SeatView
@@ -281,7 +312,6 @@ export default function App() {
             </div>
           ))}
         </div>
-
         {myTurn && (
           <div className="draw-choice">
             <div className="draw-hint">{t(lang, "hit")} / {t(lang, "stand")}</div>
@@ -295,7 +325,6 @@ export default function App() {
             </div>
           </div>
         )}
-
         {showBoard && <ResultsBoard players={state.players} lang={lang} />}
       </section>
 
