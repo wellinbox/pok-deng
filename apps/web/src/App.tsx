@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import type { Card, RoomState } from "@pokdeng/shared";
-import { CHIP_VALUES, STARTING_CHIPS, clampBuyIn } from "@pokdeng/shared";
+import { STARTING_CHIPS, clampBuyIn } from "@pokdeng/shared";
 import Landing from "./pages/Landing";
 import SeatView from "./components/Seat";
 import ResultsBoard from "./components/ResultsBoard";
@@ -9,6 +9,7 @@ import PotHeap from "./components/PotHeap";
 import SettingsMenu from "./components/SettingsMenu";
 import BrokeBar from "./components/BrokeBar";
 import Toast from "./components/Toast";
+import ChipTray from "./components/ChipTray";
 import { Lang, t } from "./i18n";
 import { money } from "./lib/money";
 
@@ -351,13 +352,7 @@ export default function App() {
             <i className="fa-solid fa-bolt" /><span>{t(lang, "allin")}</span>
           </button>
         </div>
-        <div className="tray">
-          {CHIP_VALUES.map((v) => (
-            <button key={v} className={`chip c${v} ${chip === v ? "on" : ""}`} onClick={(e) => { punch(e.currentTarget); setChip(v); }}>
-              {v}
-            </button>
-          ))}
-        </div>
+        <ChipTray chip={chip} onPick={(v, el) => { punch(el); setChip(v); }} />
       </footer>
     </div>
   );
