@@ -4,6 +4,7 @@ import App from "./App";
 import "./styles/global.css";
 import "./styles/assets.css";
 import "./styles/seats.css";
+import "./styles/pwa.css";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
