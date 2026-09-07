@@ -13,6 +13,7 @@ import "./styles/wood.css";
 import "./styles/felt.css";
 import "./styles/icons.css";
 import "./styles/pot.css";
+import "./styles/settings.css";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
