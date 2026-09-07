@@ -4,7 +4,6 @@ import type { Card, RoomState } from "@pokdeng/shared";
 import { CHIP_VALUES } from "@pokdeng/shared";
 import Landing from "./pages/Landing";
 import SeatView from "./components/Seat";
-import PlayingCard from "./components/PlayingCard";
 import { Lang, t } from "./i18n";
 
 const SOCKET_URL =
@@ -162,6 +161,7 @@ export default function App() {
   const isDealer = state?.dealerId === me;
   const betting = state?.phase === "waiting" || state?.phase === "betting";
   const revealed = ["reveal", "payout", "nextRound"].includes(state?.phase || "");
+  const dealing = state?.phase === "dealing";
   const myTurn =
     !!state &&
     state.phase === "playerAction" &&
@@ -230,13 +230,6 @@ export default function App() {
       <section className="table-stage">
         <div className="table">
           <div className="table-center">
-            <div className="pot-chips">
-              <i className="chip c5 potchip" />
-              <i className="chip c10 potchip" />
-              <i className="chip c25 potchip" />
-              <i className="chip c50 potchip" />
-              <i className="chip c100 potchip" />
-            </div>
             <div className="pot-box">
               <div className="pot-label">{t(lang, "pot")}</div>
               <div className="pot-value">{state.pot}</div>
@@ -250,17 +243,10 @@ export default function App() {
                 player={bySeat(s)}
                 showCards={revealed}
                 hole={bySeat(s)?.id === me ? hole : undefined}
+                dealing={dealing}
               />
             </div>
           ))}
-
-          {mePlayer && hole.length > 0 && !revealed && (
-            <div className="you-hand">
-              {hole.map((c, i) => (
-                <PlayingCard key={c.id} card={c} i={i} />
-              ))}
-            </div>
-          )}
         </div>
 
         {myTurn && (
