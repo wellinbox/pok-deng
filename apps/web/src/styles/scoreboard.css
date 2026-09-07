@@ -1,0 +1,49 @@
+.winner-banner.scoreboard {
+  top: 12%;
+  min-width: min(92vw, 340px);
+  max-height: 48%;
+  overflow: hidden;
+  padding: 8px 10px 10px;
+  text-align: left;
+  animation: winnerIn .35s cubic-bezier(.2,1.4,.3,1), winnerOut .4s ease-in 3.4s forwards;
+}
+.score-table {
+  margin-top: 6px;
+  display: grid;
+  gap: 3px;
+  max-height: 36vh;
+  overflow: auto;
+}
+.score-head, .score-row {
+  display: grid;
+  grid-template-columns: 18px 1fr 72px 56px;
+  gap: 6px;
+  align-items: center;
+  font-size: 11px;
+}
+.score-head {
+  color: #c9b56a;
+  font-size: 9px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 0 4px 2px;
+  border-bottom: 1px solid #c9a44a55;
+}
+.score-row {
+  padding: 4px 6px;
+  border-radius: 6px;
+  background: #0c0a06cc;
+  color: #f4e7b8;
+}
+.score-row.win {
+  background: linear-gradient(90deg, #2a2208, #143016);
+  box-shadow: inset 0 0 0 1px #e0c36a88;
+  color: #fff6d0;
+}
+.score-row.draw { background: #16120a; }
+.score-row.lose { opacity: .82; }
+.score-row.dealer .score-name::after { content: " · D"; color: #e0c36a; font-size: 9px; }
+.score-name { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.score-pts { font-weight: 800; color: #fff4c8; text-align: right; }
+.score-res { font-size: 10px; text-align: right; color: #e0c36a; }
+.score-row.lose .score-res { color: #d9a0a0; }
