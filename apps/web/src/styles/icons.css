@@ -1,0 +1,72 @@
+.gem {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: 9px;
+  line-height: 1;
+  border-width: 1.5px !important;
+  border-color: #e8d39a !important;
+  box-shadow:
+    0 0 0 1px #3d2a10,
+    0 5px 10px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.38),
+    inset 0 -7px 10px rgba(0,0,0,.28) !important;
+}
+.gem i {
+  font-size: 13px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.45));
+}
+.gem span { font-weight: 800; letter-spacing: .02em; }
+
+.icon-btn {
+  border-width: 1.5px !important;
+  border-color: #d7c07a !important;
+  box-shadow:
+    0 0 0 1px #2a1c0a,
+    0 3px 6px #0007,
+    inset 0 1px 0 rgba(255,255,255,.28) !important;
+}
+.icon-btn i { font-size: 14px; }
+
+.draw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-width: 1.5px !important;
+  border-color: #e4cf8a !important;
+}
+.draw-btn i { font-size: 15px; }
+
+.chip {
+  border: 2px solid rgba(255,255,255,.55) !important;
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,.35),
+    0 3px 5px #0006,
+    inset 0 1px 0 rgba(255,255,255,.35) !important;
+}
+
+.card,
+.flip-card .card {
+  border: 1px solid #b9a87a !important;
+  box-shadow:
+    0 3px 6px rgba(0,0,0,.4),
+    inset 0 0 0 1px rgba(255,255,255,.55) !important;
+}
+.card.back {
+  border: 1px solid #c4a45a !important;
+  box-shadow:
+    0 3px 6px rgba(0,0,0,.45),
+    inset 0 0 0 1px rgba(232,200,106,.28) !important;
+}
+
+.row-btns button,
+.full-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
