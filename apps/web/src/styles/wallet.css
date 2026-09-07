@@ -16,7 +16,7 @@
   text-align: left;
 }
 .wallet-hud::before {
-  content: "\f51e";
+  content: "\\f51e";
   font-family: "Font Awesome 6 Free";
   font-weight: 900;
   width: 22px;
@@ -30,9 +30,7 @@
   box-shadow: inset 0 1px 0 #fff8, 0 2px 4px #0006;
   flex: 0 0 auto;
 }
-.wallet-label {
-  display: none;
-}
+.wallet-label { display: none; }
 .wallet-val {
   font-family: Prompt, sans-serif !important;
   font-size: 15px;
@@ -41,12 +39,54 @@
   color: #fff6d0;
   line-height: 1.1;
 }
-
 .seat-chips,
 .bet-amt,
 .pot-heap-amt,
 .pot-value {
   font-family: Prompt, sans-serif !important;
   font-weight: 700;
-  letter-spacing: .01em;
+}
+.room-code {
+  font-family: Prompt, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  color: #fff4c8;
+  background: #14100a;
+  border: 1px solid #c9a44a;
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+.buyin-label {
+  display: block;
+  text-align: left;
+  font-size: 12px;
+  color: #e0c36a;
+  margin: 8px 0 4px;
+  font-weight: 700;
+}
+.buyin-presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 8px 0 10px;
+}
+.buyin-presets button {
+  font-family: Prompt, sans-serif;
+  font-size: 12px;
+  padding: 6px 0;
+  border-radius: 8px;
+  border: 1px solid #3a3018;
+  background: #14110b;
+  color: #efe2b4;
+}
+.buyin-presets button.on {
+  background: linear-gradient(#f3e0a6, #c9a44a);
+  color: #1a1206;
+  border-color: #fff1b8;
+}
+.join-error {
+  color: #ffb4a8;
+  font-size: 13px;
+  margin: 6px 0 8px;
 }
