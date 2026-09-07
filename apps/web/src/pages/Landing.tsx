@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { t, Lang } from "../i18n";
+import InstallHint from "../components/InstallHint";
 
 export default function Landing({
   lang,
@@ -38,6 +39,7 @@ export default function Landing({
         <button className="full-btn" style={{ width: "100%", marginTop: 10 }} onClick={() => go({ solo: true })}>
           {t(lang, "solo")}
         </button>
+        <InstallHint lang={lang} />
       </div>
     </div>
   );

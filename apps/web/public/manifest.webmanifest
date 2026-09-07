@@ -1,0 +1,20 @@
+{
+  "name": "ป๊อกเด้ง POK DENG",
+  "short_name": "ป๊อกเด้ง",
+  "description": "ห้องไพ่ป๊อกเด้งออนไลน์",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070708",
+  "theme_color": "#070708",
+  "lang": "th",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -39,6 +39,8 @@ const dict: Record<Lang, Record<string, string>> = {
     youWin: "คุณชนะ!",
     youLose: "คุณแพ้",
     draw: "เสมอ",
+    install: "ติดตั้งบนหน้าจอ",
+    installIos: "กด แชร์ ↑ แล้วเลือก เพิ่มไปยังหน้าจอ",
   },
   en: {
     title: "Pok Deng",
@@ -78,6 +80,8 @@ const dict: Record<Lang, Record<string, string>> = {
     youWin: "YOU WIN!",
     youLose: "YOU LOSE",
     draw: "DRAW",
+    install: "Install app",
+    installIos: "Tap Share ↑ then Add to Home Screen",
   },
 };
 
