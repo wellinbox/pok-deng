@@ -1,0 +1,49 @@
+.settings-wrap { position: relative; }
+.settings-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 168px;
+  z-index: 40;
+  padding: 8px;
+  background: linear-gradient(#1a160c, #0b0905);
+  border: 1.5px solid #d7c07a;
+  border-radius: 10px;
+  box-shadow: 0 10px 22px #000a;
+}
+.settings-menu button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  color: #fff4c8;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 8px;
+  border-radius: 8px;
+  background: transparent;
+  border: 0;
+}
+.settings-menu button.on,
+.settings-menu button:active {
+  background: #2a2312;
+}
+.leave-room {
+  position: fixed;
+  right: max(10px, env(safe-area-inset-right));
+  bottom: max(10px, env(safe-area-inset-bottom));
+  z-index: 35;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff4c8;
+  background: linear-gradient(#3a1410, #1a0806);
+  border: 1.5px solid #c9a44a;
+  box-shadow: 0 6px 14px #0009;
+}
