@@ -4,6 +4,7 @@ import cors from "cors";
 import { Server } from "socket.io";
 import { clampBuyIn } from "@pokdeng/shared";
 import { GameRoom } from "./room.js";
+import { applyBuyIn } from "./rebuy.js";
 
 const PORT = Number(process.env.PORT || 3001);
 const rooms = new Map<string, GameRoom>();
@@ -75,6 +76,7 @@ io.on("connection", (socket) => {
         rooms.set(id, room);
       } else {
         room.addPlayer(playerId, name, socket.id, undefined, false, chips);
+        applyBuyIn(room, playerId, chips);
       }
     } else if (payload?.roomId) {
       const id = cleanCode(payload.roomId);
@@ -92,6 +94,7 @@ io.on("connection", (socket) => {
           socket.emit("errorMsg", "ห้องเต็ม");
           return;
         }
+        applyBuyIn(room, playerId, chips);
       }
     } else {
       const id = code();
