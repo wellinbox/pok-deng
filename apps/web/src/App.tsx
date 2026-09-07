@@ -204,10 +204,6 @@ export default function App() {
             {sound ? "♪" : "×"}
           </button>
         </div>
-        <div className="logo-hex">
-          <div className="th">{t(lang, "title")}</div>
-          <div className="en">POK DENG</div>
-        </div>
         <div className="header-right">
           <div className="wallet-hud" title={t(lang, "wallet")}>
             <span className="wallet-label">{t(lang, "wallet")}</span>
@@ -226,6 +222,11 @@ export default function App() {
 
       <section className="table-stage">
         <div className="table">
+          <div className="felt-mark" aria-hidden="true">
+            <div className="th">ป๊อกเด้ง</div>
+            <div className="en">POK DENG</div>
+            <div className="rule" />
+          </div>
           <div className="table-center">
             <div className="pot-box">
               <div className="pot-label">{t(lang, "pot")}</div>
