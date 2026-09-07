@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 import {
   Card, ChatMessage, MAX_PLAYERS, MIN_BET_DEFAULT, PHASE_MS, Phase,
-  PlayerPrivate, RoomState, STARTING_CHIPS, SeatRole,
+  PlayerPrivate, RoomState, STARTING_CHIPS, SeatRole, clampBuyIn,
   avatarUrl, createDeck, dealerShouldHit, detectPok, evaluateHand, payout, shuffle,
 } from "@pokdeng/shared";
 
@@ -20,9 +20,9 @@ export class GameRoom {
   private emit: () => void;
   private actors: string[] = [];
 
-  constructor(roomId: string, hostId: string, hostName: string, emit: () => void, solo = false) {
+  constructor(roomId: string, hostId: string, hostName: string, emit: () => void, solo = false, buyIn = STARTING_CHIPS) {
     this.roomId = roomId; this.hostId = hostId; this.dealerId = hostId; this.emit = emit; this.solo = solo;
-    this.addPlayer(hostId, hostName, null, 0);
+    this.addPlayer(hostId, hostName, null, 0, false, buyIn);
     if (solo) {
       this.addPlayer("ai-dealer-bot", "เจ้ามือ AI", null, 4, true);
       this.dealerId = "ai-dealer-bot";
@@ -37,15 +37,16 @@ export class GameRoom {
     }
   }
 
-  addPlayer(id: string, name: string, socketId: string | null, seat?: number, isAi = false): boolean {
+  addPlayer(id: string, name: string, socketId: string | null, seat?: number, isAi = false, buyIn?: number): boolean {
     const existing = this.players.find((p) => p.id === id);
     if (existing) { existing.socketId = socketId; existing.connected = true; existing.name = name || existing.name; return true; }
     if (this.players.length >= MAX_PLAYERS) return false;
     const used = new Set(this.players.map((p) => p.seat));
     let s = seat ?? 0; if (seat === undefined) while (used.has(s) && s < MAX_PLAYERS) s++;
     if (used.has(s) || s >= MAX_PLAYERS) return false;
+    const chips = isAi ? Math.max(STARTING_CHIPS, clampBuyIn(buyIn)) : clampBuyIn(buyIn);
     this.players.push({
-      id, name, avatar: avatarUrl(id + "-" + name), chips: STARTING_CHIPS, bet: 0, seat: s, ready: isAi,
+      id, name, avatar: avatarUrl(id + "-" + name), chips, bet: 0, seat: s, ready: isAi,
       folded: false, connected: !isAi, role: id === this.dealerId ? "DEALER" : null,
       cardCount: 0, cards: [], socketId, lastResult: null,
     });
