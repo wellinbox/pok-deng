@@ -79,6 +79,8 @@ export const SUITS: Suit[] = ["hearts", "diamonds", "clubs", "spades"];
 export const RANKS: Rank[] = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 
 export const STARTING_CHIPS = 1000;
+export const MIN_BUYIN = 100;
+export const MAX_BUYIN = 50000;
 export const CHIP_VALUES = [5, 10, 25, 50, 100] as const;
 export const MAX_PLAYERS = 8;
 export const MIN_BET_DEFAULT = 10;
@@ -92,6 +94,12 @@ export const PHASE_MS: Record<Phase, number> = {
   payout: 3800,
   nextRound: 2500,
 };
+
+export function clampBuyIn(n: unknown) {
+  const v = Math.round(Number(n) || STARTING_CHIPS);
+  if (!Number.isFinite(v)) return STARTING_CHIPS;
+  return Math.min(MAX_BUYIN, Math.max(MIN_BUYIN, v));
+}
 
 export function avatarUrl(id: string) {
   return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(id)}&backgroundColor=1a1a1a,0b3d2a,3d2c08`;
