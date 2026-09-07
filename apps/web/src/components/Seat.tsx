@@ -70,15 +70,16 @@ export default function SeatView({
     : player?.taem != null
       ? `${player.taem}`
       : "";
+  const drawing = n >= 3 && !dealing;
 
   return (
     <div className={`seat-stack ${cls} ${player?.lastResult === "win" ? "is-winner" : ""} ${dealing ? "is-dealing" : ""}`}>
       <div className="play-pile">
         {showSideCards && (
-          <div className={`seat-cards ${dealing ? "dealing" : ""}`}>
+          <div className={`seat-cards ${dealing ? "dealing" : ""} ${drawing ? "drawing" : ""}`}>
             {list.map((c, i) => (
               <PlayingCard
-                key={typeof c === "object" && c ? c.id : i}
+                key={typeof c === "object" && c ? c.id : `${i}-${n}`}
                 card={typeof c === "object" && c ? c : undefined}
                 i={i}
               />

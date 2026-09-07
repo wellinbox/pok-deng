@@ -1,14 +1,14 @@
 .table-center { top: 52%; z-index: 2; }
 .pot-chips { display: none !important; }
 
-.seat-0 { left: 50%; top: 76%; --dx: 0px; --dy: -88px; }
-.seat-1 { left: 76%; top: 64%; --dx: -70px; --dy: -40px; }
-.seat-2 { left: 84%; top: 44%; --dx: -96px; --dy: 0px; }
-.seat-3 { left: 76%; top: 22%; --dx: -70px; --dy: 48px; }
-.seat-4 { left: 50%; top: 12%; --dx: 0px; --dy: 88px; }
-.seat-5 { left: 24%; top: 22%; --dx: 70px; --dy: 48px; }
-.seat-6 { left: 16%; top: 44%; --dx: 96px; --dy: 0px; }
-.seat-7 { left: 24%; top: 64%; --dx: 70px; --dy: -40px; }
+.seat-0 { left: 50%; top: 76%; --dx: 0px; --dy: -150px; }
+.seat-1 { left: 76%; top: 64%; --dx: -90px; --dy: -110px; }
+.seat-2 { left: 84%; top: 44%; --dx: -130px; --dy: -70px; }
+.seat-3 { left: 76%; top: 22%; --dx: -55px; --dy: -28px; }
+.seat-4 { left: 50%; top: 12%; --dx: 0px; --dy: 18px; }
+.seat-5 { left: 24%; top: 22%; --dx: 55px; --dy: -28px; }
+.seat-6 { left: 16%; top: 44%; --dx: 130px; --dy: -70px; }
+.seat-7 { left: 24%; top: 64%; --dx: 90px; --dy: -110px; }
 
 .seat-stack { gap: 6px; align-items: center; }
 .play-pile {
@@ -36,13 +36,8 @@
   flex-direction: column;
   align-items: center;
   pointer-events: none;
-  margin-top: -2px;
 }
-.bet-pile {
-  position: relative;
-  height: 18px;
-  min-width: 18px;
-}
+.bet-pile { position: relative; height: 18px; min-width: 18px; }
 .bet-pile .betchip {
   position: absolute;
   top: 0;
@@ -50,7 +45,6 @@
   height: 18px;
   font-size: 7px;
   border-width: 2px;
-  box-shadow: 0 2px 3px #0008, 0 1px 0 #fff5 inset;
 }
 .bet-amt {
   margin-top: 2px;
@@ -61,14 +55,40 @@
 }
 
 @keyframes deal-fly {
-  from {
-    transform: translate(var(--dx), var(--dy)) scale(0.45) rotate(-28deg);
+  0% {
+    transform: translate(var(--dx), var(--dy)) scale(0.4) rotate(-40deg);
     opacity: 0;
   }
-  to { opacity: 1; }
+  70% {
+    transform: translate(calc(var(--dx) * .12), calc(var(--dy) * .12)) scale(1.05) rotate(8deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(var(--fan, 0deg)) scale(1);
+    opacity: 1;
+  }
 }
-.seat-cards.dealing .flip-card {
-  animation: deal-fly 0.48s cubic-bezier(0.2, 0.85, 0.2, 1) both;
+.seat-cards.dealing .flip-card,
+.seat-cards.drawing .flip-card:nth-child(3) {
+  animation: deal-fly .32s cubic-bezier(.15,.85,.25,1) both;
 }
+/* clockwise from dealer seat-4 */
+.seat-4 .seat-cards.dealing .flip-card { animation-delay: 0.00s; }
+.seat-3 .seat-cards.dealing .flip-card { animation-delay: 0.05s; }
+.seat-2 .seat-cards.dealing .flip-card { animation-delay: 0.10s; }
+.seat-1 .seat-cards.dealing .flip-card { animation-delay: 0.15s; }
+.seat-0 .seat-cards.dealing .flip-card { animation-delay: 0.20s; }
+.seat-7 .seat-cards.dealing .flip-card { animation-delay: 0.25s; }
+.seat-6 .seat-cards.dealing .flip-card { animation-delay: 0.30s; }
+.seat-5 .seat-cards.dealing .flip-card { animation-delay: 0.35s; }
+.seat-cards.dealing .flip-card:nth-child(2) { animation-delay: calc(0.08s + inherit); }
+.seat-4 .seat-cards.dealing .flip-card:nth-child(2) { animation-delay: 0.08s; }
+.seat-3 .seat-cards.dealing .flip-card:nth-child(2) { animation-delay: 0.13s; }
+.seat-2 .seat-cards.dealing .flip-card:nth-child(2) { animation-delay: 0.18s; }
+.seat-1 .seat-cards.dealing .flip-card:nth-child(2) { animation-delay: 0.23s; }
+.seat-0 .seat-cards.dealing .flip-card:nth-child(2) { animation-delay: 0.28s; }
+.seat-7 .seat-cards.dealing .flip-card:nth-child(2) { animation-delay: 0.33s; }
+.seat-6 .seat-cards.dealing .flip-card:nth-child(2) { animation-delay: 0.38s; }
+.seat-5 .seat-cards.dealing .flip-card:nth-child(2) { animation-delay: 0.43s; }
 
 .you-hand { display: none !important; }
