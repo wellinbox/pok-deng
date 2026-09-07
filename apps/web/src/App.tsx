@@ -232,17 +232,18 @@ export default function App() {
           <button className="icon-btn" type="button" aria-label={t(lang, "sound")} onClick={(e) => { punch(e.currentTarget); setSound((v) => !v); }}>
             <i className={`fa-solid ${sound ? "fa-volume-high" : "fa-volume-xmark"}`} />
           </button>
+          <button className="icon-btn" type="button" aria-label={t(lang, "alerts")} onClick={(e) => { punch(e.currentTarget); resumeNow(); }}>
+            <i className="fa-solid fa-bell" />
+          </button>
         </div>
         <div className="header-right">
           <div className="wallet-hud" title={t(lang, "wallet")}>
             <span className="wallet-label">{t(lang, "wallet")}</span>
             <span className="wallet-val">{money(mePlayer?.chips)}</span>
           </div>
-          <div className="icon-row end">
-            <button className="icon-btn" type="button" aria-label={t(lang, "alerts")} onClick={(e) => { punch(e.currentTarget); resumeNow(); }}>
-              <i className="fa-solid fa-bell" />
-            </button>
-          </div>
+          <button className="leave-room" type="button" onClick={leaveRoom} aria-label={t(lang, "leave")} title={t(lang, "leave")}>
+            <i className="fa-solid fa-right-from-bracket" />
+          </button>
         </div>
       </header>
 
@@ -318,10 +319,6 @@ export default function App() {
           ))}
         </div>
       </footer>
-
-      <button className="leave-room" type="button" onClick={leaveRoom}>
-        <i className="fa-solid fa-right-from-bracket" /> {t(lang, "leave")}
-      </button>
     </div>
   );
 }
