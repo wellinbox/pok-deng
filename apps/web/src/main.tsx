@@ -14,6 +14,7 @@ import "./styles/felt.css";
 import "./styles/icons.css";
 import "./styles/pot.css";
 import "./styles/settings.css";
+import "./styles/wallet.css";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
