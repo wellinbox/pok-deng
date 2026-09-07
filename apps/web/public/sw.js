@@ -1,4 +1,4 @@
-const CACHE = "pokdeng-v1";
+const CACHE = "pokdeng-v2";
 const PRECACHE = ["/", "/manifest.webmanifest", "/icons/icon.svg"];
 
 self.addEventListener("install", (e) => {

@@ -22,3 +22,7 @@
   font-size: 18px;
   line-height: 1;
 }
+
+@media (display-mode: fullscreen), (display-mode: standalone) {
+  html, body, #root, #game-screen { background: #000; }
+}

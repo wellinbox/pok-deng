@@ -4,10 +4,11 @@
   "description": "ห้องไพ่ป๊อกเด้งออนไลน์",
   "start_url": "/",
   "scope": "/",
-  "display": "standalone",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
   "orientation": "portrait",
   "background_color": "#070708",
-  "theme_color": "#070708",
+  "theme_color": "#000000",
   "lang": "th",
   "icons": [
     {
