@@ -6,10 +6,12 @@ import { clampBuyIn } from "@pokdeng/shared";
 import { GameRoom } from "./room.js";
 
 const PORT = Number(process.env.PORT || 3001);
+const rooms = new Map<string, GameRoom>();
+const leaveTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
 const app = express();
 app.use(cors({ origin: true }));
-app.get("/health", (_req, res) => res.json({ ok: true, rooms: [...rooms?.keys?.() || []] }));
+app.get("/health", (_req, res) => res.json({ ok: true, rooms: [...rooms.keys()] }));
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -19,11 +21,6 @@ const io = new Server(server, {
   pingInterval: 20000,
   pingTimeout: 25000,
 });
-
-const rooms = new Map<string, GameRoom>();
-const leaveTimers = new Map<string, ReturnType<typeof setTimeout>>();
-
-app.get("/health", (_req, res) => res.json({ ok: true, rooms: [...rooms.keys()] }));
 
 function code() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -79,10 +76,6 @@ io.on("connection", (socket) => {
       } else {
         room.addPlayer(playerId, name, socket.id, undefined, false, chips);
       }
-    } else if (payload?.create && !payload.roomId) {
-      const id = code();
-      room = new GameRoom(id, playerId, name, () => emitRoom(room!), false, chips);
-      rooms.set(id, room);
     } else if (payload?.roomId) {
       const id = cleanCode(payload.roomId);
       if (id.length < 3) {
