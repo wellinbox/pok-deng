@@ -1,0 +1,37 @@
+.broke-bar {
+  position: fixed;
+  left: 50%;
+  bottom: max(108px, calc(env(safe-area-inset-bottom) + 96px));
+  transform: translateX(-50%);
+  z-index: 40;
+  width: min(92vw, 420px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: linear-gradient(#3a1410, #1a0806);
+  border: 1.5px solid #e0c36a;
+  box-shadow: 0 10px 24px #000a;
+}
+.broke-bar strong {
+  display: block;
+  color: #fff4c8;
+  font-size: 14px;
+}
+.broke-bar p {
+  margin: 2px 0 0;
+  color: #f0d9a0;
+  font-size: 12px;
+}
+.broke-bar button {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #1a1206;
+  background: linear-gradient(#f3e0a6, #c9a44a);
+  border: 1px solid #fff1b8;
+}
