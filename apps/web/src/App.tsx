@@ -50,6 +50,7 @@ export default function App() {
   const [hole, setHole] = useState<Card[]>([]);
   const [chip, setChip] = useState(10);
   const [sound, setSound] = useState(true);
+  const [menu, setMenu] = useState(false);
   const [net, setNet] = useState<"connecting" | "online" | "offline">("connecting");
   const sock = useRef<Socket | null>(null);
   const session = useRef<Session | null>(loadSession());
@@ -70,6 +71,16 @@ export default function App() {
     if (!s || !sess) return;
     if (!s.connected) s.connect();
     else emitJoin(s, sess);
+  };
+
+  const leaveRoom = () => {
+    sock.current?.emit("leave");
+    session.current = null;
+    localStorage.removeItem("pd_session");
+    setHole([]);
+    setState(null);
+    setJoined(false);
+    setMenu(false);
   };
 
   useEffect(() => {
@@ -200,9 +211,21 @@ export default function App() {
       )}
       <header className="game-header">
         <div className="icon-row">
-          <button className="icon-btn" type="button" aria-label={t(lang, "settings")} onClick={(e) => punch(e.currentTarget)}>
-            <i className="fa-solid fa-gear" />
-          </button>
+          <div className="settings-wrap">
+            <button className="icon-btn" type="button" aria-label={t(lang, "settings")} onClick={(e) => { punch(e.currentTarget); setMenu((v) => !v); }}>
+              <i className="fa-solid fa-gear" />
+            </button>
+            {menu && (
+              <div className="settings-menu">
+                <button className={lang === "th" ? "on" : ""} onClick={() => setLang("th")}>
+                  <i className="fa-solid fa-language" /> {t(lang, "thai")}
+                </button>
+                <button className={lang === "en" ? "on" : ""} onClick={() => setLang("en")}>
+                  <i className="fa-solid fa-language" /> {t(lang, "english")}
+                </button>
+              </div>
+            )}
+          </div>
           <button className="icon-btn" type="button" aria-label={t(lang, "sound")} onClick={(e) => { punch(e.currentTarget); setSound((v) => !v); }}>
             <i className={`fa-solid ${sound ? "fa-volume-high" : "fa-volume-xmark"}`} />
           </button>
@@ -215,9 +238,6 @@ export default function App() {
           <div className="icon-row end">
             <button className="icon-btn" type="button" aria-label={t(lang, "alerts")} onClick={(e) => { punch(e.currentTarget); resumeNow(); }}>
               <i className="fa-solid fa-bell" />
-            </button>
-            <button className="icon-btn" type="button" aria-label={t(lang, "menu")} onClick={(e) => { punch(e.currentTarget); setLang(lang === "th" ? "en" : "th"); }}>
-              {t(lang, "langSwitch")}
             </button>
           </div>
         </div>
@@ -295,6 +315,10 @@ export default function App() {
           ))}
         </div>
       </footer>
+
+      <button className="leave-room" type="button" onClick={leaveRoom}>
+        <i className="fa-solid fa-right-from-bracket" /> {t(lang, "leave")}
+      </button>
     </div>
   );
 }
