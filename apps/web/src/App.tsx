@@ -199,9 +199,11 @@ export default function App() {
       )}
       <header className="game-header">
         <div className="icon-row">
-          <button className="icon-btn" type="button" aria-label={t(lang, "settings")} onClick={(e) => punch(e.currentTarget)}>⚙</button>
+          <button className="icon-btn" type="button" aria-label={t(lang, "settings")} onClick={(e) => punch(e.currentTarget)}>
+            <i className="fa-solid fa-gear" />
+          </button>
           <button className="icon-btn" type="button" aria-label={t(lang, "sound")} onClick={(e) => { punch(e.currentTarget); setSound((v) => !v); }}>
-            {sound ? "♪" : "×"}
+            <i className={`fa-solid ${sound ? "fa-volume-high" : "fa-volume-xmark"}`} />
           </button>
         </div>
         <div className="header-right">
@@ -210,7 +212,9 @@ export default function App() {
             <span className="wallet-val">{money(mePlayer?.chips)}</span>
           </div>
           <div className="icon-row end">
-            <button className="icon-btn" type="button" aria-label={t(lang, "alerts")} onClick={(e) => { punch(e.currentTarget); resumeNow(); }}>○</button>
+            <button className="icon-btn" type="button" aria-label={t(lang, "alerts")} onClick={(e) => { punch(e.currentTarget); resumeNow(); }}>
+              <i className="fa-solid fa-bell" />
+            </button>
             <button className="icon-btn" type="button" aria-label={t(lang, "menu")} onClick={(e) => { punch(e.currentTarget); setLang(lang === "th" ? "en" : "th"); }}>
               {t(lang, "langSwitch")}
             </button>
@@ -251,8 +255,12 @@ export default function App() {
           <div className="draw-choice">
             <div className="draw-hint">{t(lang, "hit")} / {t(lang, "stand")}</div>
             <div className="draw-row">
-              <button className="draw-btn hit" onClick={tap("hit")}>{t(lang, "hit")}</button>
-              <button className="draw-btn stand" onClick={tap("stand")}>{t(lang, "stand")}</button>
+              <button className="draw-btn hit" onClick={tap("hit")}>
+                <i className="fa-solid fa-plus" /> {t(lang, "hit")}
+              </button>
+              <button className="draw-btn stand" onClick={tap("stand")}>
+                <i className="fa-solid fa-hand" /> {t(lang, "stand")}
+              </button>
             </div>
           </div>
         )}
@@ -262,12 +270,24 @@ export default function App() {
 
       <footer className="action-bar">
         <div className="actions">
-          <button className="gem fold" disabled={isDealer} onClick={tap("fold")}>{t(lang, "fold")}</button>
-          <button className="gem check" onClick={tap("check")}>{t(lang, "check")}</button>
-          <button className="gem call" disabled={!betting || isDealer} onClick={tap("bet", state.minBet)}>{t(lang, "call")}</button>
-          <button className="gem bet" disabled={!betting || isDealer} onClick={tap("bet", chip)}>{t(lang, "bet")}</button>
-          <button className="gem raise" disabled={!betting || isDealer} onClick={tap("bet", chip * 2)}>{t(lang, "raise")}</button>
-          <button className="gem allin" disabled={!betting || isDealer} onClick={tap("allin")}>{t(lang, "allin")}</button>
+          <button className="gem fold" disabled={isDealer} onClick={tap("fold")}>
+            <i className="fa-solid fa-hand" /><span>{t(lang, "fold")}</span>
+          </button>
+          <button className="gem check" onClick={tap("check")}>
+            <i className="fa-solid fa-check" /><span>{t(lang, "check")}</span>
+          </button>
+          <button className="gem call" disabled={!betting || isDealer} onClick={tap("bet", state.minBet)}>
+            <i className="fa-solid fa-reply" /><span>{t(lang, "call")}</span>
+          </button>
+          <button className="gem bet" disabled={!betting || isDealer} onClick={tap("bet", chip)}>
+            <i className="fa-solid fa-coins" /><span>{t(lang, "bet")}</span>
+          </button>
+          <button className="gem raise" disabled={!betting || isDealer} onClick={tap("bet", chip * 2)}>
+            <i className="fa-solid fa-angles-up" /><span>{t(lang, "raise")}</span>
+          </button>
+          <button className="gem allin" disabled={!betting || isDealer} onClick={tap("allin")}>
+            <i className="fa-solid fa-bolt" /><span>{t(lang, "allin")}</span>
+          </button>
         </div>
         <div className="tray">
           {CHIP_VALUES.map((v) => (
