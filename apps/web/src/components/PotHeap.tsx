@@ -1,6 +1,6 @@
 import { money } from "../lib/money";
 
-const DENOMS = [100, 50, 25, 10, 5];
+const DENOMS = [5000, 1000, 500, 100, 50, 25, 10, 5];
 
 function piles(amount: number) {
   let left = Math.max(0, Math.floor(amount));

@@ -81,9 +81,10 @@ export const RANKS: Rank[] = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10",
 export const STARTING_CHIPS = 1000;
 export const MIN_BUYIN = 100;
 export const MAX_BUYIN = 50000;
-export const CHIP_VALUES = [5, 10, 25, 50, 100] as const;
+export const CHIP_VALUES = [5, 10, 25, 50, 100, 500, 1000, 5000] as const;
 export const MAX_PLAYERS = 8;
 export const MIN_BET_DEFAULT = 10;
+export const MAX_BET_DEFAULT = 50000;
 export const PHASE_MS: Record<Phase, number> = {
   waiting: 0,
   betting: 20000,

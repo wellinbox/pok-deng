@@ -1,0 +1,12 @@
+.c500 { background: radial-gradient(circle at 30% 30%, #ffd78a, #b8860b); color: #2a1c06; }
+.c1000 { background: radial-gradient(circle at 30% 30%, #fff4c8, #c9a44a); color: #2a1c06; }
+.c5000 { background: radial-gradient(circle at 30% 30%, #e8e8f8, #6a6a88); color: #101018; }
+.tray {
+  flex-wrap: wrap;
+  max-width: min(100%, 420px);
+}
+.tray .chip {
+  font-size: 8px;
+  width: 36px;
+  height: 36px;
+}

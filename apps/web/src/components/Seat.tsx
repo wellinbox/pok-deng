@@ -4,7 +4,7 @@ import PlayingCard from "./PlayingCard";
 import { money } from "../lib/money";
 
 function stackChips(amount: number) {
-  const vals = [100, 50, 25, 10, 5];
+  const vals = [5000, 1000, 500, 100, 50, 25, 10, 5];
   const out: number[] = [];
   let left = Math.max(0, Math.floor(amount));
   for (const v of vals) {
@@ -55,10 +55,10 @@ export default function SeatView({
   const drawing = n >= 3 && !dealing;
 
   return (
-    <div className={`seat-stack ${cls} ${player.lastResult === "win" ? "is-winner" : ""} ${dealing ? "is-dealing" : ""}`}>
+    <div className={`seat-stack ${cls} ${player.lastResult === "win" ? "is-winner" : ""} ${dealing ? "is-dealing" : ""`}>
       <div className="play-pile">
         {showSideCards && (
-          <div className={`seat-cards ${dealing ? "dealing" : ""} ${drawing ? "drawing" : ""}`}>
+          <div className={`seat-cards ${dealing ? "dealing" : ""} ${drawing ? "drawing" : ""`}>
             {list.map((c, i) => (
               <PlayingCard
                 key={typeof c === "object" && c ? c.id : `${i}-${n}`}
@@ -84,7 +84,7 @@ export default function SeatView({
       </div>
       <div className="seat-hud">
         {rim && <div className="rim-badge">{rim}</div>}
-        <div className={`avatar ${crown ? "dealer" : ""}`}>
+        <div className={`avatar ${crown ? "dealer" : ""`}>
           <img src={src} alt="" />
         </div>
         <div className="nameplate">{player.name}</div>
