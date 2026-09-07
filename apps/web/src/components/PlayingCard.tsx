@@ -1,30 +1,36 @@
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import type { Card } from "@pokdeng/shared";
 
 const SUIT: Record<string, string> = { hearts: "♥", diamonds: "♦", clubs: "♣", spades: "♠" };
 
 export default function PlayingCard({ card, i = 0 }: { card?: Card | null; i?: number }) {
-  if (!card) {
-    return (
-      <motion.div
-        className="card back"
-        initial={{ y: -40, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: i * 0.08 }}
-      />
-    );
-  }
-  const red = card.suit === "hearts" || card.suit === "diamonds";
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (!card) {
+      setOpen(false);
+      return;
+    }
+    setOpen(false);
+    const t = window.setTimeout(() => setOpen(true), 40 + i * 90);
+    return () => window.clearTimeout(t);
+  }, [card?.id, i]);
+
+  const red = card && (card.suit === "hearts" || card.suit === "diamonds");
+
   return (
-    <motion.div
-      className={`card ${red ? "red" : "black"}`}
-      initial={{ rotateY: 90, opacity: 0 }}
-      animate={{ rotateY: 0, opacity: 1 }}
-      transition={{ delay: i * 0.08 }}
-    >
-      <div className="rank">{card.rank}</div>
-      <div className="suit">{SUIT[card.suit]}</div>
-      <div className="suit-lg">{SUIT[card.suit]}</div>
-    </motion.div>
+    <div className={`flip-card ${open && card ? "is-open" : ""}`}>
+      <div className="flip-inner">
+        <div className="card back face back-face" />
+        <div className={`card face front-face ${red ? "red" : "black"}`}>
+          {card && (
+            <>
+              <div className="rank">{card.rank}</div>
+              <div className="suit">{SUIT[card.suit]}</div>
+              <div className="suit-lg">{SUIT[card.suit]}</div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

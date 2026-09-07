@@ -6,6 +6,7 @@ import "./styles/assets.css";
 import "./styles/seats.css";
 import "./styles/pwa.css";
 import "./styles/scoreboard.css";
+import "./styles/flip.css";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

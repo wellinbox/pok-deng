@@ -1,0 +1,38 @@
+.flip-card {
+  display: inline-block;
+  width: 34px;
+  height: 48px;
+  perspective: 700px;
+  vertical-align: top;
+}
+.flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform .48s cubic-bezier(.2,.8,.2,1);
+}
+.flip-card.is-open .flip-inner {
+  transform: rotateY(180deg);
+}
+.flip-card .face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flip-card .front-face {
+  transform: rotateY(180deg);
+}
+.you-hand .flip-card,
+.seat-cards .flip-card {
+  width: 34px;
+  height: 48px;
+}
+.s4 .seat-cards .flip-card {
+  width: 32px;
+  height: 46px;
+}
