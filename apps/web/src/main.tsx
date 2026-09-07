@@ -16,6 +16,7 @@ import "./styles/pot.css";
 import "./styles/settings.css";
 import "./styles/wallet.css";
 import "./styles/broke.css";
+import "./styles/landing.css";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
