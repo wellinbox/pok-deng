@@ -11,6 +11,7 @@ import "./styles/camera.css";
 import "./styles/lighting.css";
 import "./styles/wood.css";
 import "./styles/felt.css";
+import "./styles/icons.css";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

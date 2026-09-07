@@ -22,7 +22,8 @@ export default function Landing({
   return (
     <div className="landing">
       <button className="icon-btn lang" onClick={() => setLang(lang === "th" ? "en" : "th")}>
-        {t(lang, "langSwitch")}
+        <i className="fa-solid fa-language" />
+        <span style={{ marginLeft: 4 }}>{t(lang, "langSwitch")}</span>
       </button>
       <div className="landing-card">
         <div className="logo-hex" style={{ margin: "0 auto 12px", width: 200 }}>
@@ -33,11 +34,15 @@ export default function Landing({
         <input placeholder={t(lang, "name")} value={name} onChange={(e) => setName(e.target.value)} />
         <input placeholder={t(lang, "code")} value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} maxLength={6} />
         <div className="row-btns">
-          <button onClick={() => go({ create: true })}>{t(lang, "create")}</button>
-          <button className="ghost" onClick={() => go({ roomId: code })}>{t(lang, "join")}</button>
+          <button onClick={() => go({ create: true })}>
+            <i className="fa-solid fa-plus" /> {t(lang, "create")}
+          </button>
+          <button className="ghost" onClick={() => go({ roomId: code })}>
+            <i className="fa-solid fa-right-to-bracket" /> {t(lang, "join")}
+          </button>
         </div>
         <button className="full-btn" style={{ width: "100%", marginTop: 10 }} onClick={() => go({ solo: true })}>
-          {t(lang, "solo")}
+          <i className="fa-solid fa-robot" /> {t(lang, "solo")}
         </button>
         <InstallHint lang={lang} />
       </div>

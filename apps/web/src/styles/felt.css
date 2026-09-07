@@ -1,4 +1,4 @@
-.logo-hex { display: none !important; }
+#game-screen .logo-hex { display: none !important; }
 
 .table {
   container-type: size;
