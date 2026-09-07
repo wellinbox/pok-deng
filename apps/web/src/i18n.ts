@@ -17,7 +17,7 @@ const dict: Record<Lang, Record<string, string>> = {
     bet: "ลง",
     raise: "เพิ่ม",
     allin: "ออลอิน",
-    hit: "จัว",
+    hit: "จั่ว",
     stand: "อยู่",
     chat: "แชท",
     history: "ประวัติรอบ",
