@@ -6,6 +6,7 @@ import Landing from "./pages/Landing";
 import SeatView from "./components/Seat";
 import ResultsBoard from "./components/ResultsBoard";
 import { Lang, t } from "./i18n";
+import { money } from "./lib/money";
 
 const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
@@ -208,15 +209,15 @@ export default function App() {
           <div className="en">POK DENG</div>
         </div>
         <div className="header-right">
+          <div className="wallet-hud" title={t(lang, "wallet")}>
+            <span className="wallet-label">{t(lang, "wallet")}</span>
+            <span className="wallet-val">{money(mePlayer?.chips)}</span>
+          </div>
           <div className="icon-row end">
             <button className="icon-btn" type="button" aria-label={t(lang, "alerts")} onClick={(e) => { punch(e.currentTarget); resumeNow(); }}>○</button>
             <button className="icon-btn" type="button" aria-label={t(lang, "menu")} onClick={(e) => { punch(e.currentTarget); setLang(lang === "th" ? "en" : "th"); }}>
               {t(lang, "langSwitch")}
             </button>
-          </div>
-          <div className="wallet-hud" title={t(lang, "wallet")}>
-            <span className="wallet-label">{t(lang, "wallet")}</span>
-            <span className="wallet-val">{mePlayer?.chips ?? 0}</span>
           </div>
         </div>
       </header>
@@ -228,7 +229,7 @@ export default function App() {
           <div className="table-center">
             <div className="pot-box">
               <div className="pot-label">{t(lang, "pot")}</div>
-              <div className="pot-value">{state.pot}</div>
+              <div className="pot-value">{money(state.pot)}</div>
             </div>
           </div>
 
