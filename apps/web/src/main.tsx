@@ -18,6 +18,7 @@ import "./styles/wallet.css";
 import "./styles/broke.css";
 import "./styles/landing.css";
 import "./styles/toast.css";
+import "./styles/chips-extra.css";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

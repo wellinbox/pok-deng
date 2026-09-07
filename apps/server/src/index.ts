@@ -53,6 +53,7 @@ function attach(socket: import("socket.io").Socket, room: GameRoom, playerId: st
   socket.data.playerId = playerId;
   socket.data.roomId = room.roomId;
   socket.join(room.roomId);
+  room.maxBet = 50000;
   emitRoom(room);
 }
 
