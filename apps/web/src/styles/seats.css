@@ -20,13 +20,5 @@
 .seat-cards .card .suit { font-size: 10px; }
 .seat-cards .card .suit-lg { font-size: 16px; }
 
-.you-hand {
-  left: 50%;
-  bottom: 10%;
-  top: auto;
-  transform: translateX(-50%);
-  z-index: 4;
-}
-.you-hand .card { width: 42px; height: 60px; }
-.you-hand .card .rank { font-size: 14px; }
-.you-hand .card .suit-lg { font-size: 18px; }
+/* Extra center hand removed — cards live on the seat only */
+.you-hand { display: none !important; }

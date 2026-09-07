@@ -33,13 +33,17 @@ export default function SeatView({
   showCards?: boolean;
   hole?: Card[];
 }) {
-  const cards = player && showCards ? player.revealedCards : undefined;
-  const mine = hole && hole.length ? hole : cards;
-  const n = player ? Math.min(player.cardCount || mine?.length || 0, 3) : 0;
+  const face =
+    hole && hole.length
+      ? hole
+      : showCards && player?.revealedCards?.length
+        ? player.revealedCards
+        : undefined;
+  const n = player ? Math.min(player.cardCount || face?.length || 0, 3) : 0;
   const showSideCards = !!(player && n > 0);
   const list = showSideCards
-    ? mine
-      ? mine.slice(0, n)
+    ? face
+      ? face.slice(0, n)
       : Array.from({ length: n })
     : [];
   const src = player ? player.avatar || avatarUrl(player.id) : "";
@@ -53,7 +57,7 @@ export default function SeatView({
           {list.map((c, i) => (
             <PlayingCard
               key={typeof c === "object" && c ? c.id : i}
-              card={showCards && typeof c === "object" ? c : undefined}
+              card={typeof c === "object" && c ? c : undefined}
               i={i}
             />
           ))}
