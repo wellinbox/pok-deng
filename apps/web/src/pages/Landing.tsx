@@ -19,7 +19,7 @@ export default function Landing({
   busy?: boolean;
 }) {
   const [name, setName] = useState(() => localStorage.getItem("pd_name") || "");
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(() => localStorage.getItem("pd_last_room") || "");
   const [buyIn, setBuyIn] = useState(() => Number(localStorage.getItem("pd_buyin")) || STARTING_CHIPS);
   const [localErr, setLocalErr] = useState("");
   const fallback = t(lang, "playerDefault");
