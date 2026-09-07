@@ -15,36 +15,39 @@
 .s4 .seat-hud { flex-direction: column; }
 .s4 .seat-cards { order: -1; }
 
-.seat-cards .card { width: 34px; height: 48px; margin-left: -12px; }
-.s4 .seat-cards .card { width: 32px; height: 46px; }
-.seat-cards .card .rank { font-size: 12px; }
+.seat-cards .card .rank { font-size: 11px; }
 .seat-cards .card .suit { font-size: 10px; }
-.seat-cards .card .suit-lg { font-size: 16px; }
+.seat-cards .card .suit-lg { font-size: 15px; }
+
+.seat-taem {
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff4c8;
+  background: #0b0904cc;
+  border: 1px solid #c9a44a;
+  border-radius: 6px;
+  padding: 1px 5px;
+  line-height: 1.2;
+}
 
 @keyframes deal-fly {
   from {
     transform: translate(var(--dx), var(--dy)) scale(0.45) rotate(-28deg);
     opacity: 0;
   }
-  to {
-    transform: none;
-    opacity: 1;
-  }
+  to { opacity: 1; }
 }
-.seat-cards.dealing .card {
+.seat-cards.dealing .flip-card {
   animation: deal-fly 0.48s cubic-bezier(0.2, 0.85, 0.2, 1) both;
 }
-.seat-0 .seat-cards.dealing .card { animation-delay: 0.05s; }
-.seat-1 .seat-cards.dealing .card { animation-delay: 0.12s; }
-.seat-2 .seat-cards.dealing .card { animation-delay: 0.19s; }
-.seat-3 .seat-cards.dealing .card { animation-delay: 0.26s; }
-.seat-4 .seat-cards.dealing .card { animation-delay: 0.33s; }
-.seat-5 .seat-cards.dealing .card { animation-delay: 0.4s; }
-.seat-6 .seat-cards.dealing .card { animation-delay: 0.47s; }
-.seat-7 .seat-cards.dealing .card { animation-delay: 0.54s; }
-.seat-cards.dealing .card:nth-child(2) { animation-delay: calc(var(--d2, 0.18s) + inherit); }
-.seat-cards.dealing .card:nth-child(2) { animation-delay: 0.28s; }
-.seat-cards.dealing .card:nth-child(3) { animation-delay: 0.42s; }
+.seat-0 .seat-cards.dealing .flip-card { animation-delay: 0.05s; }
+.seat-1 .seat-cards.dealing .flip-card { animation-delay: 0.12s; }
+.seat-2 .seat-cards.dealing .flip-card { animation-delay: 0.19s; }
+.seat-3 .seat-cards.dealing .flip-card { animation-delay: 0.26s; }
+.seat-4 .seat-cards.dealing .flip-card { animation-delay: 0.33s; }
+.seat-5 .seat-cards.dealing .flip-card { animation-delay: 0.4s; }
+.seat-6 .seat-cards.dealing .flip-card { animation-delay: 0.47s; }
+.seat-7 .seat-cards.dealing .flip-card { animation-delay: 0.54s; }
 
 .bet-stack {
   display: flex;
@@ -57,7 +60,6 @@
   height: 22px;
   font-size: 8px;
   margin-top: -10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,.45);
 }
 .bet-stack .betchip:first-child { margin-top: 0; }
 .bet-amt {
