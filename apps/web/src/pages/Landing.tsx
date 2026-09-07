@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MIN_BUYIN, MAX_BUYIN, STARTING_CHIPS } from "@pokdeng/shared";
 import { t, Lang } from "../i18n";
 import InstallHint from "../components/InstallHint";
+import StatusPill from "../components/StatusPill";
 
 const PRESETS = [500, 1000, 2000, 5000];
 
@@ -11,12 +12,14 @@ export default function Landing({
   onEnter,
   error,
   busy,
+  net,
 }: {
   lang: Lang;
   setLang: (l: Lang) => void;
   onEnter: (opts: { name: string; roomId?: string; solo?: boolean; create?: boolean; buyIn: number }) => void;
   error?: string;
   busy?: boolean;
+  net: "connecting" | "online" | "offline";
 }) {
   const [name, setName] = useState(() => localStorage.getItem("pd_name") || "");
   const [code, setCode] = useState(() => localStorage.getItem("pd_last_room") || "");
@@ -49,12 +52,18 @@ export default function Landing({
         <i className="chip c5" />
       </div>
 
+      <StatusPill lang={lang} net={net} />
       <button className="landing-lang" type="button" onClick={() => setLang(lang === "th" ? "en" : "th")}>
         <i className="fa-solid fa-language" />
         <span>{t(lang, "langSwitch")}</span>
       </button>
 
       <div className="landing-card">
+        {busy && (
+          <div className="landing-busy">
+            <div className="splash-spin" />
+          </div>
+        )}
         <div className="landing-crest">
           <div className="logo-hex">
             <div className="th">{t(lang, "title")}</div>
@@ -102,8 +111,6 @@ export default function Landing({
             ))}
           </div>
         </div>
-
-        {(localErr || error) && <div className="join-error">{localErr || error}</div>}
 
         <div className="row-btns">
           <button className="btn-gold" disabled={busy} onClick={() => go({ create: true })}>
