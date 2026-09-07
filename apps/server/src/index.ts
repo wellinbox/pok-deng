@@ -15,9 +15,12 @@ const io = new Server(server, {
   cors: { origin: true, methods: ["GET", "POST"] },
   transports: ["polling", "websocket"],
   allowEIO3: true,
+  pingInterval: 20000,
+  pingTimeout: 25000,
 });
 
 const rooms = new Map<string, GameRoom>();
+const leaveTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
 function code() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -30,18 +33,34 @@ function emitRoom(room: GameRoom) {
   const state = room.publicState();
   io.to(room.roomId).emit("state", state);
   for (const p of state.players) {
-    const sock = [...io.sockets.sockets.values()].find((s) => s.data.playerId === p.id);
+    const sock = [...io.sockets.sockets.values()].find((s) => s.data.playerId === p.id && s.connected);
     if (sock) sock.emit("holeCards", room.privateCards(p.id));
   }
 }
 
+function attach(socket: import("socket.io").Socket, room: GameRoom, playerId: string) {
+  const key = `${room.roomId}:${playerId}`;
+  const t = leaveTimers.get(key);
+  if (t) {
+    clearTimeout(t);
+    leaveTimers.delete(key);
+  }
+  socket.data.playerId = playerId;
+  socket.data.roomId = room.roomId;
+  socket.join(room.roomId);
+  emitRoom(room);
+}
+
 io.on("connection", (socket) => {
-  socket.on("join", ({ roomId, name, playerId, solo }: { roomId?: string; name: string; playerId: string; solo?: boolean }) => {
-    socket.data.playerId = playerId;
+  const join = ({ roomId, name, playerId, solo }: { roomId?: string; name: string; playerId: string; solo?: boolean }) => {
+    if (!playerId) {
+      socket.emit("errorMsg", "ไม่พบรหัสผู้เล่น");
+      return;
+    }
     socket.data.name = name || "ผู้เล่น";
     let room: GameRoom | undefined;
     if (solo) {
-      const id = roomId || `SOLO-${playerId.slice(0, 6)}`;
+      const id = (roomId || `SOLO-${playerId.slice(0, 8)}`).toUpperCase();
       room = rooms.get(id);
       if (!room) {
         room = new GameRoom(id, playerId, socket.data.name, () => emitRoom(room!), true);
@@ -53,6 +72,7 @@ io.on("connection", (socket) => {
       room = rooms.get(roomId.toUpperCase());
       if (!room) {
         socket.emit("errorMsg", "ไม่พบห้องนี้");
+        socket.emit("sessionGone");
         return;
       }
       const ok = room.addPlayer(playerId, socket.data.name, socket.id);
@@ -65,9 +85,14 @@ io.on("connection", (socket) => {
       room = new GameRoom(id, playerId, socket.data.name, () => emitRoom(room!), false);
       rooms.set(id, room);
     }
-    socket.data.roomId = room.roomId;
-    socket.join(room.roomId);
-    emitRoom(room);
+    attach(socket, room, playerId);
+  };
+
+  socket.on("join", join);
+  socket.on("resume", join);
+  socket.on("sync", () => {
+    const room = rooms.get(socket.data.roomId);
+    if (room) attach(socket, room, socket.data.playerId);
   });
 
   socket.on("bet", (amount: number) => {
@@ -85,19 +110,35 @@ io.on("connection", (socket) => {
     room.chatMsg(socket.data.playerId, String(text || ""));
     emitRoom(room);
   });
-  socket.on("listRooms", () => {
-    const list = [...rooms.values()]
-      .filter((r) => !r.solo && r.phase === "waiting")
-      .map((r) => ({ roomId: r.roomId, players: r.players.length, host: r.players[0]?.name }));
-    socket.emit("rooms", list);
-  });
-
-  socket.on("disconnect", () => {
+  socket.on("leave", () => {
     const room = rooms.get(socket.data.roomId);
     if (room) {
       room.disconnect(socket.data.playerId);
       emitRoom(room);
     }
+    socket.data.roomId = undefined;
+  });
+
+  socket.on("disconnect", () => {
+    const rid = socket.data.roomId as string | undefined;
+    const pid = socket.data.playerId as string | undefined;
+    if (!rid || !pid) return;
+    const key = `${rid}:${pid}`;
+    const prev = leaveTimers.get(key);
+    if (prev) clearTimeout(prev);
+    leaveTimers.set(
+      key,
+      setTimeout(() => {
+        leaveTimers.delete(key);
+        const still = [...io.sockets.sockets.values()].some((s) => s.data.playerId === pid && s.data.roomId === rid && s.connected);
+        if (still) return;
+        const room = rooms.get(rid);
+        if (room) {
+          room.disconnect(pid);
+          emitRoom(room);
+        }
+      }, 12000)
+    );
   });
 });
 

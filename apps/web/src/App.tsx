@@ -11,12 +11,27 @@ const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
   "https://pok-deng-production.up.railway.app";
 
+type Session = { roomId: string; name: string; solo: boolean };
+
 function uid() {
   const e = localStorage.getItem("pd_id");
   if (e) return e;
   const n = crypto.randomUUID();
   localStorage.setItem("pd_id", n);
   return n;
+}
+
+function loadSession(): Session | null {
+  try {
+    const raw = localStorage.getItem("pd_session");
+    return raw ? (JSON.parse(raw) as Session) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveSession(s: Session) {
+  localStorage.setItem("pd_session", JSON.stringify(s));
 }
 
 function punch(el: HTMLElement | null) {
@@ -28,56 +43,119 @@ function punch(el: HTMLElement | null) {
 
 export default function App() {
   const [lang, setLang] = useState<Lang>("th");
-  const [joined, setJoined] = useState(false);
+  const [joined, setJoined] = useState(() => !!loadSession());
   const [state, setState] = useState<RoomState | null>(null);
   const [hole, setHole] = useState<Card[]>([]);
   const [chip, setChip] = useState(10);
   const [sound, setSound] = useState(true);
   const [net, setNet] = useState<"connecting" | "online" | "offline">("connecting");
   const sock = useRef<Socket | null>(null);
-  const pending = useRef<Record<string, unknown> | null>(null);
+  const session = useRef<Session | null>(loadSession());
   const me = uid();
+
+  const emitJoin = (s: Socket, sess: Session) => {
+    s.emit("join", {
+      playerId: me,
+      name: sess.name,
+      roomId: sess.roomId,
+      solo: sess.solo,
+    });
+  };
+
+  const resumeNow = () => {
+    const s = sock.current;
+    const sess = session.current;
+    if (!s || !sess) return;
+    if (!s.connected) s.connect();
+    else emitJoin(s, sess);
+  };
 
   useEffect(() => {
     const s = io(SOCKET_URL, {
       transports: ["polling", "websocket"],
       withCredentials: false,
       reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 400,
+      reconnectionDelayMax: 4000,
+      timeout: 12000,
+      autoConnect: true,
     });
     sock.current = s;
+
     s.on("connect", () => {
       setNet("online");
-      if (pending.current) {
-        s.emit("join", pending.current);
-        pending.current = null;
-      }
+      if (session.current) emitJoin(s, session.current);
     });
     s.on("disconnect", () => setNet("offline"));
     s.on("connect_error", () => setNet("offline"));
     s.on("state", (st: RoomState) => {
       setState(st);
       setJoined(true);
+      const prev = session.current;
+      const next: Session = {
+        roomId: st.roomId,
+        name: prev?.name || localStorage.getItem("pd_name") || "ผู้เล่น",
+        solo: st.solo,
+      };
+      session.current = next;
+      saveSession(next);
     });
     s.on("holeCards", (cards: Card[]) => setHole(cards));
-    s.on("errorMsg", (m: string) => alert(m));
+    s.on("errorMsg", (m: string) => {
+      if (m === "ไม่พบห้องนี้" && !session.current?.solo) {
+        session.current = null;
+        localStorage.removeItem("pd_session");
+        setJoined(false);
+        setState(null);
+      }
+    });
+    s.on("sessionGone", () => {
+      session.current = null;
+      localStorage.removeItem("pd_session");
+      setJoined(false);
+      setState(null);
+    });
+
+    const wake = () => {
+      if (document.visibilityState === "hidden") return;
+      resumeNow();
+    };
+    document.addEventListener("visibilitychange", wake);
+    window.addEventListener("pageshow", wake);
+    window.addEventListener("focus", wake);
+    window.addEventListener("online", wake);
+
+    if (session.current && s.connected) emitJoin(s, session.current);
+
     return () => {
+      document.removeEventListener("visibilitychange", wake);
+      window.removeEventListener("pageshow", wake);
+      window.removeEventListener("focus", wake);
+      window.removeEventListener("online", wake);
       s.close();
     };
   }, []);
 
   const enter = (opts: { name: string; roomId?: string; solo?: boolean; create?: boolean }) => {
-    const payload = {
-      playerId: me,
+    const payload: Session = {
       name: opts.name,
-      roomId: opts.create ? undefined : opts.roomId,
+      roomId: opts.create ? "" : opts.solo ? `SOLO-${me.slice(0, 8)}`.toUpperCase() : (opts.roomId || "").toUpperCase(),
       solo: !!opts.solo,
     };
+    session.current = payload;
+    saveSession(payload);
+    setJoined(true);
     const s = sock.current;
-    if (s?.connected) s.emit("join", payload);
-    else {
-      pending.current = payload;
-      s?.connect();
-    }
+    if (!s) return;
+    if (s.connected) {
+      s.emit("join", {
+        playerId: me,
+        name: payload.name,
+        roomId: payload.roomId || undefined,
+        solo: payload.solo,
+      });
+    } else s.connect();
   };
 
   const mePlayer = state?.players.find((p) => p.id === me);
@@ -94,7 +172,7 @@ export default function App() {
   const remain = useMemo(() => {
     if (!state?.timerEndsAt) return 0;
     return Math.max(0, Math.ceil((state.timerEndsAt - Date.now()) / 1000));
-  }, [state]);
+  }, [state, net]);
   const bySeat = (n: number) => state?.players.find((p) => p.seat === n);
   const winners = (state?.players || []).filter((p) => p.lastResult === "win");
   const showWinner = state?.phase === "payout";
@@ -117,10 +195,15 @@ export default function App() {
 
   return (
     <div id="game-screen">
+      {net !== "online" && (
+        <div className="fixed inset-x-0 top-0 z-30 bg-amber-900/90 text-center text-xs py-1 text-amber-100">
+          {t(lang, "reconnecting")}
+        </div>
+      )}
       <header className="game-header">
         <div className="icon-row">
           <button className="icon-btn" type="button" aria-label={t(lang, "settings")} onClick={(e) => punch(e.currentTarget)}>⚙</button>
-          <button className="icon-btn" type="button" aria-label={t(lang, "sound")} onClick={(e) => { punch(e.currentTarget); setSound((s) => !s); }}>
+          <button className="icon-btn" type="button" aria-label={t(lang, "sound")} onClick={(e) => { punch(e.currentTarget); setSound((v) => !v); }}>
             {sound ? "♪" : "×"}
           </button>
         </div>
@@ -130,7 +213,7 @@ export default function App() {
         </div>
         <div className="header-right">
           <div className="icon-row end">
-            <button className="icon-btn" type="button" aria-label={t(lang, "alerts")} onClick={(e) => punch(e.currentTarget)}>○</button>
+            <button className="icon-btn" type="button" aria-label={t(lang, "alerts")} onClick={(e) => { punch(e.currentTarget); resumeNow(); }}>○</button>
             <button className="icon-btn" type="button" aria-label={t(lang, "menu")} onClick={(e) => { punch(e.currentTarget); setLang(lang === "th" ? "en" : "th"); }}>
               {t(lang, "langSwitch")}
             </button>
