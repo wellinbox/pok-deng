@@ -1,4 +1,5 @@
 import { v4 as uuid } from "uuid";
+import { io } from "socket.io";
 import {
   Card, ChatMessage, MAX_PLAYERS, MIN_BET_DEFAULT, PHASE_MS, Phase,
   PlayerPrivate, RoomState, STARTING_CHIPS, SeatRole, clampBuyIn, LeaderboardEntry,
@@ -70,8 +71,12 @@ export class GameRoom {
   chatMsg(playerId: string, text: string) {
     const p = this.players.find((x) => x.id === playerId);
     if (!p || !text.trim()) return;
-    this.chat.push({ id: uuid(), playerId, name: p.name, text: text.slice(0, 140), at: Date.now() });
+    const msg = { id: uuid(), playerId, name: p.name, text: text.slice(0, 140), at: Date.now() };
+    this.chat.push(msg);
     this.chat = this.chat.slice(-40);
+    // Broadcast new message immediately
+    this.emit();
+    io.to(this.roomId).emit("chatMessage", msg);
   }
 
   placeBet(playerId: string, amount: number) {
