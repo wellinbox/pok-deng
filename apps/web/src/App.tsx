@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import type { Card, RoomState } from "@pokdeng/shared";
+import type { Card, RoomState, ChatMessage } from "@pokdeng/shared";
 import { STARTING_CHIPS, clampBuyIn } from "@pokdeng/shared";
 import Landing from "./pages/Landing";
 import SeatView from "./components/Seat";
@@ -10,6 +10,7 @@ import SettingsMenu from "./components/SettingsMenu";
 import BrokeBar from "./components/BrokeBar";
 import Toast from "./components/Toast";
 import ChipTray from "./components/ChipTray";
+import ChatBox from "./components/ChatBox";
 import { Lang, t } from "./i18n";
 import { money } from "./lib/money";
 import { soundManager, SoundKey, preloadSounds } from "./lib/sound";
@@ -56,6 +57,8 @@ export default function App() {
   const [chip, setChip] = useState(10);
   const [sound, setSound] = useState(true);
   const [menu, setMenu] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chat, setChat] = useState<ChatMessage[]>([]);
   const [joinErr, setJoinErr] = useState("");
   const [toast, setToast] = useState<{ text: string; kind?: "info" | "error" | "ok" } | null>(null);
   const [splash, setSplash] = useState(true);
@@ -157,6 +160,14 @@ export default function App() {
       };
       session.current = next;
       saveSession(next);
+      // Reset chat when joining new room
+      setChat([]);
+    });
+    s.on("chatHistory", (history: ChatMessage[]) => {
+      setChat(history.slice(-40));
+    });
+    s.on("chatMessage", (msg: ChatMessage) => {
+      setChat(prev => [...prev.slice(-39), msg]);
     });
     s.on("holeCards", (cards: Card[]) => {
       if (!stay.current) return;
@@ -267,6 +278,10 @@ export default function App() {
     if (sound) {
       soundManager.play("buttonClick");
     }
+  };
+
+  const sendChat = (text: string) => {
+    sock.current?.emit("chat", text);
   };
 
   return (
@@ -380,6 +395,8 @@ export default function App() {
           if (sound) soundManager.play("chipClick");
         }} />
       </footer>
+
+      <ChatBox chat={chat} playerId={me} onSend={sendChat} lang={lang} />
     </div>
   );
 }

@@ -41,6 +41,8 @@ function emitRoom(room: GameRoom) {
     const sock = [...io.sockets.sockets.values()].find((s) => s.data.playerId === p.id && s.connected);
     if (sock) sock.emit("holeCards", room.privateCards(p.id));
   }
+  // Send chat history to all players in room
+  io.to(room.roomId).emit("chatHistory", room.chat.slice(-40));
 }
 
 function attach(socket: import("socket.io").Socket, room: GameRoom, playerId: string) {
