@@ -1,10 +1,22 @@
 import type { Card } from "@pokdeng/shared";
+import { GameConfig } from "@pokdeng/shared";
 
 const SUIT: Record<string, string> = { hearts: "♥", diamonds: "♦", clubs: "♣", spades: "♠" };
 
-export default function PlayingCard({ card, i = 0 }: { card?: Card | null; i?: number }) {
+export default function PlayingCard({ card, i = 0, showBackImage = true }: { card?: Card | null; i?: number, showBackImage?: boolean }) {
   if (!card) {
-    return <div className="flip-card is-back" style={{ animationDelay: `${i * 70}ms` }}><div className="card back" /></div>;
+    return (
+      <div className="flip-card is-back" style={{ animationDelay: `${i * 70}ms` }}>
+        <div 
+          className="card back" 
+          style={{ 
+            backgroundImage: showBackImage ? `url(${GameConfig.assets.cardBack})` : undefined,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        />
+      </div>
+    );
   }
   const red = card.suit === "hearts" || card.suit === "diamonds";
   return (
