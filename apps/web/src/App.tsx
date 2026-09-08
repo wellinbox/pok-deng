@@ -326,6 +326,9 @@ export default function App() {
 
       <section className="table-stage">
         <div className="table">
+          <div className="dealer-img">
+            <img src="/assets/Dealer.png" alt="Dealer" />
+          </div>
           <div className="table-center">
             <PotHeap amount={state.pot} />
           </div>
