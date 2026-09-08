@@ -1,11 +1,13 @@
 import { v4 as uuid } from "uuid";
 import {
   Card, ChatMessage, MAX_PLAYERS, MIN_BET_DEFAULT, PHASE_MS, Phase,
-  PlayerPrivate, RoomState, STARTING_CHIPS, SeatRole, clampBuyIn,
+  PlayerPrivate, RoomState, STARTING_CHIPS, SeatRole, clampBuyIn, LeaderboardEntry,
   avatarUrl, createDeck, dealerShouldHit, detectPok, evaluateHand, payout, shuffle,
 } from "@pokdeng/shared";
 
 interface InternalPlayer extends PlayerPrivate { socketId: string | null; }
+
+const GLOBAL_LEADERBOARD_KEY = "pokdeng_global_leaderboard";
 
 export class GameRoom {
   roomId: string; hostId: string; dealerId: string;
@@ -222,11 +224,21 @@ export class GameRoom {
       const deng = evP.dengLabel ? ` ${evP.dengLabel}` : "";
       const r = payout(p.cards, dealer.cards, p.bet);
       p.lastResult = r.outcome;
+      
+      // Update player stats
+      if (!p.id.startsWith("ai-")) {
+        const handLabel = evP.pok ? `ป๊อก ${evP.pok}${deng}` : `${evP.taem} แต้ม${deng}`;
+        const chipsWon = r.outcome === "win" ? r.playerDelta : r.outcome === "lose" ? -p.bet : 0;
+        this.updatePlayerStats(p.id, p.name, r.outcome, chipsWon, handLabel);
+      }
+      
       if (r.outcome === "win") { p.chips += p.bet + r.playerDelta; dealer.chips = Math.max(0, dealer.chips - r.playerDelta); hist.push(`${p.name} ชนะ ${tag}${deng} +${r.playerDelta}`); }
       else if (r.outcome === "draw") { p.chips += p.bet; hist.push(`${p.name} เสมอ ${tag}`); }
       else { const extra = Math.max(0, -r.playerDelta - p.bet); p.chips = Math.max(0, p.chips - extra); dealer.chips += -r.playerDelta; hist.push(`${p.name} แพ้ ${tag}${deng} ${r.playerDelta}`); }
     }
-    this.lastHistory = hist.slice(0, 8); this.publicMessage = "จ่ายเงินรอบนี้"; this.emit();
+    this.lastHistory = hist.slice(0, 8); this.publicMessage = "จ่ายเงินรอบนี้"; 
+    this.updateLeaderboard();
+    this.emit();
     this.setTimer(PHASE_MS.payout, () => this.nextRound());
   }
 
@@ -247,11 +259,33 @@ export class GameRoom {
 
   publicState(): RoomState {
     const open = this.phase === "reveal" || this.phase === "payout" || this.phase === "nextRound";
+    const leaderboard: LeaderboardEntry[] = [];
+    
+    for (const [playerId, stats] of this.playerStatsStore.entries()) {
+      const player = this.players.find(p => p.id === playerId);
+      if (!player || playerId.startsWith("ai-")) continue;
+      
+      const rating = 1000 + (stats.wins * 50) - (stats.losses * 30) + 
+                     Math.min(stats.gamesPlayed * 5, 500) + Math.round(stats.winRate * 0.5);
+      
+      leaderboard.push({
+        playerId,
+        name: player.name,
+        avatar: player.avatar || avatarUrl(playerId),
+        rating,
+        gamesPlayed: stats.gamesPlayed,
+        wins: stats.wins,
+        winRate: stats.winRate,
+      });
+    }
+    
+    leaderboard.sort((a, b) => b.rating - a.rating);
+    
     return {
       roomId: this.roomId, hostId: this.hostId, dealerId: this.dealerId, phase: this.phase,
       pot: this.pot, minBet: this.minBet, maxBet: this.maxBet, timerEndsAt: this.timerEndsAt,
       currentActorId: this.currentActorId, publicMessage: this.publicMessage, chat: this.chat,
-      lastHistory: this.lastHistory, solo: this.solo,
+      lastHistory: this.lastHistory, solo: this.solo, leaderboard: leaderboard.slice(0, 100),
       players: this.players.map((p) => ({
         id: p.id, name: p.name, avatar: p.avatar || avatarUrl(p.id), chips: p.chips, bet: p.bet, seat: p.seat, ready: p.ready,
         folded: p.folded, connected: p.connected, role: p.role as SeatRole, cardCount: p.cardCount,
@@ -263,5 +297,9 @@ export class GameRoom {
 
   privateCards(playerId: string): Card[] {
     return this.players.find((p) => p.id === playerId)?.cards ?? [];
+  }
+
+  getPlayerStats(playerId: string) {
+    return this.playerStatsStore.get(playerId);
   }
 }
