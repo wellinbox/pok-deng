@@ -84,9 +84,9 @@ button { font-family: inherit; border: 0; cursor: pointer; }
 .dealer-img {
   position: absolute;
   left: 50%;
-  top: 18%;
+  top: 25%;
   transform: translate(-50%, -50%);
-  width: 12%;
+  width: 15%;
   height: auto;
   z-index: 2;
 }
