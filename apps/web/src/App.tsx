@@ -325,7 +325,6 @@ export default function App() {
       {state.timerEndsAt && <div className="timer-line">{remain}s · {state.publicMessage}</div>}
 
       <section className="table-stage">
-        <div className="table-bg" />
         <div className="table">
           <div className="table-center">
             <PotHeap amount={state.pot} />
