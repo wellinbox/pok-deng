@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#0b120e"/>
+  <polygon points="56,256 128,72 384,72 456,256 384,440 128,440" fill="#d4af37"/>
+  <polygon points="88,256 148,104 364,104 424,256 364,408 148,408" fill="#1a1408"/>
+  <text x="256" y="230" text-anchor="middle" font-family="Georgia,serif" font-size="72" font-weight="700" fill="#fff4c8">ป๊อก</text>
+  <text x="256" y="310" text-anchor="middle" font-family="Georgia,serif" font-size="36" letter-spacing="8" fill="#e0c36a">DENG</text>
+</svg>
