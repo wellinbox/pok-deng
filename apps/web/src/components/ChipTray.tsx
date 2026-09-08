@@ -15,6 +15,7 @@ export default function ChipTray({
           type="button"
           className={`chip c${v} ${chip === v ? "on" : ""}`}
           onClick={(e) => onPick(v, e.currentTarget)}
+          aria-label={`${chipLabel(v)} chips`}
         >
           {chipLabel(v)}
         </button>
