@@ -5,7 +5,9 @@ node_modules/
 # Build outputs
 dist/
 build/
-target/
+.next/
+.nuxt/
+out/
 
 # Python
 __pycache__/
