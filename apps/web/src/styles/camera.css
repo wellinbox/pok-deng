@@ -6,13 +6,7 @@
   background-repeat: no-repeat;
 }
 .table {
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  transform-origin: 50% 50%;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(2px);
-  border-radius: 50%;
+  /* No camera effects - using graphic table only */
 }
 .seat-cards,
 .s0 .seat-cards,

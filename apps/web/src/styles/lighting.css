@@ -1,22 +1,8 @@
 .table {
-  box-shadow:
-    0 28px 50px #000c,
-    0 8px 16px #0008,
-    inset 0 18px 40px #fff2,
-    inset 0 -28px 40px #0007,
-    inset 18px 0 28px #0004,
-    inset -18px 0 28px #0004;
+  /* No lighting effects - using graphic table only */
 }
 .table::after {
-  content: "";
-  position: absolute;
-  inset: 8%;
-  border-radius: 50%;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at 50% 18%, #fff6 0%, transparent 42%),
-    radial-gradient(ellipse at 50% 88%, #0006 0%, transparent 46%);
-  z-index: 1;
+  display: none;
 }
 .table-center,
 .seat-anchor {
