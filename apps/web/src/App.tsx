@@ -324,13 +324,9 @@ export default function App() {
 
       {state.timerEndsAt && <div className="timer-line">{remain}s · {state.publicMessage}</div>}
 
-      <section className="table-stage" style={{ backgroundImage: `url(${GameConfig.assets.tableBg})` }}>
+      <section className="table-stage">
+        <div className="table-bg" />
         <div className="table">
-          <div className="felt-mark" aria-hidden="true">
-            <div className="th">ป๊อกเด้ง</div>
-            <div className="en">POK DENG</div>
-            <div className="rule" />
-          </div>
           <div className="table-center">
             <PotHeap amount={state.pot} />
           </div>
