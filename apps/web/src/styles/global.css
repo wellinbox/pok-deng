@@ -187,14 +187,19 @@ button { font-family: inherit; border: 0; cursor: pointer; }
   width: 34px; height: 34px; border-radius: 50%;
   border: 3px dashed rgba(255,255,255,.62);
   display: grid; place-items: center; font-weight: 800; font-size: 10px; color: #fff;
+  background-size: cover;
+  background-position: center;
 }
 .chip.on { outline: 2px solid #ffe9a0; transform: translateY(-3px); }
 .potchip { width: 18px !important; height: 18px !important; font-size: 0 !important; border-width: 2px; }
 .c5 { background: radial-gradient(circle at 30% 30%, #ff8a8a, #b1121c); }
-.c10 { background: radial-gradient(circle at 30% 30%, #8dff9a, #0d7a38); }
+.c10 { background-image: url('https://cdn-icons-png.flaticon.com/512/1029/1029316.png'); background-color: transparent; }
 .c25 { background: radial-gradient(circle at 30% 30%, #7ad4c8, #0e6a68); }
-.c50 { background: radial-gradient(circle at 30% 30%, #7aa6ff, #1a3ea8); }
-.c100 { background: radial-gradient(circle at 30% 30%, #d39bff, #6a1aa0); }
+.c50 { background-image: url('https://cdn-icons-png.flaticon.com/512/1029/1029324.png'); background-color: transparent; }
+.c100 { background-image: url('https://cdn-icons-png.flaticon.com/512/1029/1029320.png'); background-color: transparent; }
+.c500 { background-image: url('https://cdn-icons-png.flaticon.com/512/1029/1029328.png'); background-color: transparent; }
+.c1000 { background-image: url('https://cdn-icons-png.flaticon.com/512/1029/1029332.png'); background-color: transparent; }
+.c5000 { background: radial-gradient(circle at 30% 30%, #f0f0ff, #7a7a9a); color: #101018; }
 .tray {
   display: flex; gap: 6px; justify-content: center;
   background: #0b0b0c; border: 2px solid #c9a44a; border-radius: 12px; padding: 6px 8px;

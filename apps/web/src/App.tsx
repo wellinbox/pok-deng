@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import type { Card, RoomState, ChatMessage } from "@pokdeng/shared";
-import { STARTING_CHIPS, clampBuyIn } from "@pokdeng/shared";
+import { STARTING_CHIPS, clampBuyIn, GameConfig } from "@pokdeng/shared";
 import Landing from "./pages/Landing";
 import SeatView from "./components/Seat";
 import ResultsBoard from "./components/ResultsBoard";
@@ -324,7 +324,7 @@ export default function App() {
 
       {state.timerEndsAt && <div className="timer-line">{remain}s · {state.publicMessage}</div>}
 
-      <section className="table-stage">
+      <section className="table-stage" style={{ backgroundImage: `url(${GameConfig.assets.tableBg})` }}>
         <div className="table">
           <div className="felt-mark" aria-hidden="true">
             <div className="th">ป๊อกเด้ง</div>
