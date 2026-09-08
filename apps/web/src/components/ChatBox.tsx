@@ -28,7 +28,7 @@ export default function ChatBox({ chat, playerId, onSend, lang }: ChatBoxProps) 
   if (!open) {
     return (
       <button
-        className="fixed bottom-40 right-4 z-50 bg-amber-600 hover:bg-amber-500 text-white rounded-full p-3 shadow-lg transition-all"
+        className="fixed bottom-36 right-4 z-50 bg-amber-600 hover:bg-amber-500 text-white rounded-full p-3 shadow-lg transition-all"
         onClick={() => setOpen(true)}
         aria-label={t(lang, "chat")}
       >
@@ -43,7 +43,7 @@ export default function ChatBox({ chat, playerId, onSend, lang }: ChatBoxProps) 
   }
 
   return (
-    <div className="fixed bottom-40 right-4 z-50 w-72 bg-gray-900/95 backdrop-blur rounded-lg shadow-xl border border-amber-700/50 flex flex-col max-h-80">
+    <div className="fixed bottom-36 right-4 z-50 w-72 bg-gray-900/95 backdrop-blur rounded-lg shadow-xl border border-amber-700/50 flex flex-col max-h-80">
       <div className="flex items-center justify-between p-3 border-b border-amber-700/50">
         <h3 className="text-amber-100 font-semibold text-sm">{t(lang, "chat")}</h3>
         <button
