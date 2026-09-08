@@ -2,50 +2,39 @@
 # Dependencies
 node_modules/
 .pnpm-store/
+.npm/
+.yarn/
 
 # Build outputs
 dist/
 build/
-coverage/
+.next/
+out/
+public/build/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Environment variables
 .env
 .env.local
-*.env.*
+.env.*
+!.env.example
 
-# IDE and editor files
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-*.tmp
 
-# Python specific
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.venv/
-pip-log.txt
-pip-delete-this-directory.txt
-*.so
-.Python
-.pytest_cache/
-.mypy_cache/
-.coverage
-htmlcov/
-
-# Logs
-*.log
-
-# OS generated files
+# OS
 .DS_Store
 Thumbs.db
 
-# Testing
+# Coverage
 coverage/
 .nyc_output/
 istanbul/
