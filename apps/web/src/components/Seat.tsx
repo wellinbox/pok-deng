@@ -48,7 +48,7 @@ export default function SeatView({
   const rim = player.role && player.role !== "DEALER" ? player.role : crown ? "DEALER" : undefined;
   const betChips = player.bet > 0 ? stackChips(player.bet) : [];
   const taemText = player.pok
-    ? `ป๊อก ${player.pok}`
+    ? `Pok ${player.pok}`
     : player.taem != null
       ? `${player.taem}`
       : "";
