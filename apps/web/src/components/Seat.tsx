@@ -58,7 +58,7 @@ export default function SeatView({
     <div className={`seat-stack ${cls} ${player.lastResult === "win" ? "is-winner" : ""} ${dealing ? "is-dealing" : ""}`}>
       <div className="play-pile">
         {showSideCards && (
-          <div className={`seat-cards ${dealing ? "dealing" : ""} ${drawing ? "drawing" : ""}`>
+          <div className={`seat-cards ${dealing ? "dealing" : ""} ${drawing ? "drawing" : ""}`}>
             {list.map((c, i) => (
               <PlayingCard
                 key={typeof c === "object" && c ? c.id : `${i}-${n}`}
@@ -84,7 +84,7 @@ export default function SeatView({
       </div>
       <div className="seat-hud">
         {rim && <div className="rim-badge">{rim}</div>}
-        <div className={`avatar ${crown ? "dealer" : ""`}>
+        <div className={`avatar ${crown ? "dealer" : ""}`}>
           <img src={src} alt="" />
         </div>
         <div className="nameplate">{player.name}</div>
