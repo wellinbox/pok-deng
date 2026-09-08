@@ -47,13 +47,43 @@ const sounds: SoundUrls = {
   toast: `${SOUND_BASE}/mp3/notification-1-6269.mp3`,
 };
 
+// Test URLs to verify they're accessible
+const testSoundUrl = async (url: string): Promise<boolean> => {
+  try {
+    const response = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+    return response.ok;
+  } catch {
+    return false;
+  }
+};
+
 class SoundManager {
   private enabled: boolean = true;
   private cache: Map<string, HTMLAudioElement> = new Map();
   private volume: number = 0.5;
+  private initialized: boolean = false;
+
+  async initialize() {
+    if (this.initialized || !this.enabled) return;
+    
+    // Test all sound URLs on first user interaction
+    const urls = Object.values(sounds);
+    const testResults = await Promise.all(urls.map(testSoundUrl));
+    const allAccessible = testResults.every(r => r);
+    
+    if (!allAccessible) {
+      console.warn('Some sound URLs may not be accessible');
+    }
+    
+    this.initialized = true;
+    this.preloadAll();
+  }
 
   setEnabled(enabled: boolean) {
     this.enabled = enabled;
+    if (enabled && !this.initialized) {
+      this.initialize();
+    }
   }
 
   setVolume(volume: number) {
@@ -94,8 +124,9 @@ class SoundManager {
 
     // Reset and play
     audio.currentTime = 0;
-    audio.play().catch(() => {
+    audio.play().catch((err) => {
       // Ignore autoplay errors (user interaction required)
+      console.debug(`Sound playback error for ${key}:`, err.message);
     });
   }
 
@@ -103,11 +134,21 @@ class SoundManager {
   preloadAll() {
     if (!this.enabled) return;
     
-    Object.values(sounds).forEach((url) => {
+    Object.entries(sounds).forEach(([key, url]) => {
       if (!this.cache.has(url)) {
         const audio = new Audio(url);
         audio.preload = "auto";
         audio.volume = this.volume;
+        
+        // Log loading errors for debugging
+        audio.onerror = () => {
+          console.warn(`Failed to preload sound: ${key} (${url})`);
+        };
+        
+        audio.onloadeddata = () => {
+          console.debug(`Successfully loaded sound: ${key}`);
+        };
+        
         this.cache.set(url, audio);
       }
     });

@@ -1,3 +1,99 @@
+/* Sprite-based Card Graphics */
+.card-graphic {
+  width: 40px;
+  height: 56px;
+  border-radius: 6px;
+  background-image: url('/assets/sheet-table-cards.jpeg');
+  background-size: 520px 224px; /* 13 ranks x 4 suits */
+  background-repeat: no-repeat;
+  box-shadow: 0 4px 8px #0006;
+  position: relative;
+}
+.card-graphic.back {
+  background-position: 0 168px; /* Back of card row */
+  border: 2px solid #c9a44a;
+}
+/* Card positions: hearts(0), diamonds(1), clubs(2), spades(3) */
+/* Ranks: A=0, 2=1, ..., K=12 */
+.card-graphic[data-suit="hearts"][data-rank="A"] { background-position: 0 0; }
+.card-graphic[data-suit="hearts"][data-rank="2"] { background-position: -40px 0; }
+.card-graphic[data-suit="hearts"][data-rank="3"] { background-position: -80px 0; }
+.card-graphic[data-suit="hearts"][data-rank="4"] { background-position: -120px 0; }
+.card-graphic[data-suit="hearts"][data-rank="5"] { background-position: -160px 0; }
+.card-graphic[data-suit="hearts"][data-rank="6"] { background-position: -200px 0; }
+.card-graphic[data-suit="hearts"][data-rank="7"] { background-position: -240px 0; }
+.card-graphic[data-suit="hearts"][data-rank="8"] { background-position: -280px 0; }
+.card-graphic[data-suit="hearts"][data-rank="9"] { background-position: -320px 0; }
+.card-graphic[data-suit="hearts"][data-rank="10"] { background-position: -360px 0; }
+.card-graphic[data-suit="hearts"][data-rank="J"] { background-position: -400px 0; }
+.card-graphic[data-suit="hearts"][data-rank="Q"] { background-position: -440px 0; }
+.card-graphic[data-suit="hearts"][data-rank="K"] { background-position: -480px 0; }
+
+.card-graphic[data-suit="diamonds"][data-rank="A"] { background-position: 0 -56px; }
+.card-graphic[data-suit="diamonds"][data-rank="2"] { background-position: -40px -56px; }
+.card-graphic[data-suit="diamonds"][data-rank="3"] { background-position: -80px -56px; }
+.card-graphic[data-suit="diamonds"][data-rank="4"] { background-position: -120px -56px; }
+.card-graphic[data-suit="diamonds"][data-rank="5"] { background-position: -160px -56px; }
+.card-graphic[data-suit="diamonds"][data-rank="6"] { background-position: -200px -56px; }
+.card-graphic[data-suit="diamonds"][data-rank="7"] { background-position: -240px -56px; }
+.card-graphic[data-suit="diamonds"][data-rank="8"] { background-position: -280px -56px; }
+.card-graphic[data-suit="diamonds"][data-rank="9"] { background-position: -320px -56px; }
+.card-graphic[data-suit="diamonds"][data-rank="10"] { background-position: -360px -56px; }
+.card-graphic[data-suit="diamonds"][data-rank="J"] { background-position: -400px -56px; }
+.card-graphic[data-suit="diamonds"][data-rank="Q"] { background-position: -440px -56px; }
+.card-graphic[data-suit="diamonds"][data-rank="K"] { background-position: -480px -56px; }
+
+.card-graphic[data-suit="clubs"][data-rank="A"] { background-position: 0 -112px; }
+.card-graphic[data-suit="clubs"][data-rank="2"] { background-position: -40px -112px; }
+.card-graphic[data-suit="clubs"][data-rank="3"] { background-position: -80px -112px; }
+.card-graphic[data-suit="clubs"][data-rank="4"] { background-position: -120px -112px; }
+.card-graphic[data-suit="clubs"][data-rank="5"] { background-position: -160px -112px; }
+.card-graphic[data-suit="clubs"][data-rank="6"] { background-position: -200px -112px; }
+.card-graphic[data-suit="clubs"][data-rank="7"] { background-position: -240px -112px; }
+.card-graphic[data-suit="clubs"][data-rank="8"] { background-position: -280px -112px; }
+.card-graphic[data-suit="clubs"][data-rank="9"] { background-position: -320px -112px; }
+.card-graphic[data-suit="clubs"][data-rank="10"] { background-position: -360px -112px; }
+.card-graphic[data-suit="clubs"][data-rank="J"] { background-position: -400px -112px; }
+.card-graphic[data-suit="clubs"][data-rank="Q"] { background-position: -440px -112px; }
+.card-graphic[data-suit="clubs"][data-rank="K"] { background-position: -480px -112px; }
+
+.card-graphic[data-suit="spades"][data-rank="A"] { background-position: 0 -168px; }
+.card-graphic[data-suit="spades"][data-rank="2"] { background-position: -40px -168px; }
+.card-graphic[data-suit="spades"][data-rank="3"] { background-position: -80px -168px; }
+.card-graphic[data-suit="spades"][data-rank="4"] { background-position: -120px -168px; }
+.card-graphic[data-suit="spades"][data-rank="5"] { background-position: -160px -168px; }
+.card-graphic[data-suit="spades"][data-rank="6"] { background-position: -200px -168px; }
+.card-graphic[data-suit="spades"][data-rank="7"] { background-position: -240px -168px; }
+.card-graphic[data-suit="spades"][data-rank="8"] { background-position: -280px -168px; }
+.card-graphic[data-suit="spades"][data-rank="9"] { background-position: -320px -168px; }
+.card-graphic[data-suit="spades"][data-rank="10"] { background-position: -360px -168px; }
+.card-graphic[data-suit="spades"][data-rank="J"] { background-position: -400px -168px; }
+.card-graphic[data-suit="spades"][data-rank="Q"] { background-position: -440px -168px; }
+.card-graphic[data-suit="spades"][data-rank="K"] { background-position: -480px -168px; }
+
+/* Chip graphics from sprite sheet */
+.chip-graphic {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-image: url('/assets/sheet-ui-chips.jpeg');
+  background-size: 280px 68px; /* 7 chip values x 2 rows */
+  background-repeat: no-repeat;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 10px;
+  color: #fff;
+  text-shadow: 0 1px 2px #000;
+}
+.chip-graphic.c5 { background-position: 0 0; }
+.chip-graphic.c10 { background-position: -40px 0; }
+.chip-graphic.c25 { background-position: -80px 0; }
+.chip-graphic.c50 { background-position: -120px 0; }
+.chip-graphic.c100 { background-position: -160px 0; }
+.chip-graphic.c500 { background-position: -200px 0; }
+.chip-graphic.c1000 { background-position: -240px 0; }
+
 .gem {
   display: grid;
   place-items: center;

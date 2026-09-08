@@ -73,7 +73,7 @@ export default function SeatView({
           <div className="bet-stack" title={money(player.bet)}>
             <div className="bet-pile">
               {betChips.map((v, i) => (
-                <i key={`${v}-${i}`} className={`chip c${v} betchip`} style={{ zIndex: i + 1, left: `${i * 7}px` }}>
+                <i key={`${v}-${i}`} className={`chip-graphic c${v} betchip`} style={{ zIndex: i + 1, left: `${i * 7}px` }}>
                   {v}
                 </i>
               ))}
