@@ -41,6 +41,7 @@ export interface PlayerPublic {
 
 export interface PlayerPrivate extends PlayerPublic {
   cards: Card[];
+  stats?: PlayerStats;
 }
 
 export interface RoomState {
@@ -58,6 +59,7 @@ export interface RoomState {
   chat: ChatMessage[];
   lastHistory: string[];
   solo: boolean;
+  leaderboard?: LeaderboardEntry[];
 }
 
 export interface ChatMessage {
@@ -66,6 +68,26 @@ export interface ChatMessage {
   name: string;
   text: string;
   at: number;
+}
+
+export interface PlayerStats {
+  gamesPlayed: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  totalChipsWon: number;
+  bestHand: string;
+  winRate: number;
+}
+
+export interface LeaderboardEntry {
+  playerId: string;
+  name: string;
+  avatar: string;
+  rating: number;
+  gamesPlayed: number;
+  wins: number;
+  winRate: number;
 }
 
 export interface HandEval {
