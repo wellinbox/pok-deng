@@ -12,6 +12,7 @@ import Toast from "./components/Toast";
 import ChipTray from "./components/ChipTray";
 import { Lang, t } from "./i18n";
 import { money } from "./lib/money";
+import { soundManager, SoundKey, preloadSounds } from "./lib/sound";
 
 const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
@@ -63,6 +64,15 @@ export default function App() {
   const session = useRef<Session | null>(loadSession());
   const stay = useRef(!!loadSession());
   const me = uid();
+
+  // Sync sound state with soundManager
+  useEffect(() => {
+    soundManager.setEnabled(sound);
+    if (sound) {
+      // Preload sounds on first enable
+      preloadSounds();
+    }
+  }, [sound]);
 
   const emitJoin = (s: Socket, sess: Session) => {
     if (!stay.current) return;
@@ -151,6 +161,10 @@ export default function App() {
     s.on("holeCards", (cards: Card[]) => {
       if (!stay.current) return;
       setHole(cards);
+      // Play card deal sound when receiving cards
+      if (sound && cards.length > 0) {
+        soundManager.play("cardDeal");
+      }
     });
     s.on("errorMsg", (m: string) => {
       setJoinErr(m);
@@ -249,6 +263,10 @@ export default function App() {
   const tap = (ev: string, payload?: unknown) => (e: React.MouseEvent<HTMLButtonElement>) => {
     punch(e.currentTarget);
     sock.current?.emit(ev, payload);
+    // Play button click sound
+    if (sound) {
+      soundManager.play("buttonClick");
+    }
   };
 
   return (
@@ -268,7 +286,7 @@ export default function App() {
             </button>
             {menu && <SettingsMenu lang={lang} setLang={setLang} />}
           </div>
-          <button className="icon-btn" type="button" aria-label={t(lang, "sound")} onClick={(e) => { punch(e.currentTarget); setSound((v) => !v); }}>
+          <button className="icon-btn" type="button" aria-label={t(lang, "sound")} onClick={(e) => { punch(e.currentTarget); setSound((v) => !v); if (sound) soundManager.play("buttonClick"); }}>
             <i className={`fa-solid ${sound ? "fa-volume-high" : "fa-volume-xmark"}`} />
           </button>
           <button className="icon-btn" type="button" aria-label={t(lang, "alerts")} onClick={(e) => { punch(e.currentTarget); resumeNow(); }}>
@@ -348,11 +366,19 @@ export default function App() {
           <button className="gem raise" disabled={!betting || isDealer || broke} onClick={tap("bet", chip * 2)}>
             <i className="fa-solid fa-angles-up" /><span>{t(lang, "raise")}</span>
           </button>
-          <button className="gem allin" disabled={!betting || isDealer || broke} onClick={tap("allin")}>
+          <button className="gem allin" disabled={!betting || isDealer || broke} onClick={(e) => {
+            punch(e.currentTarget);
+            sock.current?.emit("allin");
+            if (sound) soundManager.play("allIn");
+          }}>
             <i className="fa-solid fa-bolt" /><span>{t(lang, "allin")}</span>
           </button>
         </div>
-        <ChipTray chip={chip} onPick={(v, el) => { punch(el); setChip(v); }} />
+        <ChipTray chip={chip} onPick={(v, el) => { 
+          punch(el); 
+          setChip(v); 
+          if (sound) soundManager.play("chipClick");
+        }} />
       </footer>
     </div>
   );

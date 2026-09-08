@@ -55,10 +55,10 @@ export default function SeatView({
   const drawing = n >= 3 && !dealing;
 
   return (
-    <div className={`seat-stack ${cls} ${player.lastResult === "win" ? "is-winner" : ""} ${dealing ? "is-dealing" : ""`}>
+    <div className={`seat-stack ${cls} ${player.lastResult === "win" ? "is-winner" : ""} ${dealing ? "is-dealing" : ""}`}>
       <div className="play-pile">
         {showSideCards && (
-          <div className={`seat-cards ${dealing ? "dealing" : ""} ${drawing ? "drawing" : ""`}>
+          <div className={`seat-cards ${dealing ? "dealing" : ""} ${drawing ? "drawing" : ""}`>
             {list.map((c, i) => (
               <PlayingCard
                 key={typeof c === "object" && c ? c.id : `${i}-${n}`}
