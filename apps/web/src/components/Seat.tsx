@@ -59,13 +59,16 @@ export default function SeatView({
       <div className="play-pile">
         {showSideCards && (
           <div className={`seat-cards ${dealing ? "dealing" : ""} ${drawing ? "drawing" : ""}`}>
-            {list.map((c, i) => (
-              <PlayingCard
-                key={typeof c === "object" && c ? c.id : `${i}-${n}`}
-                card={typeof c === "object" && c ? c : undefined}
-                i={i}
-              />
-            ))}
+            {list.map((c, i) => {
+              const card = typeof c === "object" && c !== null && "id" in c ? c as Card : undefined;
+              return (
+                <PlayingCard
+                  key={card?.id || `${i}-${n}`}
+                  card={card}
+                  i={i}
+                />
+              );
+            })}
           </div>
         )}
         {taemText && showCards && <div className="seat-taem">{taemText}</div>}
