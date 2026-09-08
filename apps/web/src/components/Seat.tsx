@@ -48,7 +48,7 @@ export default function SeatView({
   const rim = player.role && player.role !== "DEALER" ? player.role : crown ? "DEALER" : undefined;
   const betChips = player.bet > 0 ? stackChips(player.bet) : [];
   const taemText = player.pok
-    ? `ป๊อก ${player.pok}`
+    ? `Pok ${player.pok}`
     : player.taem != null
       ? `${player.taem}`
       : "";
@@ -58,7 +58,7 @@ export default function SeatView({
     <div className={`seat-stack ${cls} ${player.lastResult === "win" ? "is-winner" : ""} ${dealing ? "is-dealing" : ""}`}>
       <div className="play-pile">
         {showSideCards && (
-          <div className={`seat-cards ${dealing ? "dealing" : ""} ${drawing ? "drawing" : ""}`>
+          <div className={`seat-cards ${dealing ? "dealing" : ""} ${drawing ? "drawing" : ""}`}>
             {list.map((c, i) => (
               <PlayingCard
                 key={typeof c === "object" && c ? c.id : `${i}-${n}`}
@@ -73,7 +73,7 @@ export default function SeatView({
           <div className="bet-stack" title={money(player.bet)}>
             <div className="bet-pile">
               {betChips.map((v, i) => (
-                <i key={`${v}-${i}`} className={`chip c${v} betchip`} style={{ zIndex: i + 1, left: `${i * 7}px` }}>
+                <i key={`${v}-${i}`} className={`chip-graphic c${v} betchip`} style={{ zIndex: i + 1, left: `${i * 7}px` }}>
                   {v}
                 </i>
               ))}
@@ -84,7 +84,7 @@ export default function SeatView({
       </div>
       <div className="seat-hud">
         {rim && <div className="rim-badge">{rim}</div>}
-        <div className={`avatar ${crown ? "dealer" : ""`}>
+        <div className={`avatar ${crown ? "dealer" : ""}`}>
           <img src={src} alt="" />
         </div>
         <div className="nameplate">{player.name}</div>

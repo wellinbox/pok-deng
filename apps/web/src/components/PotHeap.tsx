@@ -20,7 +20,7 @@ export default function PotHeap({ amount }: { amount: number }) {
         {groups.map((g) => (
           <div key={g.v} className="pot-col">
             {Array.from({ length: g.n }).map((_, i) => (
-              <i key={i} className={`chip c${g.v}`} style={{ zIndex: i + 1 }}>
+              <i key={i} className={`chip-graphic c${g.v}`} style={{ zIndex: i + 1 }}>
                 {g.v}
               </i>
             ))}
