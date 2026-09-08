@@ -56,19 +56,37 @@ button { font-family: inherit; border: 0; cursor: pointer; }
 .logo-hex .th { font-size: 18px; font-weight: 800; color: #fff6d0; line-height: 1.1; text-shadow: 0 1px 0 #5a3d08; }
 .logo-hex .en { font-family: Cinzel, serif; font-size: 9px; letter-spacing: .28em; color: #2a1c06; font-weight: 800; }
 
-.table-stage { position: relative; flex: 1; min-height: 0; overflow: hidden; }
+.table-stage { 
+  position: relative; 
+  flex: 1; 
+  min-height: 0; 
+  overflow: hidden; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .table-bg {
-  position: absolute; inset: 0;
-  background: url('/assets/Tables.png') center/cover no-repeat;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 95%;
+  max-width: 1400px;
+  aspect-ratio: 2.8 / 1;
+  background: url('/assets/Tables.png') center/contain no-repeat;
   z-index: 0;
 }
+
 .table {
-  --tw: min(92vw, calc((100dvh - var(--header-h) - var(--action-h) - var(--safe-top) - var(--safe-bot)) * 1.6));
-  --th: min(calc(100dvh - var(--header-h) - var(--action-h) - var(--safe-top) - var(--safe-bot) - 8px), calc(92vw * 0.64));
-  width: var(--tw);
-  height: var(--th);
+  position: relative;
+  width: 95%;
+  max-width: 1400px;
+  aspect-ratio: 2.8 / 1;
   border-radius: 50%;
-  position: absolute; left: 50%; top: 50%;
+  position: absolute; 
+  left: 50%; 
+  top: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
   background: transparent;
