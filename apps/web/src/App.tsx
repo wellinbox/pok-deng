@@ -332,17 +332,22 @@ export default function App() {
           <div className="table-center">
             <PotHeap amount={state.pot} />
           </div>
-          {[0, 1, 2, 3, 4, 5, 6, 7].map((s) => (
-            <div key={s} className={`seat-anchor seat-${s}`}>
-              <SeatView
-                cls={`s${s}`}
-                player={bySeat(s)}
-                showCards={revealed}
-                hole={bySeat(s)?.id === me ? hole : undefined}
-                dealing={dealing}
-              />
-            </div>
-          ))}
+          {[0, 1, 2, 3, 4, 5, 6, 7].map((s) => {
+            const p = bySeat(s);
+            const isTurn = state.phase === "playerAction" && state.currentActorId === p?.id;
+            return (
+              <div key={s} className={`seat-anchor seat-${s}`}>
+                <SeatView
+                  cls={`s${s}`}
+                  player={p}
+                  showCards={revealed}
+                  hole={p?.id === me ? hole : undefined}
+                  dealing={dealing}
+                  isCurrentTurn={isTurn}
+                />
+              </div>
+            );
+          })}
         </div>
         {myTurn && (
           <div className="draw-choice">
