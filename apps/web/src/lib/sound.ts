@@ -13,6 +13,9 @@ export type SoundKey =
   | "allIn"         // All-in sound
   | "buttonClick"   // UI button click
   | "toast"         // Toast notification
+  | "emoji"         // Emoji/sticker send sound
+  | "timerTick"     // Timer countdown tick
+  | "roundEnd"      // Round end sound
 
 interface SoundUrls {
   cardDeal: string;
@@ -24,27 +27,36 @@ interface SoundUrls {
   allIn: string;
   buttonClick: string;
   toast: string;
+  emoji: string;
+  timerTick: string;
+  roundEnd: string;
 }
 
 const sounds: SoundUrls = {
   // Short card shuffling/dealing sound
   cardDeal: `${SOUND_BASE}/mp3/shuffling-cards-6269.mp3`,
   // Card flip or reveal sound
-  cardFlip: `${SOUND_BASE}/mp3/card-flip-113458.mp3`,
+  cardFlip: `${SOUND_BASE}/audio/play/113458_1711821556.3022032.mp3`,
   // Single chip click/placement
   chipClick: `${SOUND_BASE}/mp3/click-21796.mp3`,
   // Chip stacking sound
   chipStack: `${SOUND_BASE}/mp3/coins-159298.mp3`,
   // Win fanfare (short positive sound)
-  win: `${SOUND_BASE}/mp3/success-1-6269.mp3`,
+  win: `${SOUND_BASE}/audio/play/109768_1711821556.3022032.mp3`,
   // Lose sound (short negative sound)
-  lose: `${SOUND_BASE}/mp3/fail-1-6269.mp3`,
+  lose: `${SOUND_BASE}/audio/play/109769_1711821556.3022032.mp3`,
   // All-in dramatic sound
-  allIn: `${SOUND_BASE}/mp3/dramatic-hit-1-6269.mp3`,
+  allIn: `${SOUND_BASE}/audio/play/dramatic-hit-1-6269.mp3`,
   // UI button click
   buttonClick: `${SOUND_BASE}/mp3/click-21796.mp3`,
   // Toast notification sound
-  toast: `${SOUND_BASE}/mp3/notification-1-6269.mp3`,
+  toast: `${SOUND_BASE}/audio/play/notification-1-6269.mp3`,
+  // Emoji send sound
+  emoji: `${SOUND_BASE}/audio/play/pop-1-6269.mp3`,
+  // Timer tick (subtle click)
+  timerTick: `${SOUND_BASE}/audio/play/clock-tick-6269.mp3`,
+  // Round end sound
+  roundEnd: `${SOUND_BASE}/audio/play/round-end-6269.mp3`,
 };
 
 class SoundManager {

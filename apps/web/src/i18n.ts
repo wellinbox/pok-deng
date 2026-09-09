@@ -56,6 +56,13 @@ const dict: Record<Lang, Record<string, string>> = {
     stats: "สถิติ",
     myStats: "สถิติของฉัน",
     bestHand: "ไพ่ที่ดีที่สุด",
+    quickChat: "พูดเร็ว",
+    gameLog: "บันทึกเกม",
+    waitingForPlayers: "รอผู้เล่น...",
+    roundComplete: "จบรอบ",
+    dealerWins: "เจ้ามือชนะ",
+    playerWins: "ผู้เล่นชนะ",
+    draw: "เสมอ",
   },
   en: {
     title: "Pok Deng",
@@ -112,6 +119,13 @@ const dict: Record<Lang, Record<string, string>> = {
     stats: "Stats",
     myStats: "My Stats",
     bestHand: "Best Hand",
+    quickChat: "Quick Chat",
+    gameLog: "Game Log",
+    waitingForPlayers: "Waiting for players...",
+    roundComplete: "Round Complete",
+    dealerWins: "Dealer Wins",
+    playerWins: "Player Wins",
+    draw: "Draw",
   },
 };
 

@@ -11,9 +11,18 @@ import BrokeBar from "./components/BrokeBar";
 import Toast from "./components/Toast";
 import ChipTray from "./components/ChipTray";
 import ChatBox from "./components/ChatBox";
+import QuickChat from "./components/QuickChat";
+import GameLog from "./components/GameLog";
 import { Lang, t } from "./i18n";
 import { money } from "./lib/money";
 import { soundManager, SoundKey, preloadSounds } from "./lib/sound";
+
+interface GameLogEntry {
+  id: string;
+  type: "deal" | "hit" | "stand" | "bet" | "win" | "lose" | "fold" | "round";
+  message: string;
+  timestamp: number;
+}
 
 const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
@@ -63,10 +72,25 @@ export default function App() {
   const [toast, setToast] = useState<{ text: string; kind?: "info" | "error" | "ok" } | null>(null);
   const [splash, setSplash] = useState(true);
   const [net, setNet] = useState<"connecting" | "online" | "offline">("connecting");
+  const [showLogs, setShowLogs] = useState(false);
+  const [gameLogs, setGameLogs] = useState<GameLogEntry[]>([]);
   const sock = useRef<Socket | null>(null);
   const session = useRef<Session | null>(loadSession());
   const stay = useRef(!!loadSession());
   const me = uid();
+  const prevPhase = useRef<string>("");
+  const prevPot = useRef<number>(0);
+
+  // Add game log entry
+  const addLog = (type: GameLogEntry["type"], message: string) => {
+    const entry: GameLogEntry = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      type,
+      message,
+      timestamp: Date.now(),
+    };
+    setGameLogs(prev => [...prev.slice(-49), entry]);
+  };
 
   // Sync sound state with soundManager
   useEffect(() => {
@@ -149,6 +173,26 @@ export default function App() {
     s.on("state", (st: RoomState) => {
       if (!stay.current) return;
       setJoinErr("");
+      
+      // Track phase changes for game log
+      if (prevPhase.current && prevPhase.current !== st.phase) {
+        if (st.phase === "dealing") {
+          addLog("deal", t(lang, "dealing"));
+          soundManager.play("cardDeal");
+        } else if (st.phase === "payout" || st.phase === "nextRound") {
+          addLog("round", t(lang, "roundComplete"));
+          soundManager.play("roundEnd");
+        }
+      }
+      
+      // Track pot changes for betting logs
+      if (st.pot > prevPot.current && st.pot > 0) {
+        addLog("bet", `${t(lang, "pot")}: ${money(st.pot)}`);
+      }
+      
+      prevPhase.current = st.phase;
+      prevPot.current = st.pot;
+      
       setState(st);
       setJoined(true);
       const prev = session.current;
@@ -369,25 +413,41 @@ export default function App() {
 
       <footer className="action-bar">
         <div className="actions">
-          <button className="gem fold" disabled={isDealer || broke} onClick={tap("fold")}>
+          <button className="gem fold" disabled={isDealer || broke} onClick={(e) => {
+            tap("fold")(e);
+            addLog("fold", `${mePlayer?.name || t(lang, "playerDefault")} ${t(lang, "fold")}`);
+          }}>
             <i className="fa-solid fa-hand" /><span>{t(lang, "fold")}</span>
           </button>
-          <button className="gem check" disabled={broke} onClick={tap("check")}>
+          <button className="gem check" disabled={broke} onClick={(e) => {
+            tap("check")(e);
+            addLog("bet", `${mePlayer?.name || t(lang, "playerDefault")} ${t(lang, "check")}`);
+          }}>
             <i className="fa-solid fa-check" /><span>{t(lang, "check")}</span>
           </button>
-          <button className="gem call" disabled={!betting || isDealer || broke} onClick={tap("bet", state.minBet)}>
+          <button className="gem call" disabled={!betting || isDealer || broke} onClick={(e) => {
+            tap("bet", state.minBet)(e);
+            addLog("bet", `${mePlayer?.name || t(lang, "playerDefault")} ${t(lang, "call")} ${money(state.minBet)}`);
+          }}>
             <i className="fa-solid fa-reply" /><span>{t(lang, "call")}</span>
           </button>
-          <button className="gem bet" disabled={!betting || isDealer || broke} onClick={tap("bet", chip)}>
+          <button className="gem bet" disabled={!betting || isDealer || broke} onClick={(e) => {
+            tap("bet", chip)(e);
+            addLog("bet", `${mePlayer?.name || t(lang, "playerDefault")} ${t(lang, "bet")} ${money(chip)}`);
+          }}>
             <i className="fa-solid fa-coins" /><span>{t(lang, "bet")}</span>
           </button>
-          <button className="gem raise" disabled={!betting || isDealer || broke} onClick={tap("bet", chip * 2)}>
+          <button className="gem raise" disabled={!betting || isDealer || broke} onClick={(e) => {
+            tap("bet", chip * 2)(e);
+            addLog("bet", `${mePlayer?.name || t(lang, "playerDefault")} ${t(lang, "raise")} ${money(chip * 2)}`);
+          }}>
             <i className="fa-solid fa-angles-up" /><span>{t(lang, "raise")}</span>
           </button>
           <button className="gem allin" disabled={!betting || isDealer || broke} onClick={(e) => {
             punch(e.currentTarget);
             sock.current?.emit("allin");
             if (sound) soundManager.play("allIn");
+            addLog("bet", `${mePlayer?.name || t(lang, "playerDefault")} ${t(lang, "allin")}!`);
           }}>
             <i className="fa-solid fa-bolt" /><span>{t(lang, "allin")}</span>
           </button>
@@ -399,6 +459,19 @@ export default function App() {
         }} />
       </footer>
 
+      <QuickChat lang={lang} onSend={sendChat} />
+      
+      <button
+        className="fixed bottom-4 right-4 z-40 bg-amber-700 hover:bg-amber-600 text-white rounded-full p-3 shadow-lg transition-all"
+        onClick={() => setShowLogs(true)}
+        aria-label={t(lang, "gameLog")}
+        title={t(lang, "gameLog")}
+      >
+        <i className="fa-solid fa-list-ul text-xl" />
+      </button>
+
+      {showLogs && <GameLog logs={gameLogs} onClose={() => setShowLogs(false)} />}
+      
       <ChatBox chat={chat} playerId={me} onSend={sendChat} lang={lang} />
     </div>
   );
