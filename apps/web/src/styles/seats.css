@@ -40,6 +40,33 @@
 .seat-6 { left: clamp(12%, 15vw, 16%); top: 44%; --dx: 130px; --dy: -70px; }
 .seat-7 { left: clamp(20%, 25vw, 24%); top: clamp(60%, 65vh, 64%); --dx: 90px; --dy: -110px; }
 
+/* โหลดเดอร์สีเขียววิ่งวนรอบอวาตาร์เมื่อถึงตาผู้เล่นคนนั้น */
+@keyframes turn-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.turn-loader {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #22c55e 0%, #22c55e 60%, transparent 60%, transparent 100%);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+  animation: turn-spin 1.2s linear infinite;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.avatar.turning {
+  position: relative;
+  box-shadow: 0 0 12px 2px rgba(34, 197, 94, 0.5);
+}
+
+.is-turn .seat-hud .avatar img {
+  filter: brightness(1.05) saturate(1.1);
+}
+
 .seat-stack { gap: clamp(4px, 1cqw, 6px); align-items: center; }
 .play-pile {
   display: flex;

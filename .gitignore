@@ -1,4 +1,5 @@
-```css
-/* No build artifacts, dependencies, or temp files detected in changes */
-/* Only CSS source file was modified, no ignores needed */
+```
+# Build artifacts
+dist/
+build/
 ```
