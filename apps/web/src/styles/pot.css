@@ -11,7 +11,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 6px;
+  gap: clamp(4px, 1cqw, 6px);
 }
 .pot-col {
   display: flex;
@@ -19,16 +19,16 @@
   align-items: center;
 }
 .pot-col .chip {
-  width: 26px;
-  height: 26px;
-  font-size: 8px;
-  margin-top: -16px;
+  width: clamp(20px, 3.5cqw, 26px);
+  height: clamp(20px, 3.5cqw, 26px);
+  font-size: clamp(6px, 1.2cqw, 8px);
+  margin-top: clamp(-12px, -2cqw, -16px);
 }
 .pot-col .chip:last-child { margin-top: 0; }
 .pot-heap-amt {
-  margin-top: 6px;
+  margin-top: clamp(4px, 1cqw, 6px);
   font-family: Cinzel, serif;
-  font-size: clamp(18px, 4.2cqw, 28px);
+  font-size: clamp(16px, 3.5cqw, 28px);
   font-weight: 800;
   color: #fff6d0;
   text-shadow: 0 2px 0 #3a2a08, 0 4px 10px #000a;

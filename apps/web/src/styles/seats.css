@@ -10,54 +10,55 @@
 }
 .pot-heap-pile {
   position: relative;
-  width: 90px;
-  height: 34px;
+  width: clamp(60px, 10cqw, 90px);
+  height: clamp(24px, 4cqw, 34px);
 }
 .pot-heap-pile .chip {
   position: absolute;
   top: 0;
-  width: 28px;
-  height: 28px;
-  font-size: 8px;
+  width: clamp(20px, 3.5cqw, 28px);
+  height: clamp(20px, 3.5cqw, 28px);
+  font-size: clamp(6px, 1.2cqw, 8px);
 }
 .pot-heap-amt {
   margin-top: 2px;
   font-family: Cinzel, serif;
-  font-size: clamp(18px, 4.2cqw, 28px);
+  font-size: clamp(16px, 3.5cqw, 28px);
   font-weight: 800;
   color: #fff6d0;
   text-shadow: 0 2px 0 #3a2a08, 0 4px 10px #000a;
   letter-spacing: .04em;
 }
 
-.seat-0 { left: 50%; top: 76%; --dx: 0px; --dy: -150px; }
-.seat-1 { left: 76%; top: 64%; --dx: -90px; --dy: -110px; }
-.seat-2 { left: 84%; top: 44%; --dx: -130px; --dy: -70px; }
-.seat-3 { left: 76%; top: 22%; --dx: -55px; --dy: -28px; }
-.seat-4 { left: 50%; top: 12%; --dx: 0px; --dy: 18px; }
-.seat-5 { left: 24%; top: 22%; --dx: 55px; --dy: -28px; }
-.seat-6 { left: 16%; top: 44%; --dx: 130px; --dy: -70px; }
-.seat-7 { left: 24%; top: 64%; --dx: 90px; --dy: -110px; }
+/* ปรับตำแหน่งที่นั่งให้เหมาะสมกับแต่ละขนาดหน้าจอ */
+.seat-0 { left: 50%; top: clamp(72%, 75vh, 76%); --dx: 0px; --dy: -150px; }
+.seat-1 { left: clamp(72%, 75vw, 76%); top: clamp(60%, 65vh, 64%); --dx: -90px; --dy: -110px; }
+.seat-2 { left: clamp(80%, 85vw, 84%); top: 44%; --dx: -130px; --dy: -70px; }
+.seat-3 { left: clamp(72%, 75vw, 76%); top: clamp(20%, 25vh, 22%); --dx: -55px; --dy: -28px; }
+.seat-4 { left: 50%; top: clamp(10%, 15vh, 12%); --dx: 0px; --dy: 18px; }
+.seat-5 { left: clamp(20%, 25vw, 24%); top: clamp(20%, 25vh, 22%); --dx: 55px; --dy: -28px; }
+.seat-6 { left: clamp(12%, 15vw, 16%); top: 44%; --dx: 130px; --dy: -70px; }
+.seat-7 { left: clamp(20%, 25vw, 24%); top: clamp(60%, 65vh, 64%); --dx: 90px; --dy: -110px; }
 
-.seat-stack { gap: 6px; align-items: center; }
+.seat-stack { gap: clamp(4px, 1cqw, 6px); align-items: center; }
 .play-pile {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: clamp(2px, 0.5cqw, 3px);
 }
 .s4.seat-stack { flex-direction: row; align-items: center; }
 .s4 .seat-hud { flex-direction: column; }
 .s4 .play-pile { order: -1; }
 
 .seat-taem {
-  font-size: 10px;
+  font-size: clamp(8px, 1.8cqw, 10px);
   font-weight: 800;
   color: #fff4c8;
   background: #0b0904cc;
   border: 1px solid #c9a44a;
   border-radius: 6px;
-  padding: 1px 5px;
+  padding: clamp(1px, 0.3cqw, 1px) clamp(4px, 1cqw, 5px);
 }
 
 .bet-stack {
@@ -66,18 +67,22 @@
   align-items: center;
   pointer-events: none;
 }
-.bet-pile { position: relative; height: 18px; min-width: 18px; }
+.bet-pile { 
+  position: relative; 
+  height: clamp(14px, 2.5cqw, 18px); 
+  min-width: clamp(14px, 2.5cqw, 18px); 
+}
 .bet-pile .betchip {
   position: absolute;
   top: 0;
-  width: 18px;
-  height: 18px;
-  font-size: 7px;
-  border-width: 2px;
+  width: clamp(14px, 2.5cqw, 18px);
+  height: clamp(14px, 2.5cqw, 18px);
+  font-size: clamp(5px, 1cqw, 7px);
+  border-width: clamp(1px, 0.3cqw, 2px);
 }
 .bet-amt {
   margin-top: 2px;
-  font-size: 9px;
+  font-size: clamp(7px, 1.5cqw, 9px);
   font-weight: 800;
   color: #f3d98a;
   text-shadow: 0 1px 2px #000;
