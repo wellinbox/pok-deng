@@ -252,6 +252,280 @@ button { font-family: inherit; border: 0; cursor: pointer; }
 .ghost { background: transparent !important; color: #f0d78a !important; border: 1px solid #c9a227; }
 .lang { position: absolute; top: 12px; right: 12px; }
 
+/* ==========================================================================
+   Responsive Breakpoints - Mobile First Approach
+   ========================================================================== */
+
+/* 2. สมาร์ทโฟนขนาดมาตรฐานทั่วไป (376px ขึ้นไป) */
+@media (min-width: 376px) {
+  body {
+    font-size: 15px;
+  }
+  .icon-btn {
+    width: 42px; height: 42px; font-size: 17px;
+  }
+  .avatar {
+    width: 32px; height: 32px;
+  }
+  .seat-cards .card {
+    width: 30px; height: 42px;
+  }
+}
+
+/* 3. แท็บเล็ตขนาดเล็ก / มือถือแนวนอน (576px ขึ้นไป) */
+@media (min-width: 576px) {
+  body {
+    font-size: 16px;
+  }
+  .logo-hex {
+    width: 180px;
+  }
+  .logo-hex .th {
+    font-size: 20px;
+  }
+  .table {
+    width: 70vh;
+    height: 70vh;
+  }
+  .actions {
+    grid-template-columns: repeat(6, minmax(48px, 1fr));
+    width: min(100%, 480px);
+  }
+  .gem {
+    max-width: 60px;
+  }
+  .chip {
+    width: 36px; height: 36px; font-size: 11px;
+  }
+  .seat-cards .card {
+    width: 32px; height: 44px;
+  }
+  .you-hand .card {
+    width: 44px; height: 60px;
+  }
+}
+
+/* 4. แท็บเล็ตมาตรฐาน (768px ขึ้นไป) */
+@media (min-width: 768px) {
+  body {
+    font-size: 17px;
+  }
+  .game-header {
+    padding: 0 16px;
+  }
+  .logo-hex {
+    width: 200px;
+  }
+  .logo-hex .th {
+    font-size: 22px;
+  }
+  .logo-hex .en {
+    font-size: 10px;
+  }
+  .table {
+    width: 60vh;
+    height: 60vh;
+  }
+  .actions {
+    grid-template-columns: repeat(6, minmax(52px, 1fr));
+    width: min(100%, 520px);
+  }
+  .gem {
+    max-width: 64px;
+  }
+  .chip {
+    width: 38px; height: 38px; font-size: 12px;
+  }
+  .avatar {
+    width: 34px; height: 34px;
+  }
+  .nameplate {
+    font-size: 9px;
+  }
+  .seat-cards .card {
+    width: 34px; height: 46px;
+  }
+  .you-hand .card {
+    width: 48px; height: 64px;
+  }
+}
+
+/* 5. แท็บเล็ตขนาดใหญ่ / โน้ตบุ๊กขนาดเล็ก (992px ขึ้นไป) */
+@media (min-width: 992px) {
+  body {
+    font-size: 18px;
+  }
+  .action-bar {
+    flex-direction: row;
+    justify-content: center;
+    gap: 16px;
+    height: auto;
+    padding: 10px 16px;
+  }
+  .actions {
+    grid-template-columns: repeat(6, minmax(56px, 1fr));
+    width: min(100%, 560px);
+  }
+  .gem {
+    max-width: 68px;
+  }
+  .chip {
+    width: 40px; height: 40px; font-size: 13px;
+  }
+  .tray {
+    gap: 8px;
+    padding: 8px 12px;
+  }
+  .table {
+    width: 55vh;
+    height: 55vh;
+  }
+  .seat-cards .card {
+    width: 36px; height: 48px;
+  }
+  .you-hand .card {
+    width: 50px; height: 68px;
+  }
+}
+
+/* 6. แล็ปท็อปและเดสก์ท็อปมาตรฐาน (1200px ขึ้นไป) */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+    margin: 0 auto;
+  }
+  body {
+    font-size: 18px;
+  }
+  .game-header {
+    padding: 0 20px;
+  }
+  .logo-hex {
+    width: 220px;
+  }
+  .logo-hex .th {
+    font-size: 24px;
+  }
+  .logo-hex .en {
+    font-size: 11px;
+  }
+  .table {
+    width: 50vh;
+    height: 50vh;
+  }
+  .actions {
+    grid-template-columns: repeat(6, minmax(60px, 1fr));
+    width: min(100%, 600px);
+  }
+  .gem {
+    max-width: 72px;
+  }
+  .chip {
+    width: 42px; height: 42px; font-size: 14px;
+  }
+  .avatar {
+    width: 36px; height: 36px;
+  }
+  .nameplate {
+    font-size: 10px;
+  }
+  .seat-cards .card {
+    width: 38px; height: 50px;
+  }
+  .you-hand .card {
+    width: 52px; height: 70px;
+  }
+}
+
+/* 7. หน้าจอขนาดใหญ่พิเศษ Full HD (1440px ขึ้นไป) */
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1320px;
+  }
+  body {
+    font-size: 19px;
+  }
+  .logo-hex {
+    width: 240px;
+  }
+  .logo-hex .th {
+    font-size: 26px;
+  }
+  .logo-hex .en {
+    font-size: 12px;
+  }
+  .table {
+    width: 48vh;
+    height: 48vh;
+  }
+  .actions {
+    grid-template-columns: repeat(6, minmax(64px, 1fr));
+    width: min(100%, 640px);
+  }
+  .gem {
+    max-width: 76px;
+  }
+  .chip {
+    width: 44px; height: 44px; font-size: 15px;
+  }
+  .seat-cards .card {
+    width: 40px; height: 52px;
+  }
+  .you-hand .card {
+    width: 54px; height: 72px;
+  }
+}
+
+/* 8. หน้าจอความละเอียดสูง / Ultra-wide (1920px ขึ้นไป) */
+@media (min-width: 1920px) {
+  body {
+    font-size: 20px;
+  }
+  .game-header {
+    padding: 0 24px;
+  }
+  .logo-hex {
+    width: 260px;
+  }
+  .logo-hex .th {
+    font-size: 28px;
+  }
+  .logo-hex .en {
+    font-size: 13px;
+  }
+  .table {
+    width: 45vh;
+    height: 45vh;
+    max-width: 900px;
+  }
+  .actions {
+    grid-template-columns: repeat(6, minmax(68px, 1fr));
+    width: min(100%, 680px);
+  }
+  .gem {
+    max-width: 80px;
+  }
+  .chip {
+    width: 46px; height: 46px; font-size: 16px;
+  }
+  .seat-cards .card {
+    width: 42px; height: 56px;
+  }
+  .you-hand .card {
+    width: 56px; height: 76px;
+  }
+  .pot-box {
+    min-width: 140px;
+    padding: 8px 14px;
+  }
+  .pot-label {
+    font-size: 14px;
+  }
+  .pot-value {
+    font-size: 22px;
+  }
+}
+
 @media (max-height: 700px) {
   :root { --header-h: 56px; --action-h: 118px; }
   .logo-hex .en { display: none; }

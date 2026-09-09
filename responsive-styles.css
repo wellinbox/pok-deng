@@ -1,0 +1,231 @@
+/* ==========================================================================
+   Global & Reset Styles (Mobile First Approach)
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Sarabun', sans-serif; /* แนะนำให้ใช้ฟอนต์ที่อ่านง่าย */
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Container พื้นฐานสำหรับมือถือ */
+.container {
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ==========================================================================
+   1. ค่าเริ่มต้นสำหรับมือถือขนาดเล็กสุด (Mobile Portrait - 0px ขึ้นไป)
+   ========================================================================== */
+/* Layout แบบ 1 คอลัมน์ */
+.grid-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Navbar แบบมือถือ (Hamburger Menu Logic - จำลอง) */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.nav-links {
+  display: none; /* ซ่อนเมนูบนมือถือ */
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.nav-links.active {
+  display: flex; /* แสดงเมื่อมีการคลิก (ต้องใช้ JS ช่วย toggle class active) */
+}
+
+.hamburger {
+  display: block;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   2. สมาร์ทโฟนขนาดมาตรฐานทั่วไป (376px ขึ้นไป)
+   ========================================================================== */
+@media (min-width: 376px) {
+  body {
+    font-size: 15px; /* ปรับฟอนต์ใหญ่ขึ้นเล็กน้อยให้อ่านสบายตา */
+  }
+  
+  .container {
+    max-width: 360px; /* จำกัดความกว้างไม่ให้กว้างเกินไปจนอ่านยาก */
+  }
+
+  .card {
+    padding: 20px;
+  }
+}
+
+/* ==========================================================================
+   3. แท็บเล็ตขนาดเล็ก / มือถือแนวนอน (576px ขึ้นไป)
+   ========================================================================== */
+@media (min-width: 576px) {
+  body {
+    font-size: 16px;
+  }
+
+  .container {
+    max-width: 540px;
+  }
+
+  /* เปลี่ยนจาก 1 คอลัมน์เป็น 2 คอลัมน์ */
+  .grid-layout {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+}
+
+/* ==========================================================================
+   4. แท็บเล็ตมาตรฐาน (768px ขึ้นไป)
+   ========================================================================== */
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+
+  /* แสดงผลเมนู Navbar แบบเต็มแทนปุ่ม Hamburger */
+  .hamburger {
+    display: none; /* ซ่อนปุ่มแฮมเบอร์เกอร์ */
+  }
+
+  .nav-links {
+    display: flex; /* แสดงเมนูแบบแถว */
+    position: static;
+    flex-direction: row;
+    width: auto;
+    padding: 0;
+    box-shadow: none;
+    gap: 20px;
+  }
+
+  /* ปรับ Grid เป็น 3 คอลัมน์ หรือจัดหน้าแบบ Sidebar + Content */
+  .grid-layout {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ==========================================================================
+   5. แท็บเล็ตขนาดใหญ่ / โน้ตบุ๊กขนาดเล็ก (992px ขึ้นไป)
+   ========================================================================== */
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+
+  /* เริ่มเข้าสู่โครงสร้าง Desktop เต็มตัว */
+  body {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .grid-layout {
+    grid-template-columns: repeat(3, 1fr); /* ยึดไว้ที่ 3 คอลัมน์ หรือปรับตามต้องการ */
+    gap: 30px;
+  }
+  
+  .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  }
+}
+
+/* ==========================================================================
+   6. แล็ปท็อปและเดสก์ท็อปมาตรฐาน (1200px ขึ้นไป)
+   ========================================================================== */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px; /* จำกัดความกว้างเนื้อหา */
+    margin: 0 auto;    /* จัดกึ่งกลางหน้าจอ */
+  }
+  
+  .grid-layout {
+    grid-template-columns: repeat(4, 1fr); /* เพิ่มเป็น 4 คอลัมน์สำหรับจอใหญ่ */
+  }
+}
+
+/* ==========================================================================
+   7. หน้าจอขนาดใหญ่พิเศษ Full HD (1440px ขึ้นไป)
+   ========================================================================== */
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1320px;
+  }
+  
+  body {
+    font-size: 17px; /* ปรับฟอนต์ให้ใหญ่ขึ้นอีกนิดสำหรับจอใหญ่ */
+  }
+}
+
+/* ==========================================================================
+   8. หน้าจอความละเอียดสูง / Ultra-wide (1920px ขึ้นไป)
+   ========================================================================== */
+@media (min-width: 1920px) {
+  .container {
+    max-width: 1600px; /* ขยายพื้นที่ใช้งานให้เต็มที่ */
+  }
+
+  /* ปรับแต่งสเปซ ช่องไฟ หรือขนาดรูปภาพไม่ให้แตกเมื่อขยายบนจอใหญ่ */
+  .card img {
+    object-fit: cover;
+    height: 300px; /* ล็อกความสูงรูปภาพไม่ให้ยืดผิดปกติ */
+  }
+  
+  body {
+    font-size: 18px;
+  }
+}
+
+/* Utility Classes เพิ่มเติมเพื่อการใช้งานจริง */
+.text-center { text-align: center; }
+.mt-2 { margin-top: 1rem; }
+.hidden { display: none; }

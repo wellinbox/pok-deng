@@ -202,6 +202,106 @@
   justify-content: space-between;
   gap: 8px;
 }
+
+/* ==========================================================================
+   Responsive Breakpoints for Landing Page
+   ========================================================================== */
+
+@media (min-width: 376px) {
+  .landing-card {
+    padding: 24px 22px 20px;
+  }
+  .landing-sub {
+    font-size: 19px;
+  }
+}
+
+@media (min-width: 576px) {
+  .landing-card {
+    width: min(440px, 90vw);
+    padding: 26px 24px 22px;
+  }
+  .landing-crest .logo-hex {
+    width: 220px;
+  }
+  .landing-sub {
+    font-size: 20px;
+  }
+  .btn-gold,
+  .btn-ghost,
+  .btn-solo {
+    min-height: 50px;
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 768px) {
+  .landing {
+    padding: 24px;
+  }
+  .landing-card {
+    width: min(460px, 85vw);
+    padding: 28px 26px 24px;
+  }
+  .landing-crest .logo-hex {
+    width: 230px;
+  }
+  .landing-sub {
+    font-size: 22px;
+  }
+  .landing-tag {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 992px) {
+  .landing-card {
+    width: min(480px, 80vw);
+    padding: 30px 28px 26px;
+  }
+  .landing-crest .logo-hex {
+    width: 240px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .landing-card {
+    width: min(500px, 75vw);
+    padding: 32px 30px 28px;
+  }
+  .landing-crest .logo-hex {
+    width: 250px;
+  }
+  .landing-sub {
+    font-size: 24px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .landing-card {
+    width: min(520px, 70vw);
+  }
+  .landing-crest .logo-hex {
+    width: 260px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .landing {
+    padding: 32px;
+  }
+  .landing-card {
+    width: min(560px, 65vw);
+    padding: 36px 34px 32px;
+  }
+  .landing-crest .logo-hex {
+    width: 280px;
+  }
+  .landing-sub {
+    font-size: 26px;
+  }
+}
+
 @media (max-height: 680px) {
   .landing-card { padding: 16px 16px 12px; }
   .landing-sub { font-size: 16px; }
